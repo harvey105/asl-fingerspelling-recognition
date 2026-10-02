@@ -1,0 +1,48 @@
+# ==============================================================================
+# ASL Fingerspelling Recognition - Strict .gitignore
+# ==============================================================================
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Large Datasets (Keep directory skeletons via .gitkeep)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/backgrounds/*
+!data/backgrounds/.gitkeep
+data/external_test/*
+!data/external_test/.gitkeep
+
+# Track split metadata CSVs
+!data/splits/*.csv
+
+# Model Checkpoints & Large Artifacts
+weights/*.pt
+weights/*.pth
+weights/*.onnx
+!weights/.gitkeep
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IDEs & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
