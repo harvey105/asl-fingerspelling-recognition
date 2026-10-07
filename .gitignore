@@ -18,7 +18,11 @@ env/
 .pytest_cache/
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*
+
+# Environment-specifics
 archive/
+GLOSSARY.md
+docs/adr/
 
 # --- Raw & Processed Datasets (DO NOT COMMIT IMAGES) ---
 # Raw datasets
@@ -65,3 +69,9 @@ weights/*.onnx
 .DS_Store
 Thumbs.db
 *.tmp
+
+# --- Local Agent Scratch, Logs & Temp ---
+.scratch/
+temp/
+logs/
+dev_docs/
