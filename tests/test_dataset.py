@@ -1,6 +1,6 @@
 """
 tests/test_dataset.py
-Task 2.3 Part C: unit tests for the dataset pipeline.
+ unit tests for the dataset pipeline.
 
 Data-dependent tests skip if the crops or index are missing. Synthetic tests always run.
 Run from the repository root: uv run pytest tests/test_dataset.py -v
@@ -45,7 +45,7 @@ def test_train_md5_unique(manifests):
 
 
 def test_val_and_test_not_deduplicated(manifests):
-    # D10: de-duplication applies to train only, so val and test keep their full crop output.
+    # : de-duplication applies to train only, so val and test keep their full crop output.
     rep = manifests["report"]
     assert rep["val_final"] == len(manifests["val"])
     assert rep["test_final"] == len(manifests["test"])
@@ -149,26 +149,23 @@ def test_affine_fill_is_exact_gray_outside_source():
     assert tuple(out[112, 112]) == (40, 40, 40)
 
 
-def test_training_pipeline_uses_configured_affine_and_jitter():
+def test_training_pipeline_uses_configured_affine_jitter_and_flip():
     ops = build_transform(True).transforms
     names = [type(t).__name__ for t in ops]
-    assert names == ["KeepPadJitter", "RandomAffine", "ToTensor", "Normalize"]
+    assert names == ["KeepPadJitter", "RandomAffine", "RandomHorizontalFlip", "ToTensor", "Normalize"]
     affine = ops[1]
     assert tuple(affine.degrees) == (-ROTATION_DEG, ROTATION_DEG)
     assert tuple(affine.translate) == TRANSLATE
     assert tuple(affine.scale) == SCALE_RANGE
     assert tuple(affine.fill) == FILL
-
-
-def test_no_horizontal_flip_anywhere():
-    for is_train in (True, False):
-        names = [type(t).__name__ for t in build_transform(is_train).transforms]
-        assert "RandomHorizontalFlip" not in names
-        assert "RandomVerticalFlip" not in names
+    flip = ops[2]
+    assert flip.p == 0.5
 
 
 def test_eval_pipeline_has_no_augmentation():
     names = [type(t).__name__ for t in build_transform(False).transforms]
+    assert "RandomHorizontalFlip" not in names
+    assert "RandomAffine" not in names
     assert names == ["ToTensor", "Normalize"]
 
 

@@ -1,21 +1,15 @@
 """
 src/dataset.py
-Task 2.3 Part A (revised): augmentation pipeline and PyTorch Dataset over the letterboxed PNG crops.
+Augmentation pipeline and PyTorch Dataset over letterboxed crops.
 
-Train transform, in this order:
-  1. KeepPadJitter: ColorJitter (brightness, contrast, saturation 0.25, roadmap) that leaves
-     letterbox padding pixels exactly (128, 128, 128). Without this, the jitter changes the
-     padding, so the letterbox bars and the rotation fill differ in brightness.
-  2. RandomAffine: rotation +-12 deg (roadmap), translation 6% (roadmap), scale in SCALE_RANGE
-     (D22), fill exactly (128, 128, 128).
-  3. ToTensor, then ImageNet normalisation (roadmap).
-Eval transform: ToTensor and normalisation only.
+Train transforms:
+  1. KeepPadJitter: ColorJitter preserving neutral gray (128, 128, 128) letterbox padding.
+  2. RandomAffine: rotation +-12 deg, translation 6%, scale zoom [0.75, 1.35], neutral gray fill.
+  3. RandomHorizontalFlip(p=0.5): stochastic horizontal reflection for ambidextrous generalization.
+  4. ToTensor, then ImageNet normalization.
 
-No horizontal flip: mirrored signs change meaning (roadmap).
-
-SCALE_RANGE widens the zoom so each sign is seen at many scales. It does NOT remove the
-per-sign difference in hand size (D21): augmentation is class-independent, so the
-class-conditional scale distribution is weakened, not eliminated.
+Eval transforms:
+  ToTensor and ImageNet normalization only.
 """
 
 import numpy as np
@@ -28,15 +22,15 @@ from config import NUM_CLASSES, PROJECT_ROOT
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-FILL = (128, 128, 128)            # same neutral gray as the letterbox padding
+FILL = (128, 128, 128)            # neutral gray matching letterbox padding
 ROTATION_DEG = 12
 TRANSLATE = (0.06, 0.06)
-SCALE_RANGE = (0.75, 1.35)        # D22
+SCALE_RANGE = (0.75, 1.35)
 JITTER = 0.25
 
 
 class KeepPadJitter:
-    """ColorJitter that leaves pixels exactly equal to FILL unchanged (the letterbox padding)."""
+    """ColorJitter that leaves pixels equal to FILL unchanged."""
 
     def __init__(self, brightness, contrast, saturation):
         self.jitter = T.ColorJitter(brightness=brightness, contrast=contrast,
@@ -57,6 +51,7 @@ def build_transform(is_train):
             KeepPadJitter(brightness=JITTER, contrast=JITTER, saturation=JITTER),
             T.RandomAffine(degrees=ROTATION_DEG, translate=TRANSLATE,
                            scale=SCALE_RANGE, fill=FILL),
+            T.RandomHorizontalFlip(p=0.5),
         ]
     ops += [T.ToTensor(), T.Normalize(IMAGENET_MEAN, IMAGENET_STD)]
     return T.Compose(ops)
