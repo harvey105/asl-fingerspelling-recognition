@@ -18,6 +18,7 @@ env/
 .pytest_cache/
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*
+archive/
 
 # --- Raw & Processed Datasets (DO NOT COMMIT IMAGES) ---
 # Raw datasets
