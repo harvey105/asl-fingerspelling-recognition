@@ -26,8 +26,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from config import BLANK_FRAMES_CSV, CLASSES, CLASS_TO_ID, DOCS_DIR, PROJECT_ROOT, SPLITS_DIR
-from freeze_splits import COLUMNS, gate, sha256, to_frame, write_and_verify
-from manifests import load_written_table
+from .splits import COLUMNS, gate, sha256, to_frame, write_and_verify
+from .manifests import load_written_table
 
 SEED = 42
 EXPECTED_TOTAL = 35988

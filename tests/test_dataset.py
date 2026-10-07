@@ -13,10 +13,9 @@ from PIL import Image
 from torchvision import transforms as T
 
 from config import NUM_CLASSES, PROJECT_ROOT
-from dataloaders import get_dataloaders
-from dataset import (FILL, ROTATION_DEG, SCALE_RANGE, TRANSLATE, ASLDataset,
-                     KeepPadJitter, build_transform, class_weights)
-from manifests import build_manifests
+from src.data import (FILL, ROTATION_DEG, SCALE_RANGE, TRANSLATE, ASLDataset,
+                      KeepPadJitter, build_manifests, build_transform,
+                      class_weights, get_dataloaders)
 
 BATCH = 64
 

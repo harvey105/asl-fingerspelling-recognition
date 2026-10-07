@@ -42,7 +42,7 @@ from tqdm import tqdm
 
 from config import (BLANK_FRAMES_CSV, CLASSES, CROPS_DIR, DOCS_DIR, NUM_VOLUNTEERS,
                     PROCESSED_DIR, PROJECT_ROOT)
-from roi_detector import (IMG_SIZE, MAX_NUM_HANDS, MP_MIN_DETECTION_CONF, describe_box,
+from .roi_detector import (IMG_SIZE, MAX_NUM_HANDS, MP_MIN_DETECTION_CONF, describe_box,
                           detect, make_hands)
 
 SEED = 42

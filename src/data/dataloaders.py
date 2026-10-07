@@ -19,7 +19,7 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 
-from dataset import ASLDataset
+from .dataset import ASLDataset
 
 SEED = 42
 DEFAULT_BATCH = 64

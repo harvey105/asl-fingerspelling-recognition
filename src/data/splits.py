@@ -32,7 +32,7 @@ import os
 import pandas as pd
 
 from config import CLASS_TO_ID, CLASSES, DOCS_DIR, PROJECT_ROOT, SPLITS_DIR
-from manifests import build_manifests
+from .manifests import build_manifests
 
 EXPECTED = {"train": 24777, "val": 3588, "test": 7200, "excluded": 423}   # measured in 
 COLUMNS = ["filepath", "class_name", "class_id", "volunteer_id", "crop_path", "md5"]
