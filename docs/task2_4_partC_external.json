@@ -1,0 +1,448 @@
+{
+  "timestamp": "2026-10-07T16:09:25",
+  "decision": "D38: 5 per class (4 original, 1 mirrored); D39: headline on originals; D40: 85% scale threshold",
+  "frame_px": 300,
+  "normalisation": "longer side to 300 (INTER_AREA), neutral gray (128,128,128) pad",
+  "photos_total": 180,
+  "photos_original": 144,
+  "photos_mirrored": 36,
+  "headline_set": "originals only",
+  "per_class_original": {
+    "0": 4,
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 4,
+    "9": 4,
+    "A": 4,
+    "B": 4,
+    "C": 4,
+    "D": 4,
+    "E": 4,
+    "F": 4,
+    "G": 4,
+    "H": 4,
+    "I": 4,
+    "J": 4,
+    "K": 4,
+    "L": 4,
+    "M": 4,
+    "N": 4,
+    "O": 4,
+    "P": 4,
+    "Q": 4,
+    "R": 4,
+    "S": 4,
+    "T": 4,
+    "U": 4,
+    "V": 4,
+    "W": 4,
+    "X": 4,
+    "Y": 4,
+    "Z": 4
+  },
+  "per_class_mirrored": {
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1,
+    "7": 1,
+    "8": 1,
+    "9": 1,
+    "A": 1,
+    "B": 1,
+    "C": 1,
+    "D": 1,
+    "E": 1,
+    "F": 1,
+    "G": 1,
+    "H": 1,
+    "I": 1,
+    "J": 1,
+    "K": 1,
+    "L": 1,
+    "M": 1,
+    "N": 1,
+    "O": 1,
+    "P": 1,
+    "Q": 1,
+    "R": 1,
+    "S": 1,
+    "T": 1,
+    "U": 1,
+    "V": 1,
+    "W": 1,
+    "X": 1,
+    "Y": 1,
+    "Z": 1
+  },
+  "mirror_pairs": [
+    {
+      "a": "0/hck_0_01.jpg",
+      "b": "0/hck_0_02.jpg",
+      "class_name": "0",
+      "d_flip": 0,
+      "d_orig": 41
+    },
+    {
+      "a": "1/hck_1_01.jpg",
+      "b": "1/hck_1_02.jpg",
+      "class_name": "1",
+      "d_flip": 0,
+      "d_orig": 52
+    },
+    {
+      "a": "2/hck_2_01.jpg",
+      "b": "2/hck_2_02.jpg",
+      "class_name": "2",
+      "d_flip": 0,
+      "d_orig": 43
+    },
+    {
+      "a": "3/hck_3_01.jpg",
+      "b": "3/hck_3_02.jpg",
+      "class_name": "3",
+      "d_flip": 0,
+      "d_orig": 46
+    },
+    {
+      "a": "4/hck_4_01.jpg",
+      "b": "4/hck_4_02.jpg",
+      "class_name": "4",
+      "d_flip": 0,
+      "d_orig": 48
+    },
+    {
+      "a": "5/hck_5_01.jpg",
+      "b": "5/hck_5_02.jpg",
+      "class_name": "5",
+      "d_flip": 0,
+      "d_orig": 44
+    },
+    {
+      "a": "6/hck_6_01.jpg",
+      "b": "6/hck_6_02.jpg",
+      "class_name": "6",
+      "d_flip": 0,
+      "d_orig": 47
+    },
+    {
+      "a": "7/hck_7_01.jpg",
+      "b": "7/hck_7_02.jpg",
+      "class_name": "7",
+      "d_flip": 0,
+      "d_orig": 51
+    },
+    {
+      "a": "8/hck_8_01.jpg",
+      "b": "8/hck_8_02.jpg",
+      "class_name": "8",
+      "d_flip": 0,
+      "d_orig": 51
+    },
+    {
+      "a": "9/hck_9_01.jpg",
+      "b": "9/hck_9_02.jpg",
+      "class_name": "9",
+      "d_flip": 0,
+      "d_orig": 47
+    },
+    {
+      "a": "A/hck_A_01.jpg",
+      "b": "A/hck_A_02.jpg",
+      "class_name": "A",
+      "d_flip": 0,
+      "d_orig": 48
+    },
+    {
+      "a": "B/hck_B_01.jpg",
+      "b": "B/hck_B_02.jpg",
+      "class_name": "B",
+      "d_flip": 0,
+      "d_orig": 47
+    },
+    {
+      "a": "C/hck_C_01.jpg",
+      "b": "C/hck_C_02.jpg",
+      "class_name": "C",
+      "d_flip": 0,
+      "d_orig": 40
+    },
+    {
+      "a": "D/hck_D_01.jpg",
+      "b": "D/hck_D_02.jpg",
+      "class_name": "D",
+      "d_flip": 0,
+      "d_orig": 48
+    },
+    {
+      "a": "E/hck_E_01.jpg",
+      "b": "E/hck_E_02.jpg",
+      "class_name": "E",
+      "d_flip": 0,
+      "d_orig": 48
+    },
+    {
+      "a": "F/hck_F_01.jpg",
+      "b": "F/hck_F_02.jpg",
+      "class_name": "F",
+      "d_flip": 0,
+      "d_orig": 41
+    },
+    {
+      "a": "G/hck_G_01.jpg",
+      "b": "G/hck_G_02.jpg",
+      "class_name": "G",
+      "d_flip": 0,
+      "d_orig": 53
+    },
+    {
+      "a": "H/hck_H_01.jpg",
+      "b": "H/hck_H_02.jpg",
+      "class_name": "H",
+      "d_flip": 0,
+      "d_orig": 58
+    },
+    {
+      "a": "I/hck_I_01.jpg",
+      "b": "I/hck_I_02.jpg",
+      "class_name": "I",
+      "d_flip": 0,
+      "d_orig": 49
+    },
+    {
+      "a": "J/hck_J_01.jpg",
+      "b": "J/hck_J_02.jpg",
+      "class_name": "J",
+      "d_flip": 0,
+      "d_orig": 54
+    },
+    {
+      "a": "K/hck_K_01.jpg",
+      "b": "K/hck_K_02.jpg",
+      "class_name": "K",
+      "d_flip": 0,
+      "d_orig": 41
+    },
+    {
+      "a": "L/hck_L_01.jpg",
+      "b": "L/hck_L_02.jpg",
+      "class_name": "L",
+      "d_flip": 0,
+      "d_orig": 38
+    },
+    {
+      "a": "M/hck_M_01.jpg",
+      "b": "M/hck_M_02.jpg",
+      "class_name": "M",
+      "d_flip": 0,
+      "d_orig": 45
+    },
+    {
+      "a": "N/hck_N_01.jpg",
+      "b": "N/hck_N_02.jpg",
+      "class_name": "N",
+      "d_flip": 0,
+      "d_orig": 49
+    },
+    {
+      "a": "O/hck_O_01.jpg",
+      "b": "O/hck_O_02.jpg",
+      "class_name": "O",
+      "d_flip": 0,
+      "d_orig": 36
+    },
+    {
+      "a": "P/hck_P_01.jpg",
+      "b": "P/hck_P_02.jpg",
+      "class_name": "P",
+      "d_flip": 0,
+      "d_orig": 56
+    },
+    {
+      "a": "Q/hck_Q_01.jpg",
+      "b": "Q/hck_Q_02.jpg",
+      "class_name": "Q",
+      "d_flip": 0,
+      "d_orig": 49
+    },
+    {
+      "a": "R/hck_R_01.jpg",
+      "b": "R/hck_R_02.jpg",
+      "class_name": "R",
+      "d_flip": 0,
+      "d_orig": 43
+    },
+    {
+      "a": "S/hck_S_01.jpg",
+      "b": "S/hck_S_02.jpg",
+      "class_name": "S",
+      "d_flip": 0,
+      "d_orig": 48
+    },
+    {
+      "a": "T/hck_T_01.jpg",
+      "b": "T/hck_T_02.jpg",
+      "class_name": "T",
+      "d_flip": 0,
+      "d_orig": 53
+    },
+    {
+      "a": "U/hck_U_01.jpg",
+      "b": "U/hck_U_02.jpg",
+      "class_name": "U",
+      "d_flip": 0,
+      "d_orig": 49
+    },
+    {
+      "a": "V/hck_V_01.jpg",
+      "b": "V/hck_V_02.jpg",
+      "class_name": "V",
+      "d_flip": 0,
+      "d_orig": 50
+    },
+    {
+      "a": "W/hck_W_01.jpg",
+      "b": "W/hck_W_02.jpg",
+      "class_name": "W",
+      "d_flip": 0,
+      "d_orig": 51
+    },
+    {
+      "a": "X/hck_X_01.jpg",
+      "b": "X/hck_X_02.jpg",
+      "class_name": "X",
+      "d_flip": 0,
+      "d_orig": 45
+    },
+    {
+      "a": "Y/hck_Y_01.jpg",
+      "b": "Y/hck_Y_02.jpg",
+      "class_name": "Y",
+      "d_flip": 0,
+      "d_orig": 51
+    },
+    {
+      "a": "Z/hck_Z_01.jpg",
+      "b": "Z/hck_Z_02.jpg",
+      "class_name": "Z",
+      "d_flip": 0,
+      "d_orig": 56
+    }
+  ],
+  "training_scale_range_p1_p99": [
+    0.7467,
+    1.5887
+  ],
+  "domain_min_frac_gate": 0.85,
+  "external_fraction_in_range": 0.8778,
+  "external_scale_median_by_class": {
+    "0": 0.7467,
+    "1": 1.0616,
+    "2": 1.037,
+    "3": 1.037,
+    "4": 0.9912,
+    "5": 1.1371,
+    "6": 1.1371,
+    "7": 1.1728,
+    "8": 1.0667,
+    "9": 0.9614,
+    "A": 1.7099,
+    "B": 1.1034,
+    "C": 1.5342,
+    "D": 1.0228,
+    "E": 1.4088,
+    "F": 0.9697,
+    "G": 1.3254,
+    "H": 1.28,
+    "I": 1.2948,
+    "J": 1.6842,
+    "K": 1.1728,
+    "L": 0.9655,
+    "M": 1.8667,
+    "N": 1.6842,
+    "O": 1.3413,
+    "P": 1.3413,
+    "Q": 1.3333,
+    "R": 1.0228,
+    "S": 1.75,
+    "T": 1.5775,
+    "U": 1.0,
+    "V": 1.037,
+    "W": 0.9782,
+    "X": 1.3413,
+    "Y": 1.1487,
+    "Z": 1.1371
+  },
+  "blank_review_flags": [],
+  "gates": {
+    "folders_are_classes": {
+      "pass": true,
+      "detail": "bad: []"
+    },
+    "filenames_match_folder": {
+      "pass": true,
+      "detail": "bad: []"
+    },
+    "every_photo_decodes": {
+      "pass": true,
+      "detail": "failed: []"
+    },
+    "filenames_unique_per_class": {
+      "pass": true,
+      "detail": "0 duplicates"
+    },
+    "total_is_180": {
+      "pass": true,
+      "detail": "180 photos (144 orig, 36 mirrored)"
+    },
+    "exactly_5_per_class": {
+      "pass": true,
+      "detail": "all 36 at 5"
+    },
+    "exactly_4_original_per_class": {
+      "pass": true,
+      "detail": "all 36 at 4"
+    },
+    "exactly_1_mirrored_per_class": {
+      "pass": true,
+      "detail": "all 36 at 1"
+    },
+    "mirror_pairs_are_original_plus_mirrored": {
+      "pass": true,
+      "detail": "0 pairs with wrong source labels: []"
+    },
+    "every_mirrored_has_partner": {
+      "pass": true,
+      "detail": "mirrored photos with no detected partner: []"
+    },
+    "volunteer_names_are_text": {
+      "pass": true,
+      "detail": ""
+    },
+    "no_mendeley_duplicates": {
+      "pass": true,
+      "detail": "0 byte-identical matches"
+    },
+    "every_photo_cropped": {
+      "pass": true,
+      "detail": "180 of 180"
+    },
+    "domain_scale_in_training_range": {
+      "pass": true,
+      "detail": "87.8% inside [0.747, 1.589] (threshold 85%, D40)"
+    },
+    "manifest_read_back": {
+      "pass": true,
+      "detail": ""
+    }
+  },
+  "passed": true
+}

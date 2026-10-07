@@ -5,19 +5,28 @@ description = "Real-Time American Sign Language (ASL) Fingerspelling Recognition
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
 dependencies = [
+    # Core Deep Learning Framework
     "torch>=2.2.0",
     "torchvision>=0.17.0",
+
+    # Computer Vision, Preprocessing & Augmentations
     "opencv-python>=4.9.0.80",
-    "mediapipe>=0.10.14",
+    "mediapipe==0.10.14",
     "albumentations>=1.4.0",
     "pillow>=10.2.0",
+
+    # Data Handling & Scientific Computing
     "numpy>=1.24.0,<2.0.0",
     "pandas>=2.1.0",
     "scipy>=1.11.0",
+
+    # Metrics, Analytics & Visualizations
     "scikit-learn>=1.4.0",
     "matplotlib>=3.8.0",
     "seaborn>=0.13.0",
     "tqdm>=4.66.0",
+
+    # Dashboard & Interactive Demo
     "gradio>=4.20.0",
     "streamlit>=1.32.0",
 ]
@@ -28,9 +37,5 @@ dev = [
     "ipykernel>=6.29.0",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
+[tool.uv]
+package = false

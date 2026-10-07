@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-10-03T10:14:28",
+  "data_dir": "data/raw/asl_alphabet_train",
+  "expected_total": 87000,
+  "per_class_counts": {
+    "A": 3000,
+    "B": 3000,
+    "C": 3000,
+    "D": 3000,
+    "E": 3000,
+    "F": 3000,
+    "G": 3000,
+    "H": 3000,
+    "I": 3000,
+    "J": 3000,
+    "K": 3000,
+    "L": 3000,
+    "M": 3000,
+    "N": 3000,
+    "O": 3000,
+    "P": 3000,
+    "Q": 3000,
+    "R": 3000,
+    "S": 3000,
+    "T": 3000,
+    "U": 3000,
+    "V": 3000,
+    "W": 3000,
+    "X": 3000,
+    "Y": 3000,
+    "Z": 3000,
+    "del": 3000,
+    "nothing": 3000,
+    "space": 3000
+  },
+  "total_images": 87000,
+  "issue_counts": {},
+  "size_counts": {
+    "(200, 200)": 87000
+  },
+  "mode_counts": {
+    "RGB": 87000
+  },
+  "examples": {},
+  "stray_file_count": 0,
+  "stray_files_first_50": [],
+  "failures": [],
+  "passed": true
+}

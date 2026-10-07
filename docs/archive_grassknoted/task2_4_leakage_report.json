@@ -1,0 +1,35 @@
+{
+  "thresholds": [
+    0,
+    1,
+    2,
+    3,
+    5
+  ],
+  "held_out_vs_train": {
+    "val": {
+      "n": 13050,
+      "median_nn_distance": 2.0,
+      "frac_with_train_neighbour_d<=0": 0.0,
+      "frac_with_train_neighbour_d<=1": 0.3995,
+      "frac_with_train_neighbour_d<=2": 0.6687,
+      "frac_with_train_neighbour_d<=3": 0.8218,
+      "frac_with_train_neighbour_d<=5": 0.9506
+    },
+    "test": {
+      "n": 13050,
+      "median_nn_distance": 2.0,
+      "frac_with_train_neighbour_d<=0": 0.0,
+      "frac_with_train_neighbour_d<=1": 0.4021,
+      "frac_with_train_neighbour_d<=2": 0.6629,
+      "frac_with_train_neighbour_d<=3": 0.8186,
+      "frac_with_train_neighbour_d<=5": 0.9518
+    }
+  },
+  "filename_adjacency": {
+    "median_consecutive_distance": 1.0,
+    "median_random_pair_distance": 27.0,
+    "frac_consecutive_d<=1": 0.5259,
+    "frac_random_d<=1": 0.0021
+  }
+}

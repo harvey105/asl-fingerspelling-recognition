@@ -47,6 +47,8 @@ def run_smoke_test():
     print(f"[OK] NumPy: {np.__version__}")
     print(f"[OK] Pandas: {pd.__version__}")
     print(f"[OK] Scikit-Learn: {sklearn.__version__}")
+    import google.protobuf
+    print(f"[OK] protobuf: {google.protobuf.__version__}")
 
     # 4. Check UI
     import gradio as gr

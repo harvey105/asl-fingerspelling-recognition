@@ -1,8 +1,8 @@
 # ==============================================================================
-# ASL Fingerspelling Recognition - Strict .gitignore
+# ASL Fingerspelling Recognition - Production .gitignore
 # ==============================================================================
 
-# Python Bytecode & Cache
+# --- Python Bytecode, Caches & Environments ---
 __pycache__/
 *.py[cod]
 *$py.class
@@ -11,38 +11,56 @@ __pycache__/
 build/
 dist/
 *.egg-info/
-
-# Virtual Environments
 .venv/
 venv/
 ENV/
 env/
+.pytest_cache/
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
 
-# Large Datasets (Keep directory skeletons via .gitkeep)
+# --- Raw & Processed Datasets (DO NOT COMMIT IMAGES) ---
+# Raw datasets
 data/raw/*
 !data/raw/.gitkeep
+
+# Intermediate caches and processed logs
 data/processed/*
 !data/processed/.gitkeep
-data/backgrounds/*
-!data/backgrounds/.gitkeep
+
+# Generated crops from Task 2.2 (35,988 images)
+data/processed_crops/
+data/processed_crops/*
+
+# Intermediate normalized & cropped frames from Task 2.4
+data/external_processed/
+data/external_processed/*
+data/external_crops/
+data/external_crops/*
+
+# External test raw photos (Photos untracked; manifest TRACKED)
 data/external_test/*
 !data/external_test/.gitkeep
+!data/external_test/manifest.csv
 
-# Track split metadata CSVs
-!data/splits/*.csv
+# Allow background bank directory placeholder
+data/backgrounds/*
+!data/backgrounds/.gitkeep
 
-# Model Checkpoints & Large Artifacts
+# --- Track All Split Metadata & Checksums (Task 2.4) ---
+# Allow all CSVs, JSON mapping, and SHA256 checksums in data/splits/
+!data/splits/*
+!data/splits/.gitkeep
+
+# --- Model Checkpoints & Large Weights ---
 weights/*.pt
 weights/*.pth
 weights/*.onnx
 !weights/.gitkeep
 
-# Jupyter Notebook Checkpoints
-.ipynb_checkpoints
-*/.ipynb_checkpoints/*
-
-# IDEs & System files
+# --- OS & IDE Metadata ---
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+*.tmp

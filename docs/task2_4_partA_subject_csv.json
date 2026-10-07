@@ -1,0 +1,114 @@
+{
+  "timestamp": "2026-10-06T18:08:41",
+  "counts": {
+    "train": 24777,
+    "val": 3588,
+    "test": 7200,
+    "excluded": 423
+  },
+  "per_class_train": {
+    "0": 695,
+    "1": 694,
+    "2": 693,
+    "3": 699,
+    "4": 699,
+    "5": 675,
+    "6": 696,
+    "7": 697,
+    "8": 695,
+    "9": 687,
+    "A": 694,
+    "B": 694,
+    "C": 687,
+    "D": 696,
+    "E": 690,
+    "F": 700,
+    "G": 688,
+    "H": 698,
+    "I": 595,
+    "J": 696,
+    "K": 686,
+    "L": 695,
+    "M": 697,
+    "N": 684,
+    "O": 696,
+    "P": 692,
+    "Q": 698,
+    "R": 689,
+    "S": 699,
+    "T": 698,
+    "U": 697,
+    "V": 599,
+    "W": 699,
+    "X": 690,
+    "Y": 691,
+    "Z": 699
+  },
+  "gates": {
+    "count_train": {
+      "pass": true,
+      "detail": "24777 (expected 24777)"
+    },
+    "count_val": {
+      "pass": true,
+      "detail": "3588 (expected 3588)"
+    },
+    "count_test": {
+      "pass": true,
+      "detail": "7200 (expected 7200)"
+    },
+    "count_excluded": {
+      "pass": true,
+      "detail": "423 (expected 423)"
+    },
+    "no_signer_in_two_splits": {
+      "pass": true,
+      "detail": "train [1, 2, 3, 4, 5, 6, 7], val [8], test [9, 10]"
+    },
+    "all_classes_in_train": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "all_classes_in_val": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "all_classes_in_test": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "train_md5_unique": {
+      "pass": true,
+      "detail": ""
+    },
+    "class_name_matches_class_id": {
+      "pass": true,
+      "detail": ""
+    },
+    "every_crop_exists": {
+      "pass": true,
+      "detail": "missing 0"
+    },
+    "excluded_point_to_kept_train_files": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_train": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_val": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_test": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_excluded": {
+      "pass": true,
+      "detail": ""
+    }
+  },
+  "passed": true
+}

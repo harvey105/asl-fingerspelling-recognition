@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-10-05T23:33:23",
+  "seed": 42,
+  "margin_frac": 0.2,
+  "crop_size": 224,
+  "pad_value": [
+    128,
+    128,
+    128
+  ],
+  "output_format": "png (lossless)",
+  "resample": "bilinear (INTER_LINEAR)",
+  "full_frame_classes": [
+    "0"
+  ],
+  "method_definitions": {
+    "mediapipe": "single-hand MediaPipe box with margin",
+    "skin": "YCrCb skin-fallback box with margin",
+    "class_rule_full": "class-0 rule: full frame, no detection attempted",
+    "undetected_full": "detector failed on a non-rule class: full frame kept",
+    "blank": "excluded (blank_frames.csv)"
+  },
+  "mediapipe": {
+    "static_image_mode": true,
+    "max_num_hands": 1,
+    "min_detection_confidence": 0.5
+  },
+  "blank_frames_excluded": 12,
+  "files_on_disk": 35988,
+  "summary": {
+    "n": 36000,
+    "method_counts": {
+      "mediapipe": 34980,
+      "class_rule_full": 1000,
+      "blank": 12,
+      "undetected_full": 8
+    },
+    "method_rates": {
+      "mediapipe": 0.9717,
+      "class_rule_full": 0.0278,
+      "blank": 0.0003,
+      "undetected_full": 0.0002
+    },
+    "written": 35988,
+    "box_touches_border_rate_by_method": {
+      "mediapipe": 0.0077
+    },
+    "median_scale_by_method": {
+      "class_rule_full": 0.7467,
+      "mediapipe": 0.9412,
+      "undetected_full": 0.7467
+    },
+    "errors": []
+  }
+}

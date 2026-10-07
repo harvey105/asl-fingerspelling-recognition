@@ -1,0 +1,292 @@
+{
+  "timestamp": "2026-10-06T18:14:33",
+  "seed": 42,
+  "method": "two-stage stratified split: test 15%, then val 15% of the remainder",
+  "universe": 35988,
+  "counts": {
+    "train": 25190,
+    "val": 5399,
+    "test": 5399
+  },
+  "per_class": {
+    "0": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "1": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "2": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "3": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "4": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "5": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "6": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "7": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "8": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "9": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "A": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "B": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "C": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "D": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "E": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "F": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "G": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "H": {
+      "total": 988,
+      "train": 690,
+      "val": 149,
+      "test": 149
+    },
+    "I": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "J": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "K": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "L": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "M": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "N": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "O": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "P": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "Q": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "R": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "S": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "T": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "U": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "V": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "W": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "X": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "Y": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    },
+    "Z": {
+      "total": 1000,
+      "train": 700,
+      "val": 150,
+      "test": 150
+    }
+  },
+  "max_per_class_deviation": 0.8,
+  "leakage_informational": {
+    "val_rows_with_train_md5": 113,
+    "test_rows_with_train_md5": 118,
+    "val_rows": 5399,
+    "test_rows": 5399,
+    "md5_groups_crossing_splits": 221
+  },
+  "gates": {
+    "universe_is_35988": {
+      "pass": true,
+      "detail": "35988"
+    },
+    "no_blank_rows": {
+      "pass": true,
+      "detail": ""
+    },
+    "splits_sum_to_universe": {
+      "pass": true,
+      "detail": "35988 of 35988"
+    },
+    "no_filepath_in_two_splits": {
+      "pass": true,
+      "detail": ""
+    },
+    "all_classes_in_train": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "all_classes_in_val": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "all_classes_in_test": {
+      "pass": true,
+      "detail": "36 classes"
+    },
+    "per_class_within_one_of_15pct": {
+      "pass": true,
+      "detail": "max deviation 0.80 images"
+    },
+    "class_name_matches_class_id": {
+      "pass": true,
+      "detail": ""
+    },
+    "every_crop_exists": {
+      "pass": true,
+      "detail": "missing 0"
+    },
+    "read_back_train": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_val": {
+      "pass": true,
+      "detail": ""
+    },
+    "read_back_test": {
+      "pass": true,
+      "detail": ""
+    }
+  },
+  "passed": true
+}
