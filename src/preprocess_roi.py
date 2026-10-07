@@ -1,21 +1,21 @@
 """
 src/preprocess_roi.py
-Task 2.2, Part B-2 (revised): hand crop, 20% margin, letterbox to 224x224, full dataset.
+,  (revised): hand crop, 20% margin, letterbox to 224x224, full dataset.
 
 Every image receives exactly one method label. The label records WHY it was or was not
 hand-cropped, so the report cannot conflate a fixed rule with a detection failure:
 
-  mediapipe         MediaPipe single-hand box, 20% margin                    (D15)
+  mediapipe         MediaPipe single-hand box, 20% margin                    
   skin              YCrCb skin-fallback box (rejected if touching border or oversized)
-  class_rule_full   class 0 only: full frame by a fixed class rule            (D19)
-  undetected_full   non-zero class where MediaPipe and skin both failed: full frame (D20)
-  blank             listed in blank_frames.csv: not written                  (D18)
+  class_rule_full   class 0 only: full frame by a fixed class rule            
+  undetected_full   non-zero class where MediaPipe and skin both failed: full frame 
+  blank             listed in blank_frames.csv: not written                  
 
 Prerequisite: data/processed/blank_frames.csv, written by src/blank_scan.py --threshold T.
 Refuses to run if data/processed_crops already holds files (stale-output guard).
 
 Per image the log also records margin_side and scale (= 224 / margin_side), the factor by
-which the raw pixels are resampled. Part C uses scale to measure the class-0 size confound.
+which the raw pixels are resampled.  uses scale to measure the class-0 size confound.
 
 Read-only on data/raw/. Writes:
   data/processed_crops/<class folders>/*.png
@@ -46,13 +46,13 @@ from roi_detector import (IMG_SIZE, MAX_NUM_HANDS, MP_MIN_DETECTION_CONF, descri
                           detect, make_hands)
 
 SEED = 42
-MARGIN_FRAC = 0.20                       # D15
+MARGIN_FRAC = 0.20                       # 
 CROP_SIZE = 224
 PAD_VALUE = (128, 128, 128)              # neutral gray, identical in BGR and RGB
 NUM_WORKERS = 8
 PNG_PARAMS = [cv2.IMWRITE_PNG_COMPRESSION, 3]
 FULL_BOX = (0, 0, IMG_SIZE - 1, IMG_SIZE - 1)
-FULL_FRAME_CLASSES = {"0"}               # D19: two-handed sign, single-hand box clips a hand
+FULL_FRAME_CLASSES = {"0"}               # : two-handed sign, single-hand box clips a hand
 WRITTEN_METHODS = ["mediapipe", "skin", "class_rule_full", "undetected_full"]
 
 INDEX_CSV = PROCESSED_DIR / "asl_hg_image_index.csv"
@@ -168,7 +168,7 @@ def inspection_grid(res, out):
         with Image.open(png) as im:
             ax.imshow(im.convert("RGB"))
         ax.set_title(f"'{cls}'  P{vol}   [{row['method']}]", fontsize=10, weight="bold")
-    fig.suptitle("Task 2.2 Part B: 20% margin, letterboxed 224x224 PNG crops, one seeded "
+    fig.suptitle(" 20% margin, letterboxed 224x224 PNG crops, one seeded "
                  "sample per volunteer (method in brackets)", fontsize=11, weight="bold")
     fig.tight_layout()
     fig.savefig(out, dpi=200)
@@ -177,7 +177,7 @@ def inspection_grid(res, out):
 
 def main():
     print("=" * 70)
-    print("ASL-HG: TASK 2.2 PART B-2 (HAND CROP, 20% MARGIN, LETTERBOX, FULL DATASET)")
+    print("ASL-HG:  (HAND CROP, 20% MARGIN, LETTERBOX, FULL DATASET)")
     print("=" * 70)
 
     if not BLANK_FRAMES_CSV.exists():
@@ -192,7 +192,7 @@ def main():
     df = pd.read_csv(INDEX_CSV, dtype={"filepath": str, "label": str})
     blank_set = set(pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"])
     print(f"Images: {len(df):,}   blank (excluded from crops): {len(blank_set):,}")
-    print(f"Full-frame classes by rule (D19): {sorted(FULL_FRAME_CLASSES)}")
+    print(f"Full-frame classes by rule : {sorted(FULL_FRAME_CLASSES)}")
 
     CROPS_DIR.mkdir(parents=True, exist_ok=True)
     tasks = [(r.filepath, r.label, int(r.volunteer), r.filepath in blank_set, CROPS_DIR)
@@ -220,7 +220,7 @@ def main():
     on_disk = sum(1 for _ in CROPS_DIR.rglob("*.png"))
     print(f"\nPNG files on disk: {on_disk:,} (log says {s['written']:,})")
     if on_disk != s["written"]:
-        print("  [WARN] mismatch between log and disk; investigate before Part C.")
+        print("  [WARN] mismatch between log and disk; investigate before .")
 
     inspection_grid(res_df, INSPECT_FIG)
     print(f"Inspection figure: {INSPECT_FIG.relative_to(PROJECT_ROOT).as_posix()}")

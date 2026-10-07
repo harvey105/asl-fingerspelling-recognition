@@ -1,11 +1,11 @@
 """
 src/dataloaders.py
-Task 2.3 Part B: DataLoader factory for the subject-independent splits.
+ DataLoader factory for the subject-independent splits.
 
 get_dataloaders(train, val, test, ...) accepts DataFrames or CSV paths and returns
 (train_loader, val_loader, test_loader).
 
-Settings (roadmap Task 2.3):
+Settings (roadmap ):
   batch_size=64, num_workers=DEFAULT_WORKERS (8), persistent_workers=True.
   pin_memory = torch.cuda.is_available().
   worker_init_fn limits each worker to one intra-op thread. Without this, 8 workers each start

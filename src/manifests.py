@@ -1,18 +1,18 @@
 """
 src/manifests.py
-Task 2.3 Part A: subject-independent manifests over the verified crop output, built in memory.
+ subject-independent manifests over the verified crop output, built in memory.
 
 Inputs:
   data/processed/asl_hg_image_index.csv   per-image md5, label, volunteer
   data/processed/roi_crop_log.csv         per-image method (what was actually written)
 
 Rules:
-  - Only images with a written crop are included. Blank frames are excluded (D18).
-  - Split by signer from config.py: train P1-P7, val P8, test P9-P10 (D9).
-  - Exact-copy de-duplication in TRAIN ONLY (D10): from each byte-identical group, keep one
+  - Only images with a written crop are included. Blank frames are excluded .
+  - Split by signer from config.py: train P1-P7, val P8, test P9-P10 .
+  - Exact-copy de-duplication in TRAIN ONLY : from each byte-identical group, keep one
     file (first by filepath). Val and test are not de-duplicated, so the evaluation set is the
     full crop output. Within-signer repeats there are reported, not removed.
-  - Writes nothing. Task 2.4 freezes the result to CSV.
+  - Writes nothing.  freezes the result to CSV.
 
 Run as a module through check_dataset_part_a.py; no standalone run.
 """
@@ -69,10 +69,10 @@ def build_manifests():
         raise ValueError("A blank frame has a written crop. Check preprocess_roi.py.")
 
     train_all = df[df["split"] == "train"]
-    keep_mask = ~train_all.duplicated(subset="md5", keep="first")          # D10
+    keep_mask = ~train_all.duplicated(subset="md5", keep="first")          # 
     train = train_all[keep_mask]
     excluded = train_all[~keep_mask].assign(
-        kept_filepath=lambda d: d["md5"].map(train.set_index("md5")["filepath"]))          # D10
+        kept_filepath=lambda d: d["md5"].map(train.set_index("md5")["filepath"]))          # 
     val = df[df["split"] == "val"]
     test = df[df["split"] == "test"]
 

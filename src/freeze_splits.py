@@ -1,10 +1,10 @@
 """
 src/freeze_splits.py
-Task 2.4 Part A: freeze the subject-independent split to immutable CSV files.
+ freeze the subject-independent split to immutable CSV files.
 
 Writes (write-once; the script refuses to overwrite any existing file):
-  data/splits/subject_train.csv          24,777 rows, P1-P7, after train de-duplication (D10)
-  data/splits/subject_val.csv             3,588 rows, P8 (D18, blanks excluded)
+  data/splits/subject_train.csv          24,777 rows, P1-P7, after train de-duplication 
+  data/splits/subject_val.csv             3,588 rows, P8 (, blanks excluded)
   data/splits/subject_test.csv            7,200 rows, P9-P10
   data/splits/excluded_train_copies.csv     423 rows, the removed duplicates and the kept file
   data/splits/class_mapping.json          class_id <-> class_name, from config.py
@@ -34,7 +34,7 @@ import pandas as pd
 from config import CLASS_TO_ID, CLASSES, DOCS_DIR, PROJECT_ROOT, SPLITS_DIR
 from manifests import build_manifests
 
-EXPECTED = {"train": 24777, "val": 3588, "test": 7200, "excluded": 423}   # measured in Task 2.3
+EXPECTED = {"train": 24777, "val": 3588, "test": 7200, "excluded": 423}   # measured in 
 COLUMNS = ["filepath", "class_name", "class_id", "volunteer_id", "crop_path", "md5"]
 REPORT = DOCS_DIR / "task2_4_partA_subject_csv.json"
 
@@ -110,7 +110,7 @@ def write_and_verify(frame, path, cols):
 
 def main():
     print("=" * 70)
-    print("ASL-HG: TASK 2.4 PART A (FREEZE SUBJECT SPLIT TO CSV)")
+    print("ASL-HG:  (FREEZE SUBJECT SPLIT TO CSV)")
     print("=" * 70)
 
     existing = [p for p in list(TARGETS.values()) + [MAPPING, CHECKSUMS] if p.exists()]

@@ -1,7 +1,7 @@
 """
 src/roi_detector.py
-Shared hand-box detector for Task 2.2. Imported by hand_roi_audit.py (Part A) and
-preprocess_roi.py (Part B), so the audit and the crop cannot drift apart.
+Shared hand-box detector for . Imported by hand_roi_audit.py () and
+preprocess_roi.py (), so the audit and the crop cannot drift apart.
 
 Order for one 300x300 frame:
   1. MediaPipe Hands, single hand. Box = min/max over the 21 landmarks.

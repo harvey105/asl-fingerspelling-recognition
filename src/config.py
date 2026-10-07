@@ -13,31 +13,31 @@ RAW_DIR = PROJECT_ROOT / "data" / "raw"
 SPLITS_DIR = PROJECT_ROOT / "data" / "splits"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"   # our outputs only
 DOCS_DIR = PROJECT_ROOT / "docs"
-CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"   # Task 2.2 Part B output (PNG)
-BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"   # Task 2.2 Part B-1 output
+CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"   #  output (PNG)
+BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"   #  output
 
 # Class set: digits first, then letters. Digit 0 is the two-handed ASL zero sign (paper, Table 1).
 CLASSES = [str(d) for d in range(10)] + [chr(c) for c in range(ord("A"), ord("Z") + 1)]
 NUM_CLASSES = len(CLASSES)                      # expected 36
 CLASS_TO_ID = {c: i for i, c in enumerate(CLASSES)}
 
-# Expectations from the paper, dataset page, and roadmap. Part A checks these; it does not assume them.
+# Expectations from the paper, dataset page, and roadmap.  checks these; it does not assume them.
 NUM_VOLUNTEERS = 10
 IMAGES_PER_VOLUNTEER_PER_CLASS = 100
 IMAGES_PER_CLASS = 1000
 TOTAL_IMAGES = IMAGES_PER_CLASS * NUM_CLASSES   # expected 36,000
 EXPECTED_SIZE = (300, 300)
-CROP_SIZE_PX = 224   # Task 2.2 letterbox output; must match preprocess_roi.CROP_SIZE
+CROP_SIZE_PX = 224   #  letterbox output; must match preprocess_roi.CROP_SIZE
 EXPECTED_MODE = "RGB"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg"}
 
-# Subject-independent split (roadmap Task 2.4). Used in Part B onward.
+# Subject-independent split (roadmap ). Used in  onward.
 TRAIN_VOLUNTEERS = [1, 2, 3, 4, 5, 6, 7]
 VAL_VOLUNTEERS = [8]
 TEST_VOLUNTEERS = [9, 10]
 
 # Filenames are expected as P<volunteer>_<class>_<index>.<ext>, e.g. P3_K_0042.jpg (roadmap).
-# Part A verifies this pattern against the real files.
+#  verifies this pattern against the real files.
 FILENAME_RE = re.compile(r"^P(\d+)_([0-9A-Za-z]+)_(\d+)\.[A-Za-z0-9]+$")
 
 

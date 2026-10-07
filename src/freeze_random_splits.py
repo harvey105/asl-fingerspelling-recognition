@@ -1,13 +1,13 @@
 """
 src/freeze_random_splits.py
-Task 2.4 Part B: random stratified 70/15/15 split (seed 42), for Ablation 1 only.
+ random stratified 70/15/15 split (seed 42), for Ablation 1 only.
 
-Universe: the 35,988 written crops (blank frames excluded, D18). No de-duplication: this is the
+Universe: the 35,988 written crops (blank frames excluded, ). No de-duplication: this is the
 naive protocol that Ablation 1 compares against the subject split. The random split is NOT the
-primary evaluation (D11).
+primary evaluation .
 
 Method: the same two-stage stratified split as src/audit_random_split.py (test first, then val
-from the remainder), so the Task 2.1 leakage numbers remain comparable.
+from the remainder), so the  leakage numbers remain comparable.
 
 Writes (write-once; refuses to overwrite):
   data/splits/random_train.csv, random_val.csv, random_test.csv
@@ -76,7 +76,7 @@ def leakage(train, val, test):
 
 def main():
     print("=" * 70)
-    print("ASL-HG: TASK 2.4 PART B (RANDOM STRATIFIED SPLIT, ABLATION 1 ONLY)")
+    print("ASL-HG:  (RANDOM STRATIFIED SPLIT, ABLATION 1 ONLY)")
     print("=" * 70)
 
     existing = [p for p in list(TARGETS.values()) + [CHECKSUMS] if p.exists()]

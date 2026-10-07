@@ -1,25 +1,25 @@
 """
 src/prepare_external.py
-Task 2.4 Part C: Normalise, crop, cryptographically check external photos, and generate
+ Normalise, crop, cryptographically check external photos, and generate
 data/external_test/manifest.csv without requiring any external CSV input.
 
 Design Decisions (Academic & Engineering Rationale):
   - Direct File Discovery: Metadata (volunteer_name, class_name, class_id) is inferred
     directly from folder paths and filenames: <member>_<class>_<idx>.jpg.
-  - Photo Set Allocation (D38): Exactly 36 classes x 5 photos = 180 total.
+  - Photo Set Allocation : Exactly 36 classes x 5 photos = 180 total.
     * Exactly 4 original photos per class (contributed by team members).
     * Exactly 1 horizontally mirrored photo per class (hck_<class>_02.jpg).
-    * Headline metrics evaluate ORIGINALS ONLY (D39; 144 photos). All-photo metrics (180) reported second.
-  - Pixel-Level Mirror Verification (D38):
+    * Headline metrics evaluate ORIGINALS ONLY (; 144 photos). All-photo metrics (180) reported second.
+  - Pixel-Level Mirror Verification :
     * Mirroring is verified directly from pixel difference hashing (64-bit dHash, 9x8 grid).
     * Every detected mirror pair must consist of one original and one mirrored photo.
-  - Frame Normalisation (D37):
+  - Frame Normalisation :
     * Longer side scaled to 300 px (Mendeley frame format), shorter side padded to 300x300
       with neutral gray RGB (128, 128, 128) using INTER_AREA downsampling.
-  - Pipeline Identity (D15, D17, D19):
+  - Pipeline Identity (, , ):
     * Reuses preprocess_roi.process_one verbatim: class-0 full-frame rule, MediaPipe detection,
       20% dynamic margin padding, and letterbox padding to 224x224.
-  - Domain-Shift Tolerance (D40):
+  - Domain-Shift Tolerance :
     * Real webcam hands naturally vary in distance compared to laboratory captures.
     * DOMAIN_MIN_FRAC is set to 85% (measured external overlap: ~87.8% inside training p1-p99).
 
@@ -28,7 +28,7 @@ Gates (All must pass for manifest creation):
   filenames unique per class; total is exactly 180; exactly 5 per class; exactly 4 originals
   and 1 mirrored per class; mirror pairs consistent with pixel hashes; volunteer names are text;
   zero byte-identical matches with Mendeley dataset; every photo cropped successfully; >=85%
-  letterbox scale within training p1-p99 range (D40); atomic manifest read-back verification.
+  letterbox scale within training p1-p99 range ; atomic manifest read-back verification.
 
 Writes:
   data/external_test/manifest.csv            (tracked by git; raw photos untracked)
@@ -69,7 +69,7 @@ PER_CLASS_ORIGINAL = 4
 PER_CLASS_MIRRORED = 1
 PER_CLASS_TOTAL = PER_CLASS_ORIGINAL + PER_CLASS_MIRRORED        # 5
 TOTAL = len(CLASS_TO_ID) * PER_CLASS_TOTAL                        # 180
-DOMAIN_MIN_FRAC = 0.85                    # D40: Real-world camera distance domain tolerance
+DOMAIN_MIN_FRAC = 0.85                    # : Real-world camera distance domain tolerance
 TOLERANCE = 1e-3                          # Floating point boundary tolerance
 BLANK_REVIEW = 0.001                      # Blank frame detection threshold
 MIRROR_MAX_DIST = 5                       # dHash threshold for horizontal reflection
@@ -78,7 +78,7 @@ LIST_SHOW = 5
 
 
 def normalise(bgr):
-    """D37: Resizes longest side to 300 px (INTER_AREA) and pads symmetrically to 300x300."""
+    """: Resizes longest side to 300 px (INTER_AREA) and pads symmetrically to 300x300."""
     h, w = bgr.shape[:2]
     s = FRAME / max(h, w)
     nw, nh = max(1, round(w * s)), max(1, round(h * s))
@@ -91,7 +91,7 @@ def normalise(bgr):
 
 
 def dhash_bits(bgr):
-    """64-bit difference hash on 9x8 grid matching Task 2.1 audit resolution."""
+    """64-bit difference hash on 9x8 grid matching  audit resolution."""
     g = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
     s = cv2.resize(g, (9, 8), interpolation=cv2.INTER_AREA).astype(np.int16)
     return (s[:, 1:] > s[:, :-1]).flatten()
@@ -107,7 +107,7 @@ def scan_photos():
     Directly scans data/external_test/ and extracts metadata from file paths:
       - Validates parent folder belongs to 36 valid class names.
       - Enforces <member>_<class>_<idx> naming convention.
-      - Assigns 'source' tag: hck_*_02 is tagged 'mirrored' (D38), all others 'original'.
+      - Assigns 'source' tag: hck_*_02 is tagged 'mirrored' , all others 'original'.
     """
     rows, bad_folder, bad_name = [], [], []
     for p in sorted(EXT_DIR.rglob("*")):
@@ -126,7 +126,7 @@ def scan_photos():
         member = parts[0]
         idx = parts[2]
         
-        # D38 convention: member hck's _02 image is the designated mirrored partner
+        #  convention: member hck's _02 image is the designated mirrored partner
         source = "mirrored" if member == "hck" and idx in {"02", "2"} else "original"
 
         rows.append({
@@ -179,7 +179,7 @@ def short(items):
 
 def main():
     print("=" * 70)
-    print("ASL-HG: TASK 2.4 PART C (EXTERNAL CROP, AUDIT & MANIFEST GENERATOR)")
+    print("ASL-HG:  (EXTERNAL CROP, AUDIT & MANIFEST GENERATOR)")
     print("=" * 70)
 
     # 1. Discover photos directly on disk
@@ -199,7 +199,7 @@ def main():
     index = pd.read_csv(INDEX_CSV, dtype={"md5": str})
     mendeley_md5 = set(index["md5"])
 
-    # 2. Normalise (D37), crop (Task 2.2 pipeline), and record metrics
+    # 2. Normalise , crop ( pipeline), and record metrics
     pr._init_worker()
     log_rows, decode_fail = [], []
     for r in photos.itertuples(index=False):
@@ -213,7 +213,7 @@ def main():
         out_norm.parent.mkdir(parents=True, exist_ok=True)
         cv2.imwrite(str(out_norm), normalise(bgr))
 
-        # Pass through the exact Task 2.2 processing pipeline
+        # Pass through the exact  processing pipeline
         rel_norm = out_norm.relative_to(PROJECT_ROOT).as_posix()
         res = pr.process_one((rel_norm, r.class_name, 0, False, CROP_DIR))
         res["rel_path"] = r.rel_path
@@ -289,7 +289,7 @@ def main():
     gate(results, "no_mendeley_duplicates", dup == 0, f"{dup} byte-identical matches")
     gate(results, "every_photo_cropped", n_total > 0 and len(written) == n_total, f"{len(written)} of {n_total}")
     gate(results, "domain_scale_in_training_range", in_range >= DOMAIN_MIN_FRAC,
-         f"{in_range:.1%} inside [{lo:.3f}, {hi:.3f}] (threshold {DOMAIN_MIN_FRAC:.0%}, D40)")
+         f"{in_range:.1%} inside [{lo:.3f}, {hi:.3f}] (threshold {DOMAIN_MIN_FRAC:.0%}, )")
 
     flagged = log[log["edge_frac_40"] <= BLANK_REVIEW] if len(log) else log
     print(f"\nInformational: blank-review flags (edge_frac_40 <= {BLANK_REVIEW}): {len(flagged)}")
@@ -320,16 +320,16 @@ def main():
     for c in CLASS_TO_ID:
         print(f"  {c:>2}: {per_orig[c]} / {per_mirr[c]}", end="   ")
     print()
-    print(f"Headline benchmark set (originals only, D39) : {n_orig} photos")
+    print(f"Headline benchmark set (originals only, ) : {n_orig} photos")
     print(f"Full benchmark set (originals + mirrored)     : {n_total} photos")
-    print(f"Scale: {in_range:.1%} of external crops inside the training range (D40)")
+    print(f"Scale: {in_range:.1%} of external crops inside the training range ")
     print(f"Manifest: {MANIFEST.relative_to(PROJECT_ROOT).as_posix()} ({n_total} rows)")
     print("VERDICT: PASSED")
 
     # 8. Export JSON report
     report = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
-        "decision": "D38: 5 per class (4 original, 1 mirrored); D39: headline on originals; D40: 85% scale threshold",
+        "decision": ": 5 per class (4 original, 1 mirrored); : headline on originals; : 85% scale threshold",
         "frame_px": FRAME,
         "normalisation": "longer side to 300 (INTER_AREA), neutral gray (128,128,128) pad",
         "photos_total": n_total,
