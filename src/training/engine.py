@@ -74,6 +74,8 @@ class TrainerConfig:
     checkpoint_name: str | None = None
     log_filename: str | None = None
     print_freq: int = 50
+    lr_backbone: float | None = None
+    freeze_epochs: int = 0
 
 
 class Trainer:
@@ -107,12 +109,26 @@ class Trainer:
         )
 
         # Enforce foreach=False for DirectML compatibility
-        self.optimizer = torch.optim.AdamW(
-            self.model.parameters(),
-            lr=self.config.learning_rate,
-            weight_decay=self.config.weight_decay,
-            foreach=False,
-        )
+        if (
+            self.config.lr_backbone is not None
+            and hasattr(self.model, "get_parameter_groups")
+        ):
+            param_groups = self.model.get_parameter_groups(
+                lr_backbone=self.config.lr_backbone,
+                lr_head=self.config.learning_rate,
+                weight_decay=self.config.weight_decay,
+            )
+            self.optimizer = torch.optim.AdamW(
+                param_groups,
+                foreach=False,
+            )
+        else:
+            self.optimizer = torch.optim.AdamW(
+                self.model.parameters(),
+                lr=self.config.learning_rate,
+                weight_decay=self.config.weight_decay,
+                foreach=False,
+            )
 
         self.scheduler = self._build_scheduler()
         self.best_val_f1: float = -1.0
@@ -216,6 +232,18 @@ class Trainer:
         )
 
         for epoch in range(1, self.config.epochs + 1):
+            if self.config.freeze_epochs > 0:
+                if epoch <= self.config.freeze_epochs:
+                    if hasattr(self.model, "freeze_backbone"):
+                        self.model.freeze_backbone()
+                elif epoch == self.config.freeze_epochs + 1:
+                    if hasattr(self.model, "unfreeze_backbone"):
+                        self.model.unfreeze_backbone()
+                        print(
+                            f"--> Epoch {epoch:02d}: Backbone unfrozen for full fine-tuning.",
+                            flush=True,
+                        )
+
             current_lr = float(self.optimizer.param_groups[0]["lr"])
             train_metrics = self.train_epoch(
                 epoch=epoch, total_epochs=self.config.epochs

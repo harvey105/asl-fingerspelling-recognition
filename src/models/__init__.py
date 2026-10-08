@@ -32,10 +32,19 @@ def build_model(model_name: str, num_classes: int = 36, **kwargs: Any) -> nn.Mod
         return SimpleCNN(num_classes=num_classes, **kwargs)
     elif name in ("complex_cnn", "complex", "model_2"):
         return ComplexCNN(num_classes=num_classes, **kwargs)
-    elif name in ("transfer_cnn", "transfer", "mobilenet", "resnet18", "model_3"):
+    elif name in (
+        "transfer_cnn",
+        "transfer",
+        "mobilenet",
+        "mobilenet_v3_small",
+        "mobilenet_v3_large",
+        "resnet",
+        "resnet18",
+        "model_3",
+    ):
         backbone = kwargs.pop("backbone_name", name)
         if backbone in ("transfer_cnn", "transfer", "model_3"):
-            backbone = "mobilenet_v3_small"
+            backbone = "resnet18"
         return TransferCNN(backbone_name=backbone, num_classes=num_classes, **kwargs)
     else:
         raise ValueError(f"Unknown model name: {model_name}")

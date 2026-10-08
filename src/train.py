@@ -32,8 +32,23 @@ def parse_args() -> argparse.Namespace:
         "--model",
         type=str,
         default="simple_cnn",
-        choices=["simple_cnn", "complex_cnn", "transfer_cnn", "mobilenet", "resnet18"],
+        choices=[
+            "simple_cnn",
+            "complex_cnn",
+            "transfer_cnn",
+            "mobilenet",
+            "mobilenet_v3_large",
+            "mobilenet_v3_small",
+            "resnet18",
+        ],
         help="Target neural network architecture",
+    )
+    parser.add_argument(
+        "--backbone",
+        type=str,
+        default="resnet18",
+        choices=["resnet18", "mobilenet_v3_large", "mobilenet_v3_small"],
+        help="Pretrained vision backbone for transfer learning",
     )
     parser.add_argument(
         "--split-type",
@@ -56,6 +71,18 @@ def parse_args() -> argparse.Namespace:
         "--batch-size", type=int, default=64, help="Batch size per step"
     )
     parser.add_argument("--lr", type=float, default=1e-3, help="Initial learning rate")
+    parser.add_argument(
+        "--lr-backbone",
+        type=float,
+        default=None,
+        help="Differential learning rate for backbone (e.g. 1e-4)",
+    )
+    parser.add_argument(
+        "--freeze-epochs",
+        type=int,
+        default=0,
+        help="Number of initial epochs to keep backbone frozen",
+    )
     parser.add_argument(
         "--weight-decay", type=float, default=1e-4, help="AdamW weight decay"
     )
@@ -121,6 +148,16 @@ def main() -> None:
     elif args.model in ("complex_cnn", "complex"):
         model_kwargs["stage_channels"] = channel_list
         model_kwargs["fc_dim"] = args.fc_dim
+    elif args.model in (
+        "transfer_cnn",
+        "transfer",
+        "resnet18",
+        "mobilenet",
+        "mobilenet_v3_large",
+        "mobilenet_v3_small",
+    ):
+        model_kwargs["backbone_name"] = args.backbone
+        model_kwargs["fc_dim"] = args.fc_dim
 
     model = build_model(args.model, num_classes=NUM_CLASSES, **model_kwargs)
     param_count = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -137,6 +174,8 @@ def main() -> None:
         label_smoothing=args.label_smoothing,
         checkpoint_name=args.checkpoint_name,
         early_stopping_patience=args.patience,
+        lr_backbone=args.lr_backbone,
+        freeze_epochs=args.freeze_epochs,
     )
 
     if args.dry_run:
