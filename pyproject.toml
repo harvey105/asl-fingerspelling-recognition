@@ -6,8 +6,9 @@ readme = "README.md"
 requires-python = ">=3.10,<3.13"
 dependencies = [
     # Core Deep Learning Framework
-    "torch>=2.2.0",
-    "torchvision>=0.17.0",
+    "torch==2.4.0",
+    "torchvision==0.19.1",
+    "torch-directml==0.2.5.dev240914",
 
     # Computer Vision, Preprocessing & Augmentations
     "opencv-python>=4.9.0.80",
@@ -36,3 +37,9 @@ dev = ["pytest>=8.0.0", "ipykernel>=6.29.0"]
 
 [tool.uv]
 package = false
+environments = [
+    "sys_platform == 'win32' and python_version == '3.12'",
+]
+override-dependencies = [
+    "torch==2.4.0",
+]
