@@ -48,19 +48,29 @@ class ResidualBlock(nn.Module):
 
 class ComplexCNN(nn.Module):
     """
-    Deep residual CNN with modular stages and skip connections.
+    Deep residual CNN with modular stages, residual skip connections F(x) + x,
+    and configurable stage depths and channel capacities.
     """
 
     def __init__(
         self,
         in_channels: int = 3,
         num_classes: int = 36,
-        stage_channels: list[int] = None,
+        stage_channels: list[int] | None = None,
+        stage_depths: list[int] | None = None,
         dropout: float = 0.3,
+        fc_dim: int = 256,
     ) -> None:
         super().__init__()
         if stage_channels is None:
             stage_channels = [32, 64, 128, 256]
+        if stage_depths is None:
+            stage_depths = [2, 2, 2, 2]
+
+        self.stage_channels = stage_channels
+        self.stage_depths = stage_depths
+        self.dropout_rate = dropout
+        self.fc_dim = fc_dim
 
         self.stem = nn.Sequential(
             nn.Conv2d(
@@ -78,24 +88,29 @@ class ComplexCNN(nn.Module):
 
         stages: list[nn.Module] = []
         c_in = stage_channels[0]
-        for idx, c_out in enumerate(stage_channels):
-            stride = 1 if idx == 0 else 2
-            stages.append(ResidualBlock(c_in, c_out, stride=stride))
-            stages.append(ResidualBlock(c_out, c_out, stride=1))
-            c_in = c_out
+        for idx, (c_out, depth) in enumerate(zip(stage_channels, stage_depths)):
+            for b in range(depth):
+                stride = 2 if (idx > 0 and b == 0) else 1
+                stages.append(ResidualBlock(c_in, c_out, stride=stride))
+                c_in = c_out
 
         self.stages = nn.Sequential(*stages)
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Dropout(p=dropout),
-            nn.Linear(stage_channels[-1], 256),
+            nn.Linear(stage_channels[-1], fc_dim),
             nn.ReLU(inplace=True),
             nn.Dropout(p=dropout),
-            nn.Linear(256, num_classes),
+            nn.Linear(fc_dim, num_classes),
         )
 
+    def count_parameters(self) -> int:
+        """Return total trainable parameter count."""
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward pass through stem, residual stages, and classifier."""
         x = self.stem(x)
         x = self.stages(x)
         x = self.pool(x)

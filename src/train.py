@@ -118,6 +118,9 @@ def main() -> None:
     if args.model in ("simple_cnn", "simple"):
         model_kwargs["channel_list"] = channel_list
         model_kwargs["fc_dim"] = args.fc_dim
+    elif args.model in ("complex_cnn", "complex"):
+        model_kwargs["stage_channels"] = channel_list
+        model_kwargs["fc_dim"] = args.fc_dim
 
     model = build_model(args.model, num_classes=NUM_CLASSES, **model_kwargs)
     param_count = sum(p.numel() for p in model.parameters() if p.requires_grad)

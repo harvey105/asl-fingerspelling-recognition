@@ -89,8 +89,11 @@ def evaluate_test_set(
     print(f"Evaluating checkpoint: {checkpoint_path} on {device}")
 
     # Build model and load weights
-    model = build_model(model_name, num_classes=NUM_CLASSES)
     ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    fc_dim = 256
+    if "classifier.2.weight" in ckpt["model_state_dict"]:
+        fc_dim = ckpt["model_state_dict"]["classifier.2.weight"].shape[0]
+    model = build_model(model_name, num_classes=NUM_CLASSES, fc_dim=fc_dim)
     model.load_state_dict(ckpt["model_state_dict"])
     model.to(device)
     model.eval()
