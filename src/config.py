@@ -11,23 +11,23 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 SPLITS_DIR = PROJECT_ROOT / "data" / "splits"
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"   # our outputs only
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"  # our outputs only
 DOCS_DIR = PROJECT_ROOT / "docs"
-CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"   #  output (PNG)
-BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"   #  output
+CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"  #  output (PNG)
+BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"  #  output
 
 # Class set: digits first, then letters. Digit 0 is the two-handed ASL zero sign (paper, Table 1).
 CLASSES = [str(d) for d in range(10)] + [chr(c) for c in range(ord("A"), ord("Z") + 1)]
-NUM_CLASSES = len(CLASSES)                      # expected 36
+NUM_CLASSES = len(CLASSES)  # expected 36
 CLASS_TO_ID = {c: i for i, c in enumerate(CLASSES)}
 
 # Expectations from the paper, dataset page, and roadmap.  checks these; it does not assume them.
 NUM_VOLUNTEERS = 10
 IMAGES_PER_VOLUNTEER_PER_CLASS = 100
 IMAGES_PER_CLASS = 1000
-TOTAL_IMAGES = IMAGES_PER_CLASS * NUM_CLASSES   # expected 36,000
+TOTAL_IMAGES = IMAGES_PER_CLASS * NUM_CLASSES  # expected 36,000
 EXPECTED_SIZE = (300, 300)
-CROP_SIZE_PX = 224   #  letterbox output; must match preprocess_roi.CROP_SIZE
+CROP_SIZE_PX = 224  #  letterbox output; must match preprocess_roi.CROP_SIZE
 EXPECTED_MODE = "RGB"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg"}
 
@@ -67,7 +67,7 @@ def find_dataset_root(raw_dir=RAW_DIR, max_depth=3):
             hits.append(here)
         depth = len(here.relative_to(raw_dir).parts)
         if depth >= max_depth:
-            dirnames[:] = []                          # stop descending
+            dirnames[:] = []  # stop descending
 
     if not hits:
         raise ValueError(
@@ -76,5 +76,7 @@ def find_dataset_root(raw_dir=RAW_DIR, max_depth=3):
         )
     if len(hits) > 1:
         listing = [h.relative_to(raw_dir).as_posix() or "." for h in hits]
-        raise ValueError(f"Several folders contain all class folders: {listing}. Keep only one.")
+        raise ValueError(
+            f"Several folders contain all class folders: {listing}. Keep only one."
+        )
     return hits[0]

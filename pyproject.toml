@@ -30,6 +30,7 @@ dependencies = [
     # Dashboard & Interactive Demo
     "gradio>=4.20.0",
     "streamlit>=1.32.0",
+    "optuna>=4.0.0",
 ]
 
 [project.optional-dependencies]

@@ -3,15 +3,16 @@ Neural network model architectures and factory interface.
 """
 
 from typing import Any, Dict
-import torch.nn as nn
+
+from torch import nn
 
 from .complex_cnn import ComplexCNN
 from .simple_cnn import SimpleCNN
 from .transfer_cnn import TransferCNN
 
 __all__ = [
-    "SimpleCNN",
     "ComplexCNN",
+    "SimpleCNN",
     "TransferCNN",
     "build_model",
 ]

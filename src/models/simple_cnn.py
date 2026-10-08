@@ -2,9 +2,8 @@
 Simple Convolutional Neural Network baseline built from Conv, Pool, and FC layers.
 """
 
-from typing import List
 import torch
-import torch.nn as nn
+from torch import nn
 
 
 class SimpleCNN(nn.Module):
@@ -17,19 +16,33 @@ class SimpleCNN(nn.Module):
         self,
         in_channels: int = 3,
         num_classes: int = 36,
-        channel_list: List[int] = None,
+        channel_list: list[int] | None = None,
         dropout: float = 0.3,
+        fc_dim: int = 256,
+        kernel_size: int = 3,
     ) -> None:
         super().__init__()
         if channel_list is None:
             channel_list = [32, 64, 128, 256]
 
-        layers: List[nn.Module] = []
+        self.channel_list = channel_list
+        self.fc_dim = fc_dim
+        self.dropout_rate = dropout
+        self.kernel_size = kernel_size
+
+        layers: list[nn.Module] = []
         c_in = in_channels
+        padding = kernel_size // 2
         for c_out in channel_list:
             layers.extend(
                 [
-                    nn.Conv2d(c_in, c_out, kernel_size=3, padding=1, bias=False),
+                    nn.Conv2d(
+                        c_in,
+                        c_out,
+                        kernel_size=kernel_size,
+                        padding=padding,
+                        bias=False,
+                    ),
                     nn.BatchNorm2d(c_out),
                     nn.ReLU(inplace=True),
                     nn.MaxPool2d(kernel_size=2, stride=2),
@@ -42,11 +55,15 @@ class SimpleCNN(nn.Module):
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Dropout(p=dropout),
-            nn.Linear(channel_list[-1], 256),
+            nn.Linear(channel_list[-1], fc_dim),
             nn.ReLU(inplace=True),
             nn.Dropout(p=dropout),
-            nn.Linear(256, num_classes),
+            nn.Linear(fc_dim, num_classes),
         )
+
+    def count_parameters(self) -> int:
+        """Return total trainable parameter count."""
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass through feature extractor and classifier head."""

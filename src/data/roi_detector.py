@@ -16,13 +16,13 @@ import cv2
 import mediapipe as mp
 import numpy as np
 
-from config import EXPECTED_SIZE
+from src.config import EXPECTED_SIZE
 
 assert EXPECTED_SIZE[0] == EXPECTED_SIZE[1], "Detector assumes a square frame."
 IMG_SIZE = EXPECTED_SIZE[0]
-EDGE_PX = 2                       # a box within this many pixels of the frame edge is "touching"
+EDGE_PX = 2  # a box within this many pixels of the frame edge is "touching"
 MIN_SKIN_AREA_FRAC = 0.02
-MAX_SKIN_AREA_FRAC = 0.65         # larger than this is almost certainly background, not a hand
+MAX_SKIN_AREA_FRAC = 0.65  # larger than this is almost certainly background, not a hand
 SKIN_BORDER_PX = EDGE_PX
 MAX_NUM_HANDS = 1
 MP_MIN_DETECTION_CONF = 0.5
@@ -35,8 +35,11 @@ def make_hands():
             "'uv run python -c \"import mediapipe as mp; print(mp.__version__)\"' "
             "and paste the output."
         )
-    return mp.solutions.hands.Hands(static_image_mode=True, max_num_hands=MAX_NUM_HANDS,
-                                    min_detection_confidence=MP_MIN_DETECTION_CONF)
+    return mp.solutions.hands.Hands(
+        static_image_mode=True,
+        max_num_hands=MAX_NUM_HANDS,
+        min_detection_confidence=MP_MIN_DETECTION_CONF,
+    )
 
 
 def mediapipe_box(rgb, hands):
@@ -69,8 +72,12 @@ def skin_box(bgr):
     x, y, w, h = cv2.boundingRect(best)
     x0, y0 = x, y
     x1, y1 = min(x + w - 1, IMG_SIZE - 1), min(y + h - 1, IMG_SIZE - 1)
-    if (x0 <= SKIN_BORDER_PX or y0 <= SKIN_BORDER_PX
-            or x1 >= IMG_SIZE - 1 - SKIN_BORDER_PX or y1 >= IMG_SIZE - 1 - SKIN_BORDER_PX):
+    if (
+        x0 <= SKIN_BORDER_PX
+        or y0 <= SKIN_BORDER_PX
+        or x1 >= IMG_SIZE - 1 - SKIN_BORDER_PX
+        or y1 >= IMG_SIZE - 1 - SKIN_BORDER_PX
+    ):
         return None
     return x0, y0, x1, y1
 
@@ -80,8 +87,12 @@ def describe_box(box):
     x0, y0, x1, y1 = box
     side = max(x1 - x0, y1 - y0) + 1
     area_frac = ((x1 - x0 + 1) * (y1 - y0 + 1)) / (IMG_SIZE * IMG_SIZE)
-    touches = bool(x0 <= EDGE_PX or y0 <= EDGE_PX
-                   or x1 >= IMG_SIZE - 1 - EDGE_PX or y1 >= IMG_SIZE - 1 - EDGE_PX)
+    touches = bool(
+        x0 <= EDGE_PX
+        or y0 <= EDGE_PX
+        or x1 >= IMG_SIZE - 1 - EDGE_PX
+        or y1 >= IMG_SIZE - 1 - EDGE_PX
+    )
     return side, area_frac, touches
 
 

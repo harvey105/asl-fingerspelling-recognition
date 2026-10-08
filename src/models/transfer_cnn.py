@@ -2,9 +2,8 @@
 Transfer learning classifier utilizing torchvision pretrained vision backbones.
 """
 
-from typing import Optional
 import torch
-import torch.nn as nn
+from torch import nn
 from torchvision.models import (
     MobileNet_V3_Small_Weights,
     ResNet18_Weights,

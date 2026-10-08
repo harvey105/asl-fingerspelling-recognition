@@ -2,9 +2,8 @@
 Loss functions for model training and regularization.
 """
 
-from typing import Optional
 import torch
-import torch.nn as nn
+from torch import nn
 
 
 class LabelSmoothingCrossEntropy(nn.Module):
@@ -15,13 +14,17 @@ class LabelSmoothingCrossEntropy(nn.Module):
     When smoothing > 0.0, targets are smoothed uniformly across all classes.
     """
 
-    def __init__(self, smoothing: float = 0.1, weight: Optional[torch.Tensor] = None) -> None:
+    def __init__(
+        self, smoothing: float = 0.1, weight: torch.Tensor | None = None
+    ) -> None:
         super().__init__()
         if not 0.0 <= smoothing < 1.0:
             raise ValueError(f"smoothing must be in range [0.0, 1.0), got {smoothing}")
         self.smoothing = float(smoothing)
         self.weight = weight
-        self.loss_fn = nn.CrossEntropyLoss(weight=self.weight, label_smoothing=self.smoothing)
+        self.loss_fn = nn.CrossEntropyLoss(
+            weight=self.weight, label_smoothing=self.smoothing
+        )
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         """

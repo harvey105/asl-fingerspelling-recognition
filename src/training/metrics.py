@@ -2,17 +2,16 @@
 Multi-class evaluation metrics calculation across classification classes.
 """
 
-from typing import Dict, List, Optional, Union
 import numpy as np
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import torch
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
 
 def compute_metrics(
-    y_true: Union[torch.Tensor, np.ndarray, List[int]],
-    y_pred: Union[torch.Tensor, np.ndarray, List[int]],
-    num_classes: Optional[int] = 36,
-) -> Dict[str, float]:
+    y_true: torch.Tensor | np.ndarray | list[int],
+    y_pred: torch.Tensor | np.ndarray | list[int],
+    num_classes: int | None = 36,
+) -> dict[str, float]:
     """
     Compute multi-class evaluation metrics: Top-1 Accuracy, Macro-Precision,
     Macro-Recall, and Macro-F1 score.
@@ -81,8 +80,8 @@ class MetricTracker:
         self.num_classes = num_classes
         self.total_loss: float = 0.0
         self.total_samples: int = 0
-        self.all_preds: List[int] = []
-        self.all_targets: List[int] = []
+        self.all_preds: list[int] = []
+        self.all_targets: list[int] = []
 
     def update(self, loss: float, preds: torch.Tensor, targets: torch.Tensor) -> None:
         """Accumulate batch loss and prediction vectors."""
@@ -96,10 +95,29 @@ class MetricTracker:
         self.all_preds.extend(preds.detach().cpu().tolist())
         self.all_targets.extend(targets.detach().cpu().tolist())
 
-    def compute(self) -> Dict[str, float]:
+    @property
+    def accuracy(self) -> float:
+        """Running top-1 accuracy."""
+        if not self.all_targets:
+            return 0.0
+        correct = sum(p == t for p, t in zip(self.all_preds, self.all_targets))
+        return float(correct / len(self.all_targets))
+
+    @property
+    def loss(self) -> float:
+        """Running average loss."""
+        return (
+            float(self.total_loss / self.total_samples)
+            if self.total_samples > 0
+            else 0.0
+        )
+
+    def compute(self) -> dict[str, float]:
         """Compute aggregated metrics across all recorded samples."""
-        avg_loss = (self.total_loss / self.total_samples) if self.total_samples > 0 else 0.0
-        metrics = compute_metrics(self.all_targets, self.all_preds, num_classes=self.num_classes)
+        avg_loss = self.loss
+        metrics = compute_metrics(
+            self.all_targets, self.all_preds, num_classes=self.num_classes
+        )
         metrics["loss"] = float(avg_loss)
         return metrics
 

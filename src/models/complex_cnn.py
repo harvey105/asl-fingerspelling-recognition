@@ -2,9 +2,8 @@
 Deep residual convolutional neural network built from scratch with bottleneck/residual blocks.
 """
 
-from typing import List
 import torch
-import torch.nn as nn
+from torch import nn
 
 
 class ResidualBlock(nn.Module):
@@ -15,7 +14,12 @@ class ResidualBlock(nn.Module):
     def __init__(self, in_channels: int, out_channels: int, stride: int = 1) -> None:
         super().__init__()
         self.conv1 = nn.Conv2d(
-            in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False
+            in_channels,
+            out_channels,
+            kernel_size=3,
+            stride=stride,
+            padding=1,
+            bias=False,
         )
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU(inplace=True)
@@ -26,7 +30,9 @@ class ResidualBlock(nn.Module):
 
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
-                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.Conv2d(
+                    in_channels, out_channels, kernel_size=1, stride=stride, bias=False
+                ),
                 nn.BatchNorm2d(out_channels),
             )
         else:
@@ -49,7 +55,7 @@ class ComplexCNN(nn.Module):
         self,
         in_channels: int = 3,
         num_classes: int = 36,
-        stage_channels: List[int] = None,
+        stage_channels: list[int] = None,
         dropout: float = 0.3,
     ) -> None:
         super().__init__()
@@ -57,13 +63,20 @@ class ComplexCNN(nn.Module):
             stage_channels = [32, 64, 128, 256]
 
         self.stem = nn.Sequential(
-            nn.Conv2d(in_channels, stage_channels[0], kernel_size=3, stride=1, padding=1, bias=False),
+            nn.Conv2d(
+                in_channels,
+                stage_channels[0],
+                kernel_size=3,
+                stride=1,
+                padding=1,
+                bias=False,
+            ),
             nn.BatchNorm2d(stage_channels[0]),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
 
-        stages: List[nn.Module] = []
+        stages: list[nn.Module] = []
         c_in = stage_channels[0]
         for idx, c_out in enumerate(stage_channels):
             stride = 1 if idx == 0 else 2

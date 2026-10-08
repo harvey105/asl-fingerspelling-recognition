@@ -7,10 +7,10 @@ from .losses import LabelSmoothingCrossEntropy
 from .metrics import MetricTracker, compute_metrics
 
 __all__ = [
+    "LabelSmoothingCrossEntropy",
+    "MetricTracker",
     "Trainer",
     "TrainerConfig",
-    "get_default_device",
-    "LabelSmoothingCrossEntropy",
     "compute_metrics",
-    "MetricTracker",
+    "get_default_device",
 ]

@@ -12,7 +12,7 @@ import torch
 from PIL import Image
 from torchvision import transforms as T
 
-from config import NUM_CLASSES, PROJECT_ROOT
+from src.config import NUM_CLASSES, PROJECT_ROOT
 from src.data import (FILL, ROTATION_DEG, SCALE_RANGE, TRANSLATE, ASLDataset,
                       KeepPadJitter, build_manifests, build_transform,
                       class_weights, get_dataloaders)
@@ -58,9 +58,9 @@ def test_labels_in_range_and_complete(manifests):
 
 
 def test_no_blank_rows(manifests):
-    from manifests import LOG_CSV  # noqa: F401  (ensures the same source is loaded)
+    from src.data.manifests import LOG_CSV  # noqa: F401  (ensures the same source is loaded)
     import pandas as pd
-    from config import BLANK_FRAMES_CSV
+    from src.config import BLANK_FRAMES_CSV
     blank = set(pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"])
     all_fp = set(manifests["train"]["filepath"]) | set(manifests["val"]["filepath"]) \
         | set(manifests["test"]["filepath"])

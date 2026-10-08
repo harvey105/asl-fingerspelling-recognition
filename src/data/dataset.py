@@ -18,11 +18,11 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms as T
 
-from config import NUM_CLASSES, PROJECT_ROOT
+from src.config import NUM_CLASSES, PROJECT_ROOT
 
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-FILL = (128, 128, 128)            # neutral gray matching letterbox padding
+FILL = (128, 128, 128)  # neutral gray matching letterbox padding
 ROTATION_DEG = 12
 TRANSLATE = (0.06, 0.06)
 SCALE_RANGE = (0.75, 1.35)
@@ -33,8 +33,9 @@ class KeepPadJitter:
     """ColorJitter that leaves pixels equal to FILL unchanged."""
 
     def __init__(self, brightness, contrast, saturation):
-        self.jitter = T.ColorJitter(brightness=brightness, contrast=contrast,
-                                    saturation=saturation)
+        self.jitter = T.ColorJitter(
+            brightness=brightness, contrast=contrast, saturation=saturation
+        )
 
     def __call__(self, img):
         arr = np.asarray(img)
@@ -49,8 +50,9 @@ def build_transform(is_train):
     if is_train:
         ops += [
             KeepPadJitter(brightness=JITTER, contrast=JITTER, saturation=JITTER),
-            T.RandomAffine(degrees=ROTATION_DEG, translate=TRANSLATE,
-                           scale=SCALE_RANGE, fill=FILL),
+            T.RandomAffine(
+                degrees=ROTATION_DEG, translate=TRANSLATE, scale=SCALE_RANGE, fill=FILL
+            ),
             T.RandomHorizontalFlip(p=0.5),
         ]
     ops += [T.ToTensor(), T.Normalize(IMAGENET_MEAN, IMAGENET_STD)]
@@ -79,8 +81,12 @@ class ASLDataset(Dataset):
 
 def class_weights(manifest):
     """Inverse-frequency weights from the given (training) manifest, in class_id order."""
-    counts = (manifest["class_id"].value_counts()
-              .reindex(range(NUM_CLASSES), fill_value=0).astype(float))
+    counts = (
+        manifest["class_id"]
+        .value_counts()
+        .reindex(range(NUM_CLASSES), fill_value=0)
+        .astype(float)
+    )
     if (counts == 0).any():
         raise ValueError("A class has no images in this manifest.")
     w = counts.sum() / (NUM_CLASSES * counts)

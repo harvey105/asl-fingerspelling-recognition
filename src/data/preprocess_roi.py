@@ -5,11 +5,11 @@ src/preprocess_roi.py
 Every image receives exactly one method label. The label records WHY it was or was not
 hand-cropped, so the report cannot conflate a fixed rule with a detection failure:
 
-  mediapipe         MediaPipe single-hand box, 20% margin                    
+  mediapipe         MediaPipe single-hand box, 20% margin
   skin              YCrCb skin-fallback box (rejected if touching border or oversized)
-  class_rule_full   class 0 only: full frame by a fixed class rule            
-  undetected_full   non-zero class where MediaPipe and skin both failed: full frame 
-  blank             listed in blank_frames.csv: not written                  
+  class_rule_full   class 0 only: full frame by a fixed class rule
+  undetected_full   non-zero class where MediaPipe and skin both failed: full frame
+  blank             listed in blank_frames.csv: not written
 
 Prerequisite: data/processed/blank_frames.csv, written by src/blank_scan.py --threshold T.
 Refuses to run if data/processed_crops already holds files (stale-output guard).
@@ -33,6 +33,7 @@ from pathlib import Path
 
 import cv2
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,19 +41,32 @@ import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 
-from config import (BLANK_FRAMES_CSV, CLASSES, CROPS_DIR, DOCS_DIR, NUM_VOLUNTEERS,
-                    PROCESSED_DIR, PROJECT_ROOT)
-from .roi_detector import (IMG_SIZE, MAX_NUM_HANDS, MP_MIN_DETECTION_CONF, describe_box,
-                          detect, make_hands)
+from src.config import (
+    BLANK_FRAMES_CSV,
+    CROPS_DIR,
+    DOCS_DIR,
+    NUM_VOLUNTEERS,
+    PROCESSED_DIR,
+    PROJECT_ROOT,
+)
+
+from .roi_detector import (
+    IMG_SIZE,
+    MAX_NUM_HANDS,
+    MP_MIN_DETECTION_CONF,
+    describe_box,
+    detect,
+    make_hands,
+)
 
 SEED = 42
-MARGIN_FRAC = 0.20                       # 
+MARGIN_FRAC = 0.20
 CROP_SIZE = 224
-PAD_VALUE = (128, 128, 128)              # neutral gray, identical in BGR and RGB
+PAD_VALUE = (128, 128, 128)  # neutral gray, identical in BGR and RGB
 NUM_WORKERS = 8
 PNG_PARAMS = [cv2.IMWRITE_PNG_COMPRESSION, 3]
 FULL_BOX = (0, 0, IMG_SIZE - 1, IMG_SIZE - 1)
-FULL_FRAME_CLASSES = {"0"}               # : two-handed sign, single-hand box clips a hand
+FULL_FRAME_CLASSES = {"0"}  # : two-handed sign, single-hand box clips a hand
 WRITTEN_METHODS = ["mediapipe", "skin", "class_rule_full", "undetected_full"]
 
 INDEX_CSV = PROCESSED_DIR / "asl_hg_image_index.csv"
@@ -66,7 +80,12 @@ def add_margin(box, frac, size):
     x0, y0, x1, y1 = box
     side = max(x1 - x0, y1 - y0) + 1
     m = int(round(side * frac))
-    return (max(0, x0 - m), max(0, y0 - m), min(size - 1, x1 + m), min(size - 1, y1 + m))
+    return (
+        max(0, x0 - m),
+        max(0, y0 - m),
+        min(size - 1, x1 + m),
+        min(size - 1, y1 + m),
+    )
 
 
 def letterbox(crop_bgr, out_size, pad_value):
@@ -77,7 +96,7 @@ def letterbox(crop_bgr, out_size, pad_value):
     canvas = np.full((out_size, out_size, 3), pad_value, dtype=np.uint8)
     top = (out_size - new_h) // 2
     left = (out_size - new_w) // 2
-    canvas[top:top + new_h, left:left + new_w] = resized
+    canvas[top : top + new_h, left : left + new_w] = resized
     return canvas
 
 
@@ -100,11 +119,11 @@ def process_one(task):
         return {**base, "method": "error", "error": "cv2.imread failed"}
 
     if label in FULL_FRAME_CLASSES:
-        box, method = None, "class_rule_full"          # rule, not a detection result
+        box, method = None, "class_rule_full"  # rule, not a detection result
     else:
         box, method = detect(bgr, _HANDS)
         if box is None:
-            method = "undetected_full"                  # detection failed; full frame kept
+            method = "undetected_full"  # detection failed; full frame kept
 
     if box is None:
         box = FULL_BOX
@@ -114,20 +133,26 @@ def process_one(task):
 
     x0, y0, x1, y1 = add_margin(box, MARGIN_FRAC, IMG_SIZE)
     margin_side = max(x1 - x0, y1 - y0) + 1
-    out_img = letterbox(bgr[y0:y1 + 1, x0:x1 + 1], CROP_SIZE, PAD_VALUE)
+    out_img = letterbox(bgr[y0 : y1 + 1, x0 : x1 + 1], CROP_SIZE, PAD_VALUE)
 
     out_path = out_root / label / (Path(filepath).stem + ".png")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if not cv2.imwrite(str(out_path), out_img, PNG_PARAMS):
         return {**base, "method": "error", "error": "cv2.imwrite failed"}
 
-    return {**base, "method": method,
-            "box_side": side,
-            "box_area_frac": None if area_frac is None else round(area_frac, 4),
-            "box_touches_border": touches,
-            "margin_x0": x0, "margin_y0": y0, "margin_x1": x1, "margin_y1": y1,
-            "margin_side": int(margin_side),
-            "scale": round(CROP_SIZE / margin_side, 4)}
+    return {
+        **base,
+        "method": method,
+        "box_side": side,
+        "box_area_frac": None if area_frac is None else round(area_frac, 4),
+        "box_touches_border": touches,
+        "margin_x0": x0,
+        "margin_y0": y0,
+        "margin_x1": x1,
+        "margin_y1": y1,
+        "margin_side": int(margin_side),
+        "scale": round(CROP_SIZE / margin_side, 4),
+    }
 
 
 def summarise(res):
@@ -137,17 +162,23 @@ def summarise(res):
     written["scale"] = written["scale"].astype(float)
 
     det = written[written["method"].isin(["mediapipe", "skin"])]
-    touch_by_method = {m: round(float(g["box_touches_border"].astype(float).mean()), 4)
-                       for m, g in det.groupby("method")}
-    scale_by_method = {m: round(float(g["scale"].median()), 4)
-                       for m, g in written.groupby("method")}
-    errors = (res.loc[res["method"] == "error", ["filepath", "error"]].to_dict("records")
-              if "error" in res.columns else [])
+    touch_by_method = {
+        m: round(float(g["box_touches_border"].astype(float).mean()), 4)
+        for m, g in det.groupby("method")
+    }
+    scale_by_method = {
+        m: round(float(g["scale"].median()), 4) for m, g in written.groupby("method")
+    }
+    errors = (
+        res.loc[res["method"] == "error", ["filepath", "error"]].to_dict("records")
+        if "error" in res.columns
+        else []
+    )
     return {
         "n": n,
         "method_counts": counts,
         "method_rates": {k: round(v / n, 4) for k, v in counts.items()},
-        "written": int(len(written)),
+        "written": len(written),
         "box_touches_border_rate_by_method": touch_by_method,
         "median_scale_by_method": scale_by_method,
         "errors": errors,
@@ -157,7 +188,9 @@ def summarise(res):
 def inspection_grid(res, out):
     ok = res[res["method"].isin(WRITTEN_METHODS)]
     fig, axes = plt.subplots(2, 5, figsize=(14, 6.4))
-    for ax, cls, vol in zip(axes.flatten(), INSPECT_CLASSES, range(1, NUM_VOLUNTEERS + 1)):
+    for ax, cls, vol in zip(
+        axes.flatten(), INSPECT_CLASSES, range(1, NUM_VOLUNTEERS + 1)
+    ):
         ax.axis("off")
         pool = ok[(ok["label"] == cls) & (ok["volunteer"] == vol)]
         if pool.empty:
@@ -168,8 +201,12 @@ def inspection_grid(res, out):
         with Image.open(png) as im:
             ax.imshow(im.convert("RGB"))
         ax.set_title(f"'{cls}'  P{vol}   [{row['method']}]", fontsize=10, weight="bold")
-    fig.suptitle(" 20% margin, letterboxed 224x224 PNG crops, one seeded "
-                 "sample per volunteer (method in brackets)", fontsize=11, weight="bold")
+    fig.suptitle(
+        " 20% margin, letterboxed 224x224 PNG crops, one seeded "
+        "sample per volunteer (method in brackets)",
+        fontsize=11,
+        weight="bold",
+    )
     fig.tight_layout()
     fig.savefig(out, dpi=200)
     plt.close(fig)
@@ -182,11 +219,16 @@ def main():
 
     if not BLANK_FRAMES_CSV.exists():
         raise FileNotFoundError(
-            f"{BLANK_FRAMES_CSV} not found. Run: uv run python src/blank_scan.py --threshold 0.001")
-    stale = [p for p in CROPS_DIR.rglob("*") if p.is_file()] if CROPS_DIR.exists() else []
+            f"{BLANK_FRAMES_CSV} not found. Run: uv run python src/blank_scan.py --threshold 0.001"
+        )
+    stale = (
+        [p for p in CROPS_DIR.rglob("*") if p.is_file()] if CROPS_DIR.exists() else []
+    )
     if stale:
-        raise SystemExit(f"{CROPS_DIR} already holds {len(stale)} files from an earlier run. "
-                         "Delete it first: Remove-Item -Recurse -Force data\\processed_crops")
+        raise SystemExit(
+            f"{CROPS_DIR} already holds {len(stale)} files from an earlier run. "
+            "Delete it first: Remove-Item -Recurse -Force data\\processed_crops"
+        )
 
     # Labels are read as strings so the digit '0' is never coerced to a number.
     df = pd.read_csv(INDEX_CSV, dtype={"filepath": str, "label": str})
@@ -195,13 +237,19 @@ def main():
     print(f"Full-frame classes by rule : {sorted(FULL_FRAME_CLASSES)}")
 
     CROPS_DIR.mkdir(parents=True, exist_ok=True)
-    tasks = [(r.filepath, r.label, int(r.volunteer), r.filepath in blank_set, CROPS_DIR)
-             for r in df.itertuples(index=False)]
+    tasks = [
+        (r.filepath, r.label, int(r.volunteer), r.filepath in blank_set, CROPS_DIR)
+        for r in df.itertuples(index=False)
+    ]
 
     results = []
     with ProcessPoolExecutor(max_workers=NUM_WORKERS, initializer=_init_worker) as pool:
-        for res in tqdm(pool.map(process_one, tasks, chunksize=50),
-                        total=len(tasks), desc="Cropping", unit="img"):
+        for res in tqdm(
+            pool.map(process_one, tasks, chunksize=50),
+            total=len(tasks),
+            desc="Cropping",
+            unit="img",
+        ):
             results.append(res)
 
     res_df = pd.DataFrame(results)
@@ -241,15 +289,19 @@ def main():
             "undetected_full": "detector failed on a non-rule class: full frame kept",
             "blank": "excluded (blank_frames.csv)",
         },
-        "mediapipe": {"static_image_mode": True, "max_num_hands": MAX_NUM_HANDS,
-                      "min_detection_confidence": MP_MIN_DETECTION_CONF},
+        "mediapipe": {
+            "static_image_mode": True,
+            "max_num_hands": MAX_NUM_HANDS,
+            "min_detection_confidence": MP_MIN_DETECTION_CONF,
+        },
         "blank_frames_excluded": len(blank_set),
         "files_on_disk": on_disk,
         "summary": s,
     }
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False, default=str),
-                      encoding="utf-8")
+    REPORT.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
+    )
     print(f"Report: {REPORT.relative_to(PROJECT_ROOT).as_posix()}")
     print(f"Per-image log: {LOG_CSV.relative_to(PROJECT_ROOT).as_posix()}")
 
