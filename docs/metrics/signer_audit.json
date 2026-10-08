@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-05T11:25:51",
+  "timestamp": "2026-10-07T23:08:21",
   "seed": 42,
   "border_fraction": 0.1,
   "pairs_per_class": 2000,
@@ -12,36 +12,36 @@
     "groups_spanning_classes": 0,
     "cross_volunteer_examples": [
       [
-        "data/raw/V/P6_V_585.jpg",
-        "data/raw/V/P5_V_485.jpg"
+        "data/raw/V/P5_V_485.jpg",
+        "data/raw/V/P6_V_585.jpg"
       ],
       [
-        "data/raw/I/P6_I_561.jpg",
-        "data/raw/I/P5_I_461.jpg"
+        "data/raw/I/P5_I_461.jpg",
+        "data/raw/I/P6_I_561.jpg"
       ],
       [
         "data/raw/I/P5_I_488.jpg",
         "data/raw/I/P6_I_588.jpg"
       ],
       [
-        "data/raw/V/P6_V_535.jpg",
-        "data/raw/V/P5_V_435.jpg"
+        "data/raw/V/P5_V_435.jpg",
+        "data/raw/V/P6_V_535.jpg"
       ],
       [
         "data/raw/I/P5_I_434.jpg",
         "data/raw/I/P6_I_534.jpg"
       ],
       [
-        "data/raw/V/P6_V_593.jpg",
-        "data/raw/V/P5_V_493.jpg"
+        "data/raw/V/P5_V_493.jpg",
+        "data/raw/V/P6_V_593.jpg"
       ],
       [
         "data/raw/V/P5_V_459.jpg",
         "data/raw/V/P6_V_559.jpg"
       ],
       [
-        "data/raw/V/P6_V_514.jpg",
-        "data/raw/V/P5_V_414.jpg"
+        "data/raw/V/P5_V_414.jpg",
+        "data/raw/V/P6_V_514.jpg"
       ],
       [
         "data/raw/V/P5_V_473.jpg",
@@ -52,8 +52,8 @@
         "data/raw/I/P6_I_527.jpg"
       ],
       [
-        "data/raw/V/P6_V_527.jpg",
-        "data/raw/V/P5_V_427.jpg"
+        "data/raw/V/P5_V_427.jpg",
+        "data/raw/V/P6_V_527.jpg"
       ],
       [
         "data/raw/I/P5_I_446.jpg",
@@ -64,20 +64,20 @@
         "data/raw/V/P6_V_581.jpg"
       ],
       [
-        "data/raw/V/P6_V_550.jpg",
-        "data/raw/V/P5_V_450.jpg"
+        "data/raw/V/P5_V_450.jpg",
+        "data/raw/V/P6_V_550.jpg"
       ],
       [
         "data/raw/I/P5_I_425.jpg",
         "data/raw/I/P6_I_525.jpg"
       ],
       [
-        "data/raw/I/P6_I_533.jpg",
-        "data/raw/I/P5_I_433.jpg"
+        "data/raw/I/P5_I_433.jpg",
+        "data/raw/I/P6_I_533.jpg"
       ],
       [
-        "data/raw/V/P6_V_597.jpg",
-        "data/raw/V/P5_V_497.jpg"
+        "data/raw/V/P5_V_497.jpg",
+        "data/raw/V/P6_V_597.jpg"
       ],
       [
         "data/raw/I/P5_I_436.jpg",
@@ -88,8 +88,8 @@
         "data/raw/V/P6_V_560.jpg"
       ],
       [
-        "data/raw/I/P6_I_565.jpg",
-        "data/raw/I/P5_I_465.jpg"
+        "data/raw/I/P5_I_465.jpg",
+        "data/raw/I/P6_I_565.jpg"
       ]
     ]
   },

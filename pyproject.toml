@@ -1,7 +1,7 @@
 [project]
 name = "asl-fingerspelling-recognition"
 version = "0.1.0"
-description = "Real-Time American Sign Language (ASL) Fingerspelling Recognition with PyTorch"
+description = "Real-Time American Sign Language (ASL) Fingerspelling Recognition"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 dependencies = [
@@ -32,10 +32,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=8.0.0",
-    "ipykernel>=6.29.0",
-]
+dev = ["pytest>=8.0.0", "ipykernel>=6.29.0"]
 
 [tool.uv]
 package = false

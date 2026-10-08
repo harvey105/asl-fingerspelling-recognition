@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-05T17:18:13",
+  "timestamp": "2026-10-07T23:08:59",
   "primary_feature": "edge_frac_40",
   "edge_magnitudes": [
     20,
@@ -8,14 +8,14 @@
   ],
   "quantiles_pct": {
     "0": 0.0,
-    "0.1": 0.045977711111111035,
-    "0.5": 0.0474666666666666,
-    "1": 0.0483666666666666,
-    "2": 0.0516666666666666,
-    "5": 0.0568222222222222,
+    "0.1": 0.04597771111111111,
+    "0.5": 0.047466666666666664,
+    "1": 0.04836666666666667,
+    "2": 0.051666666666666666,
+    "5": 0.056822222222222225,
     "10": 0.0617,
-    "25": 0.0718555555555555,
-    "50": 0.0857444444444444
+    "25": 0.07185555555555556,
+    "50": 0.08574444444444444
   },
   "counts_at_thresholds": {
     "0.0": 11,
@@ -57,7 +57,7 @@
       ],
       "values": [
         0.0123,
-        0.0260333333333333
+        0.026033333333333332
       ],
       "ratio": 2.12
     },
@@ -67,8 +67,8 @@
         16
       ],
       "values": [
-        0.0266666666666666,
-        0.0295555555555555
+        0.02666666666666667,
+        0.029555555555555557
       ],
       "ratio": 1.11
     },
@@ -78,15 +78,18 @@
         24
       ],
       "values": [
-        0.0390444444444444,
-        0.0451333333333333
+        0.039044444444444444,
+        0.04513333333333333
       ],
       "ratio": 1.16
     }
   ],
-  "mediapipe_check": null,
+  "mediapipe_check": {
+    "checked": 13,
+    "hand_found": 0
+  },
   "blank": {
-    "threshold": 0.001,
+    "threshold": 0.002,
     "blank_count": 12,
     "per_class_nonzero": {
       "H": 12
@@ -191,105 +194,105 @@
       "filepath": "data/raw/H/P8_H_777.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0260333333333333,
+      "edge_frac_40": 0.026033333333333332,
       "std_L": 30.84976577758789
     },
     {
       "filepath": "data/raw/H/P8_H_797.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0266666666666666,
+      "edge_frac_40": 0.02666666666666667,
       "std_L": 23.27279281616211
     },
     {
       "filepath": "data/raw/H/P8_H_703.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0295555555555555,
+      "edge_frac_40": 0.029555555555555557,
       "std_L": 28.798479080200195
     },
     {
       "filepath": "data/raw/H/P8_H_798.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0309333333333333,
+      "edge_frac_40": 0.030933333333333334,
       "std_L": 25.8012638092041
     },
     {
       "filepath": "data/raw/H/P8_H_799.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0315111111111111,
-      "std_L": 30.02229690551757
+      "edge_frac_40": 0.03151111111111111,
+      "std_L": 30.022296905517575
     },
     {
       "filepath": "data/raw/H/P8_H_793.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0319666666666666,
+      "edge_frac_40": 0.031966666666666664,
       "std_L": 27.31642723083496
     },
     {
       "filepath": "data/raw/H/P8_H_795.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0347555555555555,
+      "edge_frac_40": 0.03475555555555555,
       "std_L": 28.316919326782227
     },
     {
       "filepath": "data/raw/H/P8_H_794.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0350222222222222,
+      "edge_frac_40": 0.035022222222222225,
       "std_L": 28.67920684814453
     },
     {
       "filepath": "data/raw/H/P8_H_796.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0374111111111111,
-      "std_L": 27.6784896850586
+      "edge_frac_40": 0.03741111111111111,
+      "std_L": 27.678489685058597
     },
     {
       "filepath": "data/raw/H/P8_H_800.jpg",
       "label": "H",
       "volunteer": 8,
-      "edge_frac_40": 0.0390444444444444,
+      "edge_frac_40": 0.039044444444444444,
       "std_L": 30.51301002502441
     },
     {
       "filepath": "data/raw/M/P10_M_997.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0451333333333333,
+      "edge_frac_40": 0.04513333333333333,
       "std_L": 50.81071853637695
     },
     {
       "filepath": "data/raw/M/P10_M_996.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0452777777777777,
+      "edge_frac_40": 0.04527777777777778,
       "std_L": 50.54206466674805
     },
     {
       "filepath": "data/raw/M/P10_M_998.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0454444444444444,
+      "edge_frac_40": 0.04544444444444445,
       "std_L": 50.835731506347656
     },
     {
       "filepath": "data/raw/M/P10_M_999.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0456444444444444,
+      "edge_frac_40": 0.045644444444444446,
       "std_L": 50.71834182739258
     },
     {
       "filepath": "data/raw/Q/P5_Q_495.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0456444444444444,
+      "edge_frac_40": 0.045644444444444446,
       "std_L": 34.39562225341797
     },
     {
@@ -310,28 +313,28 @@
       "filepath": "data/raw/M/P10_M_983.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0458111111111111,
+      "edge_frac_40": 0.04581111111111111,
       "std_L": 50.86930465698242
     },
     {
       "filepath": "data/raw/M/P10_M_985.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0458222222222222,
+      "edge_frac_40": 0.04582222222222222,
       "std_L": 50.38554000854492
     },
     {
       "filepath": "data/raw/Q/P5_Q_493.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0458222222222222,
+      "edge_frac_40": 0.04582222222222222,
       "std_L": 34.55784606933594
     },
     {
       "filepath": "data/raw/Q/P5_Q_497.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0458222222222222,
+      "edge_frac_40": 0.04582222222222222,
       "std_L": 34.39048385620117
     },
     {
@@ -345,91 +348,91 @@
       "filepath": "data/raw/Q/P5_Q_500.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0459111111111111,
+      "edge_frac_40": 0.04591111111111111,
       "std_L": 34.37226867675781
     },
     {
       "filepath": "data/raw/Q/P5_Q_494.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0459777777777777,
+      "edge_frac_40": 0.04597777777777778,
       "std_L": 34.47536849975586
     },
     {
       "filepath": "data/raw/M/P10_M_987.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0459888888888888,
+      "edge_frac_40": 0.04598888888888889,
       "std_L": 50.58601760864258
     },
     {
       "filepath": "data/raw/M/P10_M_982.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0460222222222222,
+      "edge_frac_40": 0.04602222222222222,
       "std_L": 50.95188522338867
     },
     {
       "filepath": "data/raw/M/P10_M_986.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0460222222222222,
+      "edge_frac_40": 0.04602222222222222,
       "std_L": 50.41497421264648
     },
     {
       "filepath": "data/raw/M/P10_M_971.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0460666666666666,
+      "edge_frac_40": 0.046066666666666665,
       "std_L": 51.45435333251953
     },
     {
       "filepath": "data/raw/M/P10_M_981.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0460888888888888,
+      "edge_frac_40": 0.04608888888888889,
       "std_L": 51.36556243896485
     },
     {
       "filepath": "data/raw/M/P10_M_992.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0461555555555555,
+      "edge_frac_40": 0.046155555555555554,
       "std_L": 50.82344436645508
     },
     {
       "filepath": "data/raw/M/P10_M_984.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0461777777777777,
+      "edge_frac_40": 0.046177777777777776,
       "std_L": 50.764530181884766
     },
     {
       "filepath": "data/raw/M/P10_M_988.jpg",
       "label": "M",
       "volunteer": 10,
-      "edge_frac_40": 0.0461777777777777,
+      "edge_frac_40": 0.046177777777777776,
       "std_L": 50.43131637573242
     },
     {
       "filepath": "data/raw/Q/P5_Q_492.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0461888888888888,
+      "edge_frac_40": 0.04618888888888889,
       "std_L": 34.7772216796875
     },
     {
       "filepath": "data/raw/Q/P5_Q_481.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0462555555555555,
+      "edge_frac_40": 0.04625555555555556,
       "std_L": 34.78196334838867
     },
     {
       "filepath": "data/raw/Q/P5_Q_489.jpg",
       "label": "Q",
       "volunteer": 5,
-      "edge_frac_40": 0.0462666666666666,
+      "edge_frac_40": 0.046266666666666664,
       "std_L": 34.81057357788086
     }
   ]
