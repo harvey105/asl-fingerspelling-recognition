@@ -48,7 +48,40 @@ The feature extraction hierarchy consists of four sequential downsampling stages
 
 ---
 
-## 3. Theoretical Receptive Field Propagation
+## 3. Design Rationale and Architectural Justifications
+
+Every architectural primitive in Model 1 is calibrated to establish an interpretable, mathematically sound, non-residual baseline under a strict sub-500k parameter budget.
+
+### Input Specification: $3 \times 224 \times 224$ RGB
+- **Spatial Resolution ($224 \times 224$ vs. $64 \times 64$ or $112 \times 112$)**: ASL fingerspelling phonology relies on fine distal knuckle articulation, inter-finger contact, and subtle thumb tuck positions (e.g., distinguishing `M`, `N`, and `T`). Downsampling inputs to $64 \times 64$ eliminates these high-frequency anatomical boundaries across letterboxed bounding boxes. $224 \times 224$ preserves sub-millimeter finger separation while maintaining exact input dimension parity with Model 2 and Model 3 for rigorous, controlled comparative evaluation.
+- **Color Space (3-Channel RGB vs. Grayscale)**: Grayscale conversion collapses chromatic contrast between skin tones and varied classroom backgrounds into luminance. Multi-channel RGB preserves chromatic cast shadows in inter-digital clefts, providing critical depth cues under monocular 2D imaging.
+
+### Channel Hierarchy and Capacity Budget ($32 \to 64 \to 128 \to 256$)
+- **Pyramidal Doubling**: Halving spatial dimensions ($H/2, W/2$) while doubling feature depth ($2C$) preserves a constant representational volume per layer ($C \times H \times W$), maintaining balanced computational FLOP density across all four stages.
+- **Budget Capping at 256 Channels (463,940 Parameters)**: Capping stage 4 at 256 channels enforces an inductive capacity ceiling under 500k weights. Expanding to 512 channels would inflate parameters to ~1.8M without residual highways, exacerbating optimization instability and severe overfitting to the 7 training signers. This establishes a lean reference point to measure the isolated gains of residual shortcuts (Model 2) and pretrained feature transfer (Model 3).
+
+### Convolutional Operator: $3 \times 3$, Stride 1, Padding 1
+- **$3 \times 3$ vs. $5 \times 5$ or $7 \times 7$ Kernels**: Following Simonyan & Zisserman (VGG), stacking two $3 \times 3$ convolutions yields an effective receptive field of $5 \times 5$ with $2 \times (3^2 \cdot C^2) = 18C^2$ weights, compared to $5^2 \cdot C^2 = 25C^2$ for a single $5 \times 5$ kernel (28% parameter reduction). Concurrently, smaller kernels introduce additional intermediate non-linearities, increasing discriminative capacity per parameter.
+- **Omission of Convolutional Bias (`bias=False`)**: Every convolutional layer directly feeds a `BatchNorm2d` layer. Because batch normalization centers intermediate activations via mini-batch subtraction $\hat{x} = \frac{(Wx + b) - \mu_B}{\sigma_B}$, the scalar bias $b$ cancels identically ($\mu_B = \frac{1}{m}\sum(Wx_i + b) = \mu_{Wx} + b$). Retaining bias introduces redundant unregularized degrees of freedom that induce gradient drift; omitting it eliminates 480 extraneous parameters without representational loss.
+
+### Normalization and Activation Dynamics
+- **Batch Normalization**: Deep non-residual networks suffer from internal covariate shift and exploding/vanishing gradients during early training. `BatchNorm2d` re-centers and scales activations at each stage, smoothing the optimization landscape and enabling a high initial learning rate ($5.0 \times 10^{-4}$) without divergence.
+- **ReLU vs. LeakyReLU / GELU**: ReLU ($f(x) = \max(0, x)$) introduces exact zeros, inducing representational sparsity and minimal floating-point computational overhead. In a pure feed-forward baseline where dead-neuron collapse was monitored and absent, parametric or smooth activations (GELU/Swish) introduce computational cost without measurable empirical gain in shallow non-residual settings.
+
+### Spatial Subsampling: MaxPool2d ($2 \times 2$, Stride 2)
+- **MaxPool vs. Strided Convolution vs. Average Pooling**: Average pooling acts as a spatial low-pass filter, blurring finger silhouettes and edge boundaries in early stages. Strided convolutions add trainable parameters prone to aliasing on small datasets. Max-pooling non-linearly selects dominant edge and knuckle activations within each $2 \times 2$ patch, providing translation pseudo-invariance with zero parameter overhead.
+
+### Global Spatial Aggregation: Adaptive Average Pooling vs. Dense Flattening
+- **Global Average Pooling (`AdaptiveAvgPool2d((1, 1))`)**: Directly flattening the Stage 4 feature map ($256 \times 14 \times 14 = 50,176$ activations) into a 256-D dense layer would require $50,176 \times 256 \approx 12.84\times 10^6$ parameters, dominating >96% of the entire network. Such unconstrained fully connected capacity memorizes signer-specific spatial positions, causing catastrophic failure under cross-subject testing.
+- **Mechanism**: Global average pooling collapses spatial dimensions to a clean 256-D channel descriptor without trainable parameters, enforcing full translation invariance across letterboxed hand crops.
+
+### Classification Head: 2-Stage MLP with Dual Dropout ($p=0.4$)
+- **2-Stage MLP vs. Single Linear Projection**: In shallow sequential networks, feature representations at the pooling boundary are not yet linearly separable for 36 classes. An intermediate dense layer (`Linear(256, 256)` + ReLU) acts as a non-linear coordinate warping stage before the final 36-way projection.
+- **Heavy Regularization ($p = 0.4$)**: Under subject-independent splits, signers introduce stark anatomical and luminance domain shifts. Placing dual dropout layers before each dense transformation destroys co-adaptations between pooled features, preventing individual channels from overfitting to idiosyncratic signer artifacts.
+
+---
+
+## 4. Theoretical Receptive Field Propagation
 
 The effective receptive field ($RF$) evolves sequentially through convolutional and pooling layers according to:
 $$RF_{l} = RF_{l-1} + (k_l - 1) \cdot j_{l-1}$$
@@ -72,7 +105,7 @@ where $j_l = j_{l-1} \cdot s_l$ represents the cumulative stride jump.
 
 ---
 
-## 4. Optimization Protocol and Hyperparameters
+## 5. Optimization Protocol and Hyperparameters
 
 Training is governed by an adaptive schedule with explicit early stopping to ensure convergence without over-constraining the model:
 
@@ -92,7 +125,7 @@ Training is governed by an adaptive schedule with explicit early stopping to ens
 
 ---
 
-## 5. Empirical Performance on Unseen Test Set
+## 6. Empirical Performance on Unseen Test Set
 
 The model checkpoint from the best validation epoch (`weights/best_model_1_simple_cnn.pt`) was evaluated on the completely unseen subject test set (7,200 images across signers 9 and 10).
 
@@ -107,7 +140,7 @@ The model checkpoint from the best validation epoch (`weights/best_model_1_simpl
 
 ---
 
-## 6. Error Taxonomy and Failure Mode Analysis
+## 7. Error Taxonomy and Failure Mode Analysis
 
 Across 7,200 unseen test samples, the baseline network produced 3,405 classification errors (47.29% error rate). To rigorously dissect network limitations versus data-intrinsic ambiguity, errors are classified into three distinct tiers:
 
@@ -153,7 +186,7 @@ Errors occurring between phonologically distinct static hand configurations repr
 
 ---
 
-## 7. Training Diagnostics and Visualizations
+## 8. Training Diagnostics and Visualizations
 
 ### Loss and Accuracy Curves
 Convergence curves illustrate steady learning across 25 epochs. While training accuracy surpassed 89%, validation accuracy plateaued near 49.40%, showing the typical generalization gap of shallow sequential architectures under cross-signer domain shift.

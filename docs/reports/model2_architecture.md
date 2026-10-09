@@ -57,7 +57,37 @@ The network consists of an initial downsampling stem, four modular residual stag
 
 ---
 
-## 4. Theoretical Receptive Field Propagation
+## 4. Design Rationale and Architectural Justifications
+
+Every architectural primitive in Model 2 is engineered to resolve the structural representation bottlenecks identified in Model 1 while calibrating model capacity to 2.91M parameters.
+
+### Stem Design: $3 \times 3$, Stride 1 + MaxPool vs. Standard ResNet $7 \times 7$, Stride 2
+- **Standard ResNet Stem ($7 \times 7, s=2$ + MaxPool $3 \times 3, s=2$)**: Downsamples natural $224 \times 224$ images by $4\times$ immediately to $56 \times 56$ in the first two operations. While effective on coarse ImageNet objects, this aggressive early downsampling destroys sub-pixel edge gradients of thin finger tips and distal knuckle folds on letterboxed hand crops.
+- **Custom Conservative Stem**: Employs a $3 \times 3, s=1$ convolution with padding 1, followed by a single $2 \times 2, s=2$ max-pooling operation. This preserves a spatial resolution of $112 \times 112$ entering Stage 1, retaining high-frequency silhouette contours and inter-finger gaps before non-linear residual processing begins.
+
+### Modular Residual Stages ($D = [2, 2, 2, 2]$, 8 Blocks, 16 Convolutions)
+- **Depth Configuration ($D=2$ per stage)**: Calibrating depth to 2 residual blocks (4 convolutions) per stage provides 18 total parameterized layers. Compared to deeper variants like ResNet-34 ($D=[3, 4, 6, 3]$, 21.8M params), an 18-layer depth prevents over-parameterization on 7 training signers while providing 6.3$\times$ more capacity than Model 1.
+- **Additive Shortcut Operator ($y = \mathcal{F}(x) + x$)**: Eliminates the gradient vanishing problem inherent in Model 1's sequential chain. By providing an additive path $\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial \mathcal{L}}{\partial y} (1 + \frac{\partial \mathcal{F}}{\partial x})$, backpropagated error flows directly through the identity connection even when residual layer weights $\frac{\partial \mathcal{F}}{\partial x}$ are small. This enables training an 18-layer network stably from scratch without auxiliary losses.
+- **Preservation of Multi-Scale Morphology**: Identity skips allow higher stages to access unattenuated low-level edge features, directly resolving fine-grained phonological distinctions (e.g., thumb placement in `M` vs `N`, `A` vs `S`).
+
+### Projection Downsampling Shortcut ($1 \times 1$ Conv, Stride 2 + BatchNorm)
+- **$1 \times 1$ Projection vs. Zero-Padding or Strided Pooling**: When transitioning between stages (where spatial dimensions halve and channel depth doubles), tensor geometry must be reconciled. Zero-padding shortcuts introduce inactive channels that corrupt variance tracking in subsequent batch norm layers; strided average pooling lacks trainable alignment. A learned $1 \times 1$ convolution with stride 2 linearly projects dimensions with minimal parameter cost ($C_{in} \times C_{out}$) and zero phase distortion.
+
+### Multi-Scale Receptive Field Staging ($20 \to 48 \to 104 \to 216$)
+- **Staged Morphological Receptive Fields**:
+  - *Stage 1 ($RF = 20$)*: Local knuckle and fingertip edge primitives.
+  - *Stage 2 ($RF = 48$)*: Individual finger flexions and joint curvature angles.
+  - *Stage 3 ($RF = 104$)*: Multi-digit configurations (e.g., index-middle-thumb spatial relations in `3`, `W`, `K`).
+  - *Stage 4 ($RF = 216$)*: Global hand orientation, wrist alignment, and total silhouette boundary.
+- **Global Average Pooling**: Collapses the $14 \times 14 \times 256$ tensor into a 256-D latent vector, providing complete translation invariance across letterbox padding boundaries.
+
+### Classifier Head Expansion: 384-D Hidden Space vs. Direct Linear Projection
+- **Over-Complete Intermediate Projection (`Linear(256, 384)`)**: In residual networks, the 256 pooled features represent dense, rich semantic representations. Projecting through an intermediate expansion layer (384 units) with ReLU activation provides representational flexibility to disentangle fine morphological confusions (`8` vs `7`, `N` vs `M`) before final 36-way classification. Empirically, this 384-D intermediate layer improved validation Macro-F1 over direct 256-D linear mapping.
+- **Moderate Dropout ($p = 0.3$)**: Residual architectures exhibit implicit ensemble regularization across exponential parallel paths (Veit et al., 2016). A moderate rate ($p=0.3$) prevents dense unit co-adaptation without destroying the coordinated feature representations learned across residual stages.
+
+---
+
+## 5. Theoretical Receptive Field Propagation
 
 With depth $D=2$ (two residual blocks / four $3 \times 3$ convolutions per stage), cumulative receptive field evolves as:
 $$RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}$$
@@ -81,7 +111,7 @@ $$RF_l = RF_{l-1} + (k_l - 1) \cdot j_{l-1}$$
 
 ---
 
-## 5. Optimization Protocol and Hyperparameters
+## 6. Optimization Protocol and Hyperparameters
 
 Hyperparameters were calibrated through exploratory tuning on the Subject Split:
 
@@ -101,7 +131,7 @@ Hyperparameters were calibrated through exploratory tuning on the Subject Split:
 
 ---
 
-## 6. Empirical Performance on Unseen Test Set
+## 7. Empirical Performance on Unseen Test Set
 
 The optimal checkpoint (`weights/best_model_2_complex_cnn.pt`) was evaluated across the 7,200 unseen images of Signers 9 and 10:
 
@@ -116,7 +146,7 @@ The optimal checkpoint (`weights/best_model_2_complex_cnn.pt`) was evaluated acr
 
 ---
 
-## 7. Error Taxonomy and Failure Mode Analysis
+## 8. Error Taxonomy and Failure Mode Analysis
 
 Out of 7,200 unseen test samples, the residual network produced 1,231 classification errors (17.10% error rate), achieving a drastic reduction from Model 1's 3,405 errors:
 
@@ -151,7 +181,7 @@ Without temporal motion sequences or 3D depth, single static frames of `1` vs. `
 
 ---
 
-## 8. Training Diagnostics and Visualizations
+## 9. Training Diagnostics and Visualizations
 
 ### Loss and Accuracy Curves
 Convergence occurred rapidly by Epoch 8, with validation accuracy achieving 81.57% on isolated signer P8 before stabilizing.
