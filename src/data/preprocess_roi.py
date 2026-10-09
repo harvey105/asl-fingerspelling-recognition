@@ -1,98 +1,77 @@
-"""
-src/preprocess_roi.py
-,  (revised): hand crop, 20% margin, letterbox to 224x224, full dataset.
-
-Every image receives exactly one method label. The label records WHY it was or was not
-hand-cropped, so the report cannot conflate a fixed rule with a detection failure:
-
-  mediapipe         MediaPipe single-hand box, 20% margin
-  skin              YCrCb skin-fallback box (rejected if touching border or oversized)
-  class_rule_full   class 0 only: full frame by a fixed class rule
-  undetected_full   non-zero class where MediaPipe and skin both failed: full frame
-  blank             listed in blank_frames.csv: not written
-
-Prerequisite: data/processed/blank_frames.csv, written by src/blank_scan.py --threshold T.
-Refuses to run if data/processed_crops already holds files (stale-output guard).
-
-Per image the log also records margin_side and scale (= 224 / margin_side), the factor by
-which the raw pixels are resampled.  uses scale to measure the class-0 size confound.
-
-Read-only on data/raw/. Writes:
-  data/processed_crops/<class folders>/*.png
-  data/processed/roi_crop_log.csv
-  docs/metrics/crop_log.json
-  docs/figures/dataset/roi_crop_inspection.png
-
-Run (from repository root): uv run python src/preprocess_roi.py
-"""
-
 import json
 from concurrent.futures import ProcessPoolExecutor
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 import cv2
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from PIL import Image
 from tqdm import tqdm
 
 from src.config import (
     BLANK_FRAMES_CSV,
     CROPS_DIR,
     DOCS_DIR,
-    NUM_VOLUNTEERS,
     PROCESSED_DIR,
     PROJECT_ROOT,
 )
+from src.utils.inspection import generate_crop_inspection_grid
 
 from .roi_detector import (
     IMG_SIZE,
-    MAX_NUM_HANDS,
-    MP_MIN_DETECTION_CONF,
+    BoxCoords,
     describe_box,
     detect,
     make_hands,
 )
 
-SEED = 42
-MARGIN_FRAC = 0.20
-CROP_SIZE = 224
-PAD_VALUE = (128, 128, 128)  # neutral gray, identical in BGR and RGB
-NUM_WORKERS = 8
-PNG_PARAMS = [cv2.IMWRITE_PNG_COMPRESSION, 3]
-FULL_BOX = (0, 0, IMG_SIZE - 1, IMG_SIZE - 1)
-FULL_FRAME_CLASSES = {"0"}  # : two-handed sign, single-hand box clips a hand
-WRITTEN_METHODS = ["mediapipe", "skin", "class_rule_full", "undetected_full"]
+SEED: int = 42
+MARGIN_FRAC: float = 0.20
+CROP_SIZE: int = 224
+PAD_VALUE: tuple[int, int, int] = (128, 128, 128)
+NUM_WORKERS: int = 8
+PNG_PARAMS: list[int] = [cv2.IMWRITE_PNG_COMPRESSION, 3]
+FULL_BOX: BoxCoords = (0, 0, IMG_SIZE - 1, IMG_SIZE - 1)
+FULL_FRAME_CLASSES: set[str] = {"0"}
+WRITTEN_METHODS: list[str] = [
+    "mediapipe",
+    "skin",
+    "class_rule_full",
+    "undetected_full",
+]
 
-INDEX_CSV = PROCESSED_DIR / "asl_hg_image_index.csv"
-LOG_CSV = PROCESSED_DIR / "roi_crop_log.csv"
-REPORT = DOCS_DIR / "metrics" / "crop_log.json"
-INSPECT_FIG = DOCS_DIR / "figures" / "dataset" / "roi_crop_inspection.png"
-INSPECT_CLASSES = ["0", "5", "W", "B", "C", "H", "Y", "K", "U", "3"]
+INDEX_CSV: Path = PROCESSED_DIR / "asl_hg_image_index.csv"
+LOG_CSV: Path = PROCESSED_DIR / "roi_crop_log.csv"
+REPORT: Path = DOCS_DIR / "metrics" / "crop_log.json"
+INSPECT_FIG: Path = DOCS_DIR / "figures" / "dataset" / "roi_crop_inspection.png"
 
 
-def add_margin(box, frac, size):
+def add_margin(box: BoxCoords, frac: float, frame_size: int) -> BoxCoords:
+    """Expand a bounding box symmetrically by a fraction of its longest side."""
     x0, y0, x1, y1 = box
     side = max(x1 - x0, y1 - y0) + 1
-    m = int(round(side * frac))
+    margin = round(side * frac)
     return (
-        max(0, x0 - m),
-        max(0, y0 - m),
-        min(size - 1, x1 + m),
-        min(size - 1, y1 + m),
+        max(0, x0 - margin),
+        max(0, y0 - margin),
+        min(frame_size - 1, x1 + margin),
+        min(frame_size - 1, y1 + margin),
     )
 
 
-def letterbox(crop_bgr, out_size, pad_value):
+def letterbox(
+    crop_bgr: np.ndarray,
+    out_size: int,
+    pad_value: tuple[int, int, int],
+) -> np.ndarray:
+    """Resize image preserving aspect ratio and center on a padded square canvas."""
     h, w = crop_bgr.shape[:2]
     scale = out_size / max(h, w)
     new_w, new_h = max(1, round(w * scale)), max(1, round(h * scale))
-    resized = cv2.resize(crop_bgr, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
+    resized = cv2.resize(
+        crop_bgr, (new_w, new_h), interpolation=cv2.INTER_LINEAR
+    )
     canvas = np.full((out_size, out_size, 3), pad_value, dtype=np.uint8)
     top = (out_size - new_h) // 2
     left = (out_size - new_w) // 2
@@ -103,27 +82,36 @@ def letterbox(crop_bgr, out_size, pad_value):
 _HANDS = None
 
 
-def _init_worker():
+def _init_worker() -> None:
     global _HANDS
     _HANDS = make_hands()
 
 
-def process_one(task):
+TaskTuple = tuple[str, str, int, bool, Path]
+
+
+def process_one(task: TaskTuple) -> dict[str, Any]:
+    """Process a single image record: detect hand, crop, letterbox, and save to disk."""
     filepath, label, volunteer, is_blank, out_root = task
-    base = {"filepath": filepath, "label": label, "volunteer": volunteer}
+    base_info = {
+        "filepath": filepath,
+        "label": label,
+        "volunteer": volunteer,
+    }
     if is_blank:
-        return {**base, "method": "blank"}
+        return {**base_info, "method": "blank"}
 
     bgr = cv2.imread(str(PROJECT_ROOT / filepath))
     if bgr is None:
-        return {**base, "method": "error", "error": "cv2.imread failed"}
+        return {**base_info, "method": "error", "error": "cv2.imread failed"}
 
+    box: BoxCoords | None = None
     if label in FULL_FRAME_CLASSES:
-        box, method = None, "class_rule_full"  # rule, not a detection result
+        method = "class_rule_full"
     else:
         box, method = detect(bgr, _HANDS)
         if box is None:
-            method = "undetected_full"  # detection failed; full frame kept
+            method = "undetected_full"
 
     if box is None:
         box = FULL_BOX
@@ -138,10 +126,10 @@ def process_one(task):
     out_path = out_root / label / (Path(filepath).stem + ".png")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if not cv2.imwrite(str(out_path), out_img, PNG_PARAMS):
-        return {**base, "method": "error", "error": "cv2.imwrite failed"}
+        return {**base_info, "method": "error", "error": "cv2.imwrite failed"}
 
     return {
-        **base,
+        **base_info,
         "method": method,
         "box_side": side,
         "box_area_frac": None if area_frac is None else round(area_frac, 4),
@@ -155,7 +143,8 @@ def process_one(task):
     }
 
 
-def summarise(res):
+def summarise(res: pd.DataFrame) -> dict[str, Any]:
+    """Compute aggregate detector statistics over processed crops."""
     n = len(res)
     counts = {k: int(v) for k, v in res["method"].value_counts().items()}
     written = res[res["method"].isin(WRITTEN_METHODS)].copy()
@@ -167,10 +156,13 @@ def summarise(res):
         for m, g in det.groupby("method")
     }
     scale_by_method = {
-        m: round(float(g["scale"].median()), 4) for m, g in written.groupby("method")
+        m: round(float(g["scale"].median()), 4)
+        for m, g in written.groupby("method")
     }
     errors = (
-        res.loc[res["method"] == "error", ["filepath", "error"]].to_dict("records")
+        res.loc[res["method"] == "error", ["filepath", "error"]].to_dict(
+            "records"
+        )
         if "error" in res.columns
         else []
     )
@@ -185,65 +177,44 @@ def summarise(res):
     }
 
 
-def inspection_grid(res, out):
-    ok = res[res["method"].isin(WRITTEN_METHODS)]
-    fig, axes = plt.subplots(2, 5, figsize=(14, 6.4))
-    for ax, cls, vol in zip(
-        axes.flatten(), INSPECT_CLASSES, range(1, NUM_VOLUNTEERS + 1)
-    ):
-        ax.axis("off")
-        pool = ok[(ok["label"] == cls) & (ok["volunteer"] == vol)]
-        if pool.empty:
-            ax.set_title(f"'{cls}'  P{vol}: no written sample", fontsize=9)
-            continue
-        row = pool.sample(1, random_state=SEED).iloc[0]
-        png = CROPS_DIR / cls / (Path(row["filepath"]).stem + ".png")
-        with Image.open(png) as im:
-            ax.imshow(im.convert("RGB"))
-        ax.set_title(f"'{cls}'  P{vol}   [{row['method']}]", fontsize=10, weight="bold")
-    fig.suptitle(
-        " 20% margin, letterboxed 224x224 PNG crops, one seeded "
-        "sample per volunteer (method in brackets)",
-        fontsize=11,
-        weight="bold",
-    )
-    fig.tight_layout()
-    fig.savefig(out, dpi=200)
-    plt.close(fig)
-
-
-def main():
-    print("=" * 70)
-    print("ASL-HG:  (HAND CROP, 20% MARGIN, LETTERBOX, FULL DATASET)")
-    print("=" * 70)
+def main() -> None:
+    print("ASL-HG: Dataset ROI Preprocessing and Letterboxing")
 
     if not BLANK_FRAMES_CSV.exists():
-        raise FileNotFoundError(
-            f"{BLANK_FRAMES_CSV} not found. Run: uv run python src/blank_scan.py --threshold 0.001"
-        )
+        raise FileNotFoundError(f"{BLANK_FRAMES_CSV} not found.")
     stale = (
-        [p for p in CROPS_DIR.rglob("*") if p.is_file()] if CROPS_DIR.exists() else []
+        [p for p in CROPS_DIR.rglob("*") if p.is_file()]
+        if CROPS_DIR.exists()
+        else []
     )
     if stale:
         raise SystemExit(
-            f"{CROPS_DIR} already holds {len(stale)} files from an earlier run. "
-            "Delete it first: Remove-Item -Recurse -Force data\\processed_crops"
+            f"{CROPS_DIR} already contains {len(stale)} existing files. "
+            "Remove directory before re-running preprocessing."
         )
 
-    # Labels are read as strings so the digit '0' is never coerced to a number.
     df = pd.read_csv(INDEX_CSV, dtype={"filepath": str, "label": str})
-    blank_set = set(pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"])
-    print(f"Images: {len(df):,}   blank (excluded from crops): {len(blank_set):,}")
-    print(f"Full-frame classes by rule : {sorted(FULL_FRAME_CLASSES)}")
+    blank_set = set(
+        pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"]
+    )
+    print(f"Images: {len(df):,} | Blank excluded: {len(blank_set):,}")
 
     CROPS_DIR.mkdir(parents=True, exist_ok=True)
     tasks = [
-        (r.filepath, r.label, int(r.volunteer), r.filepath in blank_set, CROPS_DIR)
+        (
+            r.filepath,
+            r.label,
+            int(r.volunteer),
+            r.filepath in blank_set,
+            CROPS_DIR,
+        )
         for r in df.itertuples(index=False)
     ]
 
     results = []
-    with ProcessPoolExecutor(max_workers=NUM_WORKERS, initializer=_init_worker) as pool:
+    with ProcessPoolExecutor(
+        max_workers=NUM_WORKERS, initializer=_init_worker
+    ) as pool:
         for res in tqdm(
             pool.map(process_one, tasks, chunksize=50),
             total=len(tasks),
@@ -256,54 +227,32 @@ def main():
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     res_df.to_csv(LOG_CSV, index=False)
 
-    s = summarise(res_df)
-    print("\nMethod counts:", s["method_counts"])
-    print("Method rates :", s["method_rates"])
-    print("Border-touching rate by detector:", s["box_touches_border_rate_by_method"])
-    print("Median scale by method:", s["median_scale_by_method"])
-    print(f"Written to crops: {s['written']:,}   errors: {len(s['errors'])}")
-    for e in s["errors"][:20]:
-        print(f"  {e['filepath']}: {e['error']}")
+    summary_stats = summarise(res_df)
+    print("Method counts:", summary_stats["method_counts"])
+    print("Method rates :", summary_stats["method_rates"])
 
     on_disk = sum(1 for _ in CROPS_DIR.rglob("*.png"))
-    print(f"\nPNG files on disk: {on_disk:,} (log says {s['written']:,})")
-    if on_disk != s["written"]:
-        print("  [WARN] mismatch between log and disk; investigate before .")
+    print(f"PNG files on disk: {on_disk:,} (logged: {summary_stats['written']:,})")
 
-    inspection_grid(res_df, INSPECT_FIG)
-    print(f"Inspection figure: {INSPECT_FIG.relative_to(PROJECT_ROOT).as_posix()}")
+    generate_crop_inspection_grid(res_df, INSPECT_FIG)
 
-    report = {
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
+    report_data = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "seed": SEED,
         "margin_frac": MARGIN_FRAC,
         "crop_size": CROP_SIZE,
         "pad_value": list(PAD_VALUE),
-        "output_format": "png (lossless)",
-        "resample": "bilinear (INTER_LINEAR)",
+        "output_format": "png",
         "full_frame_classes": sorted(FULL_FRAME_CLASSES),
-        "method_definitions": {
-            "mediapipe": "single-hand MediaPipe box with margin",
-            "skin": "YCrCb skin-fallback box with margin",
-            "class_rule_full": "class-0 rule: full frame, no detection attempted",
-            "undetected_full": "detector failed on a non-rule class: full frame kept",
-            "blank": "excluded (blank_frames.csv)",
-        },
-        "mediapipe": {
-            "static_image_mode": True,
-            "max_num_hands": MAX_NUM_HANDS,
-            "min_detection_confidence": MP_MIN_DETECTION_CONF,
-        },
         "blank_frames_excluded": len(blank_set),
         "files_on_disk": on_disk,
-        "summary": s,
+        "summary": summary_stats,
     }
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
+        json.dumps(report_data, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8",
     )
-    print(f"Report: {REPORT.relative_to(PROJECT_ROOT).as_posix()}")
-    print(f"Per-image log: {LOG_CSV.relative_to(PROJECT_ROOT).as_posix()}")
 
 
 if __name__ == "__main__":

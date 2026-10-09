@@ -1,6 +1,4 @@
-"""
-Multi-class evaluation metrics calculation across classification classes.
-"""
+from collections.abc import Sequence
 
 import numpy as np
 import torch
@@ -8,26 +6,11 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 
 
 def compute_metrics(
-    y_true: torch.Tensor | np.ndarray | list[int],
-    y_pred: torch.Tensor | np.ndarray | list[int],
+    y_true: torch.Tensor | np.ndarray | Sequence[int],
+    y_pred: torch.Tensor | np.ndarray | Sequence[int],
     num_classes: int | None = 36,
 ) -> dict[str, float]:
-    """
-    Compute multi-class evaluation metrics: Top-1 Accuracy, Macro-Precision,
-    Macro-Recall, and Macro-F1 score.
-
-    Args:
-        y_true: Ground truth target labels (1D array or tensor).
-        y_pred: Predicted class labels or logits (1D or 2D array or tensor).
-        num_classes: Optional total number of classes.
-
-    Returns:
-        Dictionary containing:
-            - accuracy: Top-1 classification accuracy [0.0, 1.0]
-            - precision_macro: Macro-averaged precision [0.0, 1.0]
-            - recall_macro: Macro-averaged recall [0.0, 1.0]
-            - f1_macro: Macro-averaged F1 score [0.0, 1.0]
-    """
+    """Compute multi-class evaluation metrics conforming to assignment rubric."""
     if isinstance(y_true, torch.Tensor):
         y_true = y_true.detach().cpu().numpy()
     else:
@@ -72,9 +55,7 @@ def compute_metrics(
 
 
 class MetricTracker:
-    """
-    Online accumulator for batch predictions and loss tracking during an epoch.
-    """
+    """Accumulator for batch predictions and loss tracking during an epoch."""
 
     def __init__(self, num_classes: int = 36) -> None:
         self.num_classes = num_classes
@@ -83,7 +64,9 @@ class MetricTracker:
         self.all_preds: list[int] = []
         self.all_targets: list[int] = []
 
-    def update(self, loss: float, preds: torch.Tensor, targets: torch.Tensor) -> None:
+    def update(
+        self, loss: float, preds: torch.Tensor, targets: torch.Tensor
+    ) -> None:
         """Accumulate batch loss and prediction vectors."""
         batch_size = targets.size(0)
         self.total_loss += float(loss) * batch_size
@@ -113,12 +96,11 @@ class MetricTracker:
         )
 
     def compute(self) -> dict[str, float]:
-        """Compute aggregated metrics across all recorded samples."""
-        avg_loss = self.loss
+        """Compute aggregated metrics across recorded samples."""
         metrics = compute_metrics(
             self.all_targets, self.all_preds, num_classes=self.num_classes
         )
-        metrics["loss"] = float(avg_loss)
+        metrics["loss"] = float(self.loss)
         return metrics
 
     def reset(self) -> None:

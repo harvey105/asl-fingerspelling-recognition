@@ -1,14 +1,17 @@
-"""
-Deep residual convolutional neural network built from scratch with bottleneck/residual blocks.
-"""
-
 import torch
 from torch import nn
 
 
 class ResidualBlock(nn.Module):
-    """
-    Residual block with optional projection shortcut: F(x) + x.
+    """Residual block with identity or 1x1 projection shortcut.
+
+    Computes y = ReLU(F(x) + G(x)), where G(x) projects x via a 1x1 conv if
+    spatial stride > 1 or channel dimensions differ.
+
+    Args:
+        in_channels: Number of input channels.
+        out_channels: Number of output channels.
+        stride: Stride for the first 3x3 convolution and shortcut.
     """
 
     def __init__(self, in_channels: int, out_channels: int, stride: int = 1) -> None:
@@ -24,14 +27,23 @@ class ResidualBlock(nn.Module):
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU(inplace=True)
         self.conv2 = nn.Conv2d(
-            out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False
+            out_channels,
+            out_channels,
+            kernel_size=3,
+            stride=1,
+            padding=1,
+            bias=False,
         )
         self.bn2 = nn.BatchNorm2d(out_channels)
 
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(
-                    in_channels, out_channels, kernel_size=1, stride=stride, bias=False
+                    in_channels,
+                    out_channels,
+                    kernel_size=1,
+                    stride=stride,
+                    bias=False,
                 ),
                 nn.BatchNorm2d(out_channels),
             )
@@ -47,9 +59,15 @@ class ResidualBlock(nn.Module):
 
 
 class ComplexCNN(nn.Module):
-    """
-    Deep residual CNN with modular stages, residual skip connections F(x) + x,
-    and configurable stage depths and channel capacities.
+    """Deep residual CNN with modular stages and skip connections.
+
+    Args:
+        in_channels: Number of input image channels (default 3 for RGB).
+        num_classes: Number of target gesture classes (default 36).
+        stage_channels: Channel capacities across the residual stages.
+        stage_depths: Number of residual blocks per stage.
+        dropout: Dropout probability applied in classifier head.
+        fc_dim: Latent dimension of intermediate fully-connected layer.
     """
 
     def __init__(
@@ -110,7 +128,7 @@ class ComplexCNN(nn.Module):
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Forward pass through stem, residual stages, and classifier."""
+        """Extract residual features and predict class logits."""
         x = self.stem(x)
         x = self.stages(x)
         x = self.pool(x)

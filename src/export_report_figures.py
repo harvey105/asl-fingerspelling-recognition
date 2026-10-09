@@ -1,25 +1,20 @@
-"""
-Export training curve plots, test confusion matrices, and detailed evaluation metrics.
-"""
-
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import seaborn as sns
-from sklearn.metrics import classification_report, confusion_matrix
 import torch
+from sklearn.metrics import classification_report, confusion_matrix
 
 # Ensure project root is discoverable
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import CLASSES, DOCS_DIR, NUM_CLASSES, SPLITS_DIR
+from src.config import CLASSES, DOCS_DIR, NUM_CLASSES
 from src.data.dataloaders import get_dataloaders
 from src.models import build_model
 from src.training.engine import get_default_device

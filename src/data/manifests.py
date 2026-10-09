@@ -1,22 +1,3 @@
-"""
-src/manifests.py
- subject-independent manifests over the verified crop output, built in memory.
-
-Inputs:
-  data/processed/asl_hg_image_index.csv   per-image md5, label, volunteer
-  data/processed/roi_crop_log.csv         per-image method (what was actually written)
-
-Rules:
-  - Only images with a written crop are included. Blank frames are excluded .
-  - Split by signer from config.py: train P1-P7, val P8, test P9-P10 .
-  - Exact-copy de-duplication in TRAIN ONLY : from each byte-identical group, keep one
-    file (first by filepath). Val and test are not de-duplicated, so the evaluation set is the
-    full crop output. Within-signer repeats there are reported, not removed.
-  - Writes nothing.  freezes the result to CSV.
-
-Run as a module through check_dataset_part_a.py; no standalone run.
-"""
-
 from pathlib import Path
 
 import pandas as pd

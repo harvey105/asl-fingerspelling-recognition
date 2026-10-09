@@ -1,110 +1,88 @@
-"""
-Transfer learning classifier utilizing torchvision pretrained vision backbones.
-"""
+from typing import Any
 
-from typing import Any, List, Optional
 import torch
 from torch import nn
-from torchvision.models import (
-    MobileNet_V3_Large_Weights,
-    MobileNet_V3_Small_Weights,
-    ResNet18_Weights,
-    mobilenet_v3_large,
-    mobilenet_v3_small,
-    resnet18,
-)
+from torchvision.models import ResNet18_Weights, resnet18
 
 
 class TransferCNN(nn.Module):
-    """
-    Transfer learning network adapting pretrained vision models to 36-class fingerspelling recognition.
+    """Transfer learning classifier adapting pretrained ResNet-18 (Model 3).
+    Replaces the default ImageNet classification head with an MLP head for 36-class gesture recognition.
+
+    Args:
+        num_classes: Number of target gesture classes (default 36).
+        pretrained: If True, loads official ImageNet-1K pretrained weights.
+        dropout: Dropout probability applied before classifier layers.
+        fc_dim: Intermediate linear layer dimension in classifier head.
     """
 
     def __init__(
         self,
-        backbone_name: str = "resnet18",
         num_classes: int = 36,
         pretrained: bool = True,
         dropout: float = 0.3,
         fc_dim: int = 256,
+        **kwargs: Any,
     ) -> None:
         super().__init__()
-        self.backbone_name = backbone_name.lower().replace("-", "_")
         self.num_classes = num_classes
         self.fc_dim = fc_dim
 
-        if self.backbone_name in ("resnet18", "resnet"):
-            weights = ResNet18_Weights.DEFAULT if pretrained else None
-            base = resnet18(weights=weights)
-            in_features = base.fc.in_features
-            if fc_dim > 0:
-                base.fc = nn.Sequential(
-                    nn.Dropout(p=dropout),
-                    nn.Linear(in_features, fc_dim),
-                    nn.BatchNorm1d(fc_dim),
-                    nn.ReLU(inplace=True),
-                    nn.Dropout(p=dropout),
-                    nn.Linear(fc_dim, num_classes),
-                )
-            else:
-                base.fc = nn.Sequential(
-                    nn.Dropout(p=dropout),
-                    nn.Linear(in_features, num_classes),
-                )
-            self.model = base
+        weights = ResNet18_Weights.DEFAULT if pretrained else None
+        base = resnet18(weights=weights)
+        in_features = base.fc.in_features
 
-        elif self.backbone_name in ("mobilenet_v3_large", "mobilenet_large"):
-            weights = MobileNet_V3_Large_Weights.DEFAULT if pretrained else None
-            base = mobilenet_v3_large(weights=weights)
-            in_features = base.classifier[3].in_features
-            base.classifier[3] = nn.Linear(in_features, num_classes)
-            if dropout != 0.2:
-                base.classifier[2] = nn.Dropout(p=dropout)
-            self.model = base
-
-        elif self.backbone_name in (
-            "mobilenet_v3_small",
-            "mobilenet_small",
-            "mobilenet",
-        ):
-            weights = MobileNet_V3_Small_Weights.DEFAULT if pretrained else None
-            base = mobilenet_v3_small(weights=weights)
-            in_features = base.classifier[3].in_features
-            base.classifier[3] = nn.Linear(in_features, num_classes)
-            if dropout != 0.2:
-                base.classifier[2] = nn.Dropout(p=dropout)
-            self.model = base
+        if fc_dim > 0:
+            base.fc = nn.Sequential(
+                nn.Dropout(p=dropout),
+                nn.Linear(in_features, fc_dim),
+                nn.BatchNorm1d(fc_dim),
+                nn.ReLU(inplace=True),
+                nn.Dropout(p=dropout),
+                nn.Linear(fc_dim, num_classes),
+            )
         else:
-            raise ValueError(f"Unsupported backbone: {backbone_name}")
+            base.fc = nn.Sequential(
+                nn.Dropout(p=dropout),
+                nn.Linear(in_features, num_classes),
+            )
+        self.model = base
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward pass through ResNet-18 backbone and classifier head."""
         return self.model(x)
 
     def freeze_backbone(self) -> None:
-        """Freeze feature extraction layers, leaving only custom classifier head trainable."""
+        """Freeze feature extractor parameters, training only classifier head."""
         for name, param in self.model.named_parameters():
-            if "classifier" in name or "fc" in name:
+            if "fc" in name:
                 param.requires_grad = True
             else:
                 param.requires_grad = False
 
     def unfreeze_backbone(self) -> None:
-        """Unfreeze all model parameters for full fine-tuning."""
+        """Unfreeze all model parameters for full end-to-end fine-tuning."""
         for param in self.model.parameters():
             param.requires_grad = True
 
-    def get_parameter_groups(
-        self, lr_backbone: float, lr_head: float, weight_decay: float
-    ) -> List[dict[str, Any]]:
-        """Return parameter groups with differential learning rates for backbone vs head."""
+    def get_parameter_groups(self, lr_backbone: float, lr_head: float, weight_decay: float) -> list[dict[str, Any]]:
+        """Group parameters with differential learning rates for backbone vs head.
+
+        Args:
+            lr_backbone: Learning rate for pretrained feature extraction stages.
+            lr_head: Learning rate for newly initialized classifier head layers.
+            weight_decay: L2 regularization penalty.
+
+        Returns:
+            List of optimizer parameter group dictionaries.
+        """
         head_params = []
         backbone_params = []
-        head_keys = ("classifier", "fc")
 
         for name, param in self.model.named_parameters():
             if not param.requires_grad:
                 continue
-            if any(k in name for k in head_keys):
+            if "fc" in name:
                 head_params.append(param)
             else:
                 backbone_params.append(param)

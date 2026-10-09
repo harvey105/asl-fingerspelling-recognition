@@ -1,23 +1,3 @@
-"""
-src/freeze_random_splits.py
- random stratified 70/15/15 split (seed 42), for Ablation 1 only.
-
-Universe: the 35,988 written crops (blank frames excluded, ). No de-duplication: this is the
-naive protocol that Ablation 1 compares against the subject split. The random split is NOT the
-primary evaluation .
-
-Method: the same two-stage stratified split as src/audit_random_split.py (test first, then val
-from the remainder), so the  leakage numbers remain comparable.
-
-Writes (write-once; refuses to overwrite):
-  data/splits/random_train.csv, random_val.csv, random_test.csv
-  data/splits/SHA256SUMS_random.txt
-  docs/metrics/split_random.json
-
-Columns match the subject CSVs: filepath, class_name, class_id, volunteer_id, crop_path, md5.
-Run (from repository root): uv run python -m src.data.random_splits
-"""
-
 import json
 import sys
 from datetime import datetime

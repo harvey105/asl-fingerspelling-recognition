@@ -1,17 +1,16 @@
-"""
-Loss functions for model training and regularization.
-"""
-
 import torch
 from torch import nn
 
 
 class LabelSmoothingCrossEntropy(nn.Module):
-    """
-    Cross-entropy loss with optional label smoothing.
+    """Cross-entropy loss with optional label smoothing.
 
-    When smoothing=0.0, standard cross-entropy is computed.
-    When smoothing > 0.0, targets are smoothed uniformly across all classes.
+    When smoothing is 0.0, computes standard categorical cross-entropy.
+    When smoothing > 0.0, redistributes probability uniformly across classes.
+
+    Args:
+        smoothing: Label smoothing factor in [0.0, 1.0).
+        weight: Optional class rebalancing weights tensor of shape (num_classes,).
     """
 
     def __init__(
@@ -27,14 +26,5 @@ class LabelSmoothingCrossEntropy(nn.Module):
         )
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
-        """
-        Compute label-smoothed cross-entropy loss.
-
-        Args:
-            logits: Predicted class logits of shape (N, C).
-            targets: Ground-truth class indices of shape (N,).
-
-        Returns:
-            Scalar loss tensor.
-        """
+        """Compute loss between unnormalized logits and ground-truth labels."""
         return self.loss_fn(logits, targets)

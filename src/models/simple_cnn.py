@@ -1,15 +1,17 @@
-"""
-Simple Convolutional Neural Network baseline built from Conv, Pool, and FC layers.
-"""
-
 import torch
 from torch import nn
 
 
 class SimpleCNN(nn.Module):
-    """
-    Standard sequential CNN architecture conforming to baseline rubric:
-    Convolutional feature extractor followed by pooling and fully connected classifier.
+    """Sequential CNN baseline built from conv, pooling, and dense layers.
+
+    Args:
+        in_channels: Number of input image channels (default 3 for RGB).
+        num_classes: Number of target gesture classes (default 36).
+        channel_list: Output channel counts per convolutional stage.
+        dropout: Dropout probability applied in classifier head.
+        fc_dim: Latent dimension of intermediate fully-connected layer.
+        kernel_size: Spatial kernel size for convolutions (default 3).
     """
 
     def __init__(
@@ -34,20 +36,18 @@ class SimpleCNN(nn.Module):
         c_in = in_channels
         padding = kernel_size // 2
         for c_out in channel_list:
-            layers.extend(
-                [
-                    nn.Conv2d(
-                        c_in,
-                        c_out,
-                        kernel_size=kernel_size,
-                        padding=padding,
-                        bias=False,
-                    ),
-                    nn.BatchNorm2d(c_out),
-                    nn.ReLU(inplace=True),
-                    nn.MaxPool2d(kernel_size=2, stride=2),
-                ]
-            )
+            layers.extend([
+                nn.Conv2d(
+                    c_in,
+                    c_out,
+                    kernel_size=kernel_size,
+                    padding=padding,
+                    bias=False,
+                ),
+                nn.BatchNorm2d(c_out),
+                nn.ReLU(inplace=True),
+                nn.MaxPool2d(kernel_size=2, stride=2),
+            ])
             c_in = c_out
 
         self.features = nn.Sequential(*layers)
@@ -66,7 +66,7 @@ class SimpleCNN(nn.Module):
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Forward pass through feature extractor and classifier head."""
+        """Extract features and predict class logits."""
         x = self.features(x)
         x = self.pool(x)
         return self.classifier(x)

@@ -1,7 +1,3 @@
-"""
-Unified training engine supporting hardware acceleration and graceful CPU fallback.
-"""
-
 import json
 import time
 import uuid
@@ -24,7 +20,6 @@ from torch.utils.data import DataLoader
 from .losses import LabelSmoothingCrossEntropy
 from .metrics import MetricTracker
 
-# Suppress repetitive DirectML CPU fallback notices for aten::lerp during optimizer steps
 warnings.filterwarnings(
     "ignore",
     message=".*The operator 'aten::lerp.Scalar_out' is not currently supported on the DML backend.*",
@@ -32,8 +27,13 @@ warnings.filterwarnings(
 
 
 def get_default_device(device_preference: str | None = None) -> torch.device:
-    """
-    Select execution device with DirectML support on Windows/AMD and CPU fallback.
+    """Select compute device supporting DirectML, CUDA, or CPU fallback.
+
+    Args:
+        device_preference: Optional device string ('dml', 'cuda', 'cpu').
+
+    Returns:
+        Configured torch.device.
     """
     if device_preference is not None:
         pref = device_preference.strip().lower()
@@ -59,7 +59,7 @@ def get_default_device(device_preference: str | None = None) -> torch.device:
 
 @dataclass
 class TrainerConfig:
-    """Trainer configuration hyper-parameters and runtime settings."""
+    """Hyperparameter and runtime configuration for Trainer."""
 
     model_name: str
     epochs: int = 20
@@ -79,8 +79,15 @@ class TrainerConfig:
 
 
 class Trainer:
-    """
-    Unified model training and evaluation engine.
+    """Standardized neural network training, validation, and evaluation engine.
+
+    Args:
+        model: PyTorch model module.
+        config: TrainerConfig settings.
+        train_loader: Training DataLoader.
+        val_loader: Validation DataLoader.
+        device: Target torch compute device.
+        test_loader: Optional test set DataLoader.
     """
 
     def __init__(
@@ -108,7 +115,6 @@ class Trainer:
             smoothing=self.config.label_smoothing
         )
 
-        # Enforce foreach=False for DirectML compatibility
         if (
             self.config.lr_backbone is not None
             and hasattr(self.model, "get_parameter_groups")
@@ -118,10 +124,7 @@ class Trainer:
                 lr_head=self.config.learning_rate,
                 weight_decay=self.config.weight_decay,
             )
-            self.optimizer = torch.optim.AdamW(
-                param_groups,
-                foreach=False,
-            )
+            self.optimizer = torch.optim.AdamW(param_groups, foreach=False)
         else:
             self.optimizer = torch.optim.AdamW(
                 self.model.parameters(),
@@ -136,33 +139,32 @@ class Trainer:
         self.history: list[dict[str, Any]] = []
 
     def _build_scheduler(self) -> _LRScheduler:
-        """Construct Cosine Annealing learning rate scheduler with linear warmup."""
+        """Construct Cosine Annealing learning rate schedule with linear warmup."""
         warmup_epochs = max(1, self.config.warmup_epochs)
         main_epochs = max(1, self.config.epochs - warmup_epochs)
-
-        warmup_sched = LinearLR(
+        warmup = LinearLR(
             self.optimizer,
             start_factor=0.1,
             end_factor=1.0,
             total_iters=warmup_epochs,
         )
-        cosine_sched = CosineAnnealingLR(
-            self.optimizer,
-            T_max=main_epochs,
-            eta_min=self.config.min_lr,
+        cosine = CosineAnnealingLR(
+            self.optimizer, T_max=main_epochs, eta_min=self.config.min_lr
         )
         return SequentialLR(
             self.optimizer,
-            schedulers=[warmup_sched, cosine_sched],
+            schedulers=[warmup, cosine],
             milestones=[warmup_epochs],
         )
 
-    def train_epoch(self, epoch: int = 1, total_epochs: int = 1) -> dict[str, float]:
-        """Execute a single training epoch across train_loader batches."""
+    def train_epoch(
+        self, epoch: int = 1, total_epochs: int = 1
+    ) -> dict[str, float]:
+        """Execute one complete training epoch over train_loader batches."""
         self.model.train()
         tracker = MetricTracker(num_classes=36)
         start_time = time.perf_counter()
-        total_batches = len(self.train_loader)
+        num_batches = len(self.train_loader)
 
         for step, (inputs, targets) in enumerate(self.train_loader, start=1):
             inputs = inputs.to(self.device, non_blocking=True)
@@ -176,27 +178,25 @@ class Trainer:
 
             tracker.update(loss.item(), outputs, targets)
 
-            if step % self.config.print_freq == 0 or step == total_batches:
-                step_acc = tracker.accuracy
-                step_loss = tracker.loss
-                current_lr = self.optimizer.param_groups[0]["lr"]
+            if step % self.config.print_freq == 0 or step == num_batches:
+                lr = self.optimizer.param_groups[0]["lr"]
                 print(
-                    f"Epoch [{epoch:02d}/{total_epochs:02d}] Step [{step:03d}/{total_batches:03d}] "
-                    f"Loss: {step_loss:.4f} Acc: {step_acc:.4f} LR: {current_lr:.2e}",
+                    f"Epoch [{epoch:02d}/{total_epochs:02d}] Step [{step:03d}/{num_batches:03d}] "
+                    f"Loss: {tracker.loss:.4f} Acc: {tracker.accuracy:.4f} LR: {lr:.2e}",
                     flush=True,
                 )
 
-        epoch_time = time.perf_counter() - start_time
+        elapsed = time.perf_counter() - start_time
         metrics = tracker.compute()
-        metrics["epoch_time_sec"] = epoch_time
+        metrics["epoch_time_sec"] = elapsed
         metrics["samples_per_sec"] = (
-            (tracker.total_samples / epoch_time) if epoch_time > 0 else 0.0
+            tracker.total_samples / elapsed if elapsed > 0 else 0.0
         )
         return metrics
 
     @torch.no_grad()
     def evaluate(self, data_loader: DataLoader) -> dict[str, float]:
-        """Execute evaluation over a dataloader without computing gradients."""
+        """Compute evaluation metrics over a DataLoader without tracking gradients."""
         self.model.eval()
         tracker = MetricTracker(num_classes=36)
         start_time = time.perf_counter()
@@ -204,30 +204,29 @@ class Trainer:
         for inputs, targets in data_loader:
             inputs = inputs.to(self.device, non_blocking=True)
             targets = targets.to(self.device, non_blocking=True)
-
             outputs = self.model(inputs)
             loss = self.criterion(outputs, targets)
-
             tracker.update(loss.item(), outputs, targets)
 
-        eval_time = time.perf_counter() - start_time
         metrics = tracker.compute()
-        metrics["eval_time_sec"] = eval_time
+        metrics["eval_time_sec"] = time.perf_counter() - start_time
         return metrics
 
     def fit(self) -> list[dict[str, Any]]:
-        """Run the full multi-epoch training pipeline."""
-        log_file_name = (
+        """Run full training loop with early stopping, scheduling, and checkpointing."""
+        log_name = (
             self.config.log_filename or f"{self.config.model_name}_history.jsonl"
         )
-        log_file = self.log_dir / log_file_name
-        ckpt_name = self.config.checkpoint_name or f"best_{self.config.model_name}"
-        best_ckpt_path = self.save_dir / f"{ckpt_name}.pt"
+        log_file = self.log_dir / log_name
+        ckpt_name = (
+            self.config.checkpoint_name or f"best_{self.config.model_name}"
+        )
+        ckpt_path = self.save_dir / f"{ckpt_name}.pt"
         patience_counter = 0
-
         session_id = str(uuid.uuid4())
+
         print(
-            f"Starting training run | Session: {session_id} | Checkpoint: {best_ckpt_path}",
+            f"Training session {session_id} started. Checkpoint target: {ckpt_path}",
             flush=True,
         )
 
@@ -236,23 +235,21 @@ class Trainer:
                 if epoch <= self.config.freeze_epochs:
                     if hasattr(self.model, "freeze_backbone"):
                         self.model.freeze_backbone()
-                elif epoch == self.config.freeze_epochs + 1:
-                    if hasattr(self.model, "unfreeze_backbone"):
-                        self.model.unfreeze_backbone()
-                        print(
-                            f"--> Epoch {epoch:02d}: Backbone unfrozen for full fine-tuning.",
-                            flush=True,
-                        )
+                elif epoch == self.config.freeze_epochs + 1 and hasattr(
+                    self.model, "unfreeze_backbone"
+                ):
+                    self.model.unfreeze_backbone()
+                    print(
+                        f"--> Epoch {epoch:02d}: Backbone unfrozen for fine-tuning.",
+                        flush=True,
+                    )
 
             current_lr = float(self.optimizer.param_groups[0]["lr"])
-            train_metrics = self.train_epoch(
-                epoch=epoch, total_epochs=self.config.epochs
-            )
+            train_metrics = self.train_epoch(epoch, self.config.epochs)
             val_metrics = self.evaluate(self.val_loader)
-
             self.scheduler.step()
 
-            epoch_record = {
+            record = {
                 "session_id": session_id,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "epoch": epoch,
@@ -260,13 +257,11 @@ class Trainer:
                 "train": train_metrics,
                 "val": val_metrics,
             }
-            self.history.append(epoch_record)
-
+            self.history.append(record)
             with open(log_file, "a", encoding="utf-8") as f:
-                f.write(json.dumps(epoch_record) + "\n")
+                f.write(json.dumps(record) + "\n")
 
             val_f1 = val_metrics["f1_macro"]
-            val_acc = val_metrics["accuracy"]
             is_best = val_f1 > self.best_val_f1
             if is_best:
                 self.best_val_f1 = val_f1
@@ -278,18 +273,18 @@ class Trainer:
                         "model_state_dict": self.model.state_dict(),
                         "optimizer_state_dict": self.optimizer.state_dict(),
                         "val_f1": val_f1,
-                        "val_acc": val_acc,
+                        "val_acc": val_metrics["accuracy"],
                         "config": asdict(self.config),
                     },
-                    best_ckpt_path,
+                    ckpt_path,
                 )
 
-            status_marker = "(*BEST*)" if is_best else ""
+            marker = " (*BEST*)" if is_best else ""
             print(
-                f"--> Epoch {epoch:02d}/{self.config.epochs:02d} Complete | "
+                f"--> Epoch {epoch:02d}/{self.config.epochs:02d} | "
                 f"Train Loss: {train_metrics['loss']:.4f} Acc: {train_metrics['accuracy']:.4f} F1: {train_metrics['f1_macro']:.4f} | "
-                f"Val Loss: {val_metrics['loss']:.4f} Acc: {val_metrics['accuracy']:.4f} F1: {val_metrics['f1_macro']:.4f} "
-                f"{status_marker} | LR: {current_lr:.2e} | Time: {train_metrics['epoch_time_sec']:.1f}s",
+                f"Val Loss: {val_metrics['loss']:.4f} Acc: {val_metrics['accuracy']:.4f} F1: {val_metrics['f1_macro']:.4f}"
+                f"{marker} | LR: {current_lr:.2e} | Time: {train_metrics['epoch_time_sec']:.1f}s",
                 flush=True,
             )
 
@@ -297,22 +292,22 @@ class Trainer:
                 patience_counter += 1
                 if patience_counter >= self.config.early_stopping_patience:
                     print(
-                        f"Early stopping triggered after {epoch} epochs without validation F1 improvement.",
+                        f"Early stopping triggered at epoch {epoch} (patience={self.config.early_stopping_patience}).",
                         flush=True,
                     )
                     break
 
-        if best_ckpt_path.exists():
+        if ckpt_path.exists():
             print(
-                f"Loading best weights from {best_ckpt_path} (Best Val F1: {self.best_val_f1:.4f})...",
+                f"Restoring best weights from {ckpt_path} (Val F1: {self.best_val_f1:.4f}).",
                 flush=True,
             )
-            ckpt = torch.load(best_ckpt_path, map_location="cpu", weights_only=False)
+            ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
             self.model.load_state_dict(ckpt["model_state_dict"])
             self.model.to(self.device)
 
         if self.test_loader is not None:
-            print("Evaluating best checkpoint on unseen test set...", flush=True)
+            print("Evaluating best model on test set...", flush=True)
             test_metrics = self.evaluate(self.test_loader)
             test_record = {
                 "session_id": session_id,
@@ -323,14 +318,12 @@ class Trainer:
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(test_record) + "\n")
             print(
-                f"============================================================\n"
-                f"Final Test Evaluation (Best Checkpoint: {ckpt_name}.pt)\n"
-                f"Top-1 Accuracy:  {test_metrics['accuracy']:.4f} ({test_metrics['accuracy'] * 100:.2f}%)\n"
-                f"Macro-Precision: {test_metrics['precision_macro']:.4f}\n"
-                f"Macro-Recall:    {test_metrics['recall_macro']:.4f}\n"
-                f"Macro-F1:        {test_metrics['f1_macro']:.4f}\n"
-                f"Loss:            {test_metrics['loss']:.4f}\n"
-                f"============================================================",
+                f"Test Results ({ckpt_path.name}):\n"
+                f"  Accuracy:  {test_metrics['accuracy'] * 100:.2f}%\n"
+                f"  Precision: {test_metrics['precision_macro']:.4f}\n"
+                f"  Recall:    {test_metrics['recall_macro']:.4f}\n"
+                f"  F1-score:  {test_metrics['f1_macro']:.4f}\n"
+                f"  Loss:      {test_metrics['loss']:.4f}",
                 flush=True,
             )
 

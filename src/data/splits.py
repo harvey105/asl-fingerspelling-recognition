@@ -1,33 +1,10 @@
-"""
-src/freeze_splits.py
- freeze the subject-independent split to immutable CSV files.
-
-Writes (write-once; the script refuses to overwrite any existing file):
-  data/splits/subject_train.csv          24,777 rows, P1-P7, after train de-duplication
-  data/splits/subject_val.csv             3,588 rows, P8 (, blanks excluded)
-  data/splits/subject_test.csv            7,200 rows, P9-P10
-  data/splits/excluded_train_copies.csv     423 rows, the removed duplicates and the kept file
-  data/splits/class_mapping.json          class_id <-> class_name, from config.py
-  data/splits/SHA256SUMS.txt              checksums of every file above
-
-Column order: filepath, class_name, class_id, volunteer_id, crop_path, md5.
-Required by the leader: filepath, class_name, class_id, volunteer_id.
-Extras: crop_path (used by the loader), md5 (audit).
-
-Gates (any failure exits with code 1 and writes nothing):
-  counts, no volunteer in two splits, all 36 classes in each split, no MD5 duplicate in
-  train, every crop file exists, class_name agrees with class_id, excluded rows all point
-  to a kept train file, and the CSVs read back identically.
-
-Writes docs/metrics/split_subject.json.
-Run (from repository root): uv run python -m src.data.splits
-"""
-
 import hashlib
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -35,21 +12,35 @@ from src.config import CLASS_TO_ID, CLASSES, DOCS_DIR, PROJECT_ROOT, SPLITS_DIR
 
 from .manifests import build_manifests
 
-EXPECTED = {"train": 24777, "val": 3588, "test": 7200, "excluded": 423}  # measured in
-COLUMNS = ["filepath", "class_name", "class_id", "volunteer_id", "crop_path", "md5"]
-REPORT = DOCS_DIR / "metrics" / "split_subject.json"
+EXPECTED_COUNTS: dict[str, int] = {
+    "train": 24777,
+    "val": 3588,
+    "test": 7200,
+    "excluded": 423,
+}
+COLUMNS: list[str] = [
+    "filepath",
+    "class_name",
+    "class_id",
+    "volunteer_id",
+    "crop_path",
+    "md5",
+]
+REPORT: Path = DOCS_DIR / "metrics" / "split_subject.json"
 
-TARGETS = {
+TARGETS: dict[str, Path] = {
     "train": SPLITS_DIR / "subject_train.csv",
     "val": SPLITS_DIR / "subject_val.csv",
     "test": SPLITS_DIR / "subject_test.csv",
     "excluded": SPLITS_DIR / "excluded_train_copies.csv",
 }
-MAPPING = SPLITS_DIR / "class_mapping.json"
-CHECKSUMS = SPLITS_DIR / "SHA256SUMS.txt"
+MAPPING: Path = SPLITS_DIR / "class_mapping.json"
+CHECKSUMS: Path = SPLITS_DIR / "SHA256SUMS.txt"
+STR_COLS: list[str] = ["filepath", "class_name", "crop_path", "md5"]
 
 
-def to_frame(df):
+def to_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Standardize split DataFrame columns and sorting."""
     out = pd.DataFrame(
         {
             "filepath": df["filepath"].astype(str),
@@ -65,20 +56,27 @@ def to_frame(df):
     )
 
 
-def excluded_frame(df):
+def excluded_frame(df: pd.DataFrame) -> pd.DataFrame:
+    """Format DataFrame for excluded duplicate training records."""
     out = to_frame(df.rename(columns={"label": "label"}))
     out.insert(
-        len(out.columns), "kept_filepath", df["kept_filepath"].astype(str).values
+        len(out.columns),
+        "kept_filepath",
+        df["kept_filepath"].astype(str).values,
     )
     return out.sort_values(["md5", "filepath"]).reset_index(drop=True)
 
 
-def gate(results, name, ok, detail=""):
+def gate(
+    results: dict[str, dict[str, Any]], name: str, ok: bool, detail: str = ""
+) -> None:
+    """Record verification gate status and print formatted output."""
     results[name] = {"pass": bool(ok), "detail": detail}
     print(f"  {'PASS' if ok else 'FAIL'}  {name}  {detail}")
 
 
-def sha256(path):
+def compute_sha256(path: Path) -> str:
+    """Compute SHA-256 hash digest of a given file."""
     h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
@@ -86,13 +84,10 @@ def sha256(path):
     return h.hexdigest()
 
 
-STR_COLS = ["filepath", "class_name", "crop_path", "md5"]
-
-
-def write_and_verify(frame, path, cols):
-    """Write to a temporary file, read it back, compare values column by column, then rename.
-    Compares as text, so dtype differences (int vs int64, object vs string) cannot cause a
-    false failure. Returns (ok, diffs). On failure the temporary file is deleted."""
+def write_and_verify(
+    frame: pd.DataFrame, path: Path, cols: list[str]
+) -> tuple[bool, list[str]]:
+    """Write DataFrame to temporary file, read back to verify data integrity, then replace."""
     tmp = path.with_name(path.name + ".tmp")
     expected = frame[cols].reset_index(drop=True)
     expected.to_csv(tmp, index=False, lineterminator="\n")
@@ -101,7 +96,7 @@ def write_and_verify(frame, path, cols):
     )
     diffs = []
     if len(back) != len(expected):
-        diffs.append(f"row count {len(back)} != {len(expected)}")
+        diffs.append(f"Row count mismatch: {len(back)} != {len(expected)}")
     for c in cols:
         a = expected[c].astype(str).tolist()
         b = back[c].astype(str).tolist()
@@ -109,8 +104,7 @@ def write_and_verify(frame, path, cols):
         if bad:
             i = bad[0]
             diffs.append(
-                f"{c}: {len(bad)} rows differ; first at row {i}: "
-                f"wrote {a[i]!r}, read back {b[i]!r}"
+                f"{c}: {len(bad)} rows differ; row {i}: wrote {a[i]!r}, read back {b[i]!r}"
             )
     if diffs:
         tmp.unlink()
@@ -119,53 +113,53 @@ def write_and_verify(frame, path, cols):
     return True, []
 
 
-def main():
-    print("=" * 70)
-    print("ASL-HG:  (FREEZE SUBJECT SPLIT TO CSV)")
-    print("=" * 70)
+def main() -> None:
+    print("ASL-HG: Subject-Independent Dataset Split Generation")
 
-    existing = [p for p in list(TARGETS.values()) + [MAPPING, CHECKSUMS] if p.exists()]
+    existing = [
+        p for p in list(TARGETS.values()) + [MAPPING, CHECKSUMS] if p.exists()
+    ]
     if existing:
-        print("Refusing to overwrite existing split files (write-once):")
-        for p in existing:
-            print(f"  {p.relative_to(PROJECT_ROOT).as_posix()}")
-        print(
-            "A change requires a logged decision in consolidation Section 8 and "
-            "a deliberate move of these files to an archive folder."
-        )
+        print("Existing split files detected. Archive existing splits before re-generating.")
         sys.exit(1)
 
-    m = build_manifests()
+    manifests = build_manifests()
     frames = {
-        "train": to_frame(m["train"]),
-        "val": to_frame(m["val"]),
-        "test": to_frame(m["test"]),
-        "excluded": excluded_frame(m["excluded"]),
+        "train": to_frame(manifests["train"]),
+        "val": to_frame(manifests["val"]),
+        "test": to_frame(manifests["test"]),
+        "excluded": excluded_frame(manifests["excluded"]),
     }
 
-    results = {}
-    print("\nGates")
+    results: dict[str, dict[str, Any]] = {}
     for k, df in frames.items():
         gate(
             results,
             f"count_{k}",
-            len(df) == EXPECTED[k],
-            f"{len(df)} (expected {EXPECTED[k]})",
+            len(df) == EXPECTED_COUNTS[k],
+            f"{len(df)} (expected {EXPECTED_COUNTS[k]})",
         )
 
-    sv = {k: set(frames[k]["volunteer_id"]) for k in ("train", "val", "test")}
+    signers = {
+        k: set(frames[k]["volunteer_id"]) for k in ("train", "val", "test")
+    }
     gate(
         results,
-        "no_signer_in_two_splits",
-        sv["train"].isdisjoint(sv["val"])
-        and sv["val"].isdisjoint(sv["test"])
-        and sv["train"].isdisjoint(sv["test"]),
-        f"train {sorted(sv['train'])}, val {sorted(sv['val'])}, test {sorted(sv['test'])}",
+        "no_signer_overlap",
+        signers["train"].isdisjoint(signers["val"])
+        and signers["val"].isdisjoint(signers["test"])
+        and signers["train"].isdisjoint(signers["test"]),
+        f"train {sorted(signers['train'])}, val {sorted(signers['val'])}, test {sorted(signers['test'])}",
     )
 
     for k in ("train", "val", "test"):
-        n = frames[k]["class_id"].nunique()
-        gate(results, f"all_classes_in_{k}", n == len(CLASSES), f"{n} classes")
+        n_classes = frames[k]["class_id"].nunique()
+        gate(
+            results,
+            f"all_classes_in_{k}",
+            n_classes == len(CLASSES),
+            f"{n_classes} classes",
+        )
 
     gate(results, "train_md5_unique", frames["train"]["md5"].is_unique)
 
@@ -185,14 +179,16 @@ def main():
 
     train_md5 = set(frames["train"]["md5"])
     exc_ok = (
-        frames["excluded"]["kept_filepath"].isin(set(frames["train"]["filepath"])).all()
+        frames["excluded"]["kept_filepath"]
+        .isin(set(frames["train"]["filepath"]))
+        .all()
         and frames["excluded"]["md5"].isin(train_md5).all()
     )
     gate(results, "excluded_point_to_kept_train_files", bool(exc_ok))
 
     passed = all(v["pass"] for v in results.values())
     if not passed:
-        print("\nVERDICT: FAILED. No files written.")
+        print("VERDICT: FAILED. Split creation aborted.")
         sys.exit(1)
 
     SPLITS_DIR.mkdir(parents=True, exist_ok=True)
@@ -203,7 +199,7 @@ def main():
         gate(results, f"read_back_{k}", ok, "; ".join(diffs))
         all_ok &= ok
     if not all_ok:
-        print("\nVERDICT: FAILED on read-back. No split file was written.")
+        print("VERDICT: FAILED during read-back verification.")
         sys.exit(1)
 
     mapping = {
@@ -215,18 +211,14 @@ def main():
         json.dumps(mapping, indent=2, ensure_ascii=False), encoding="utf-8"
     )
 
-    lines = []
-    for path in list(TARGETS.values()) + [MAPPING]:
-        lines.append(f"{sha256(path)}  {path.name}")
+    lines = [
+        f"{compute_sha256(path)}  {path.name}"
+        for path in list(TARGETS.values()) + [MAPPING]
+    ]
     CHECKSUMS.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    print("\nWritten:")
-    for path in list(TARGETS.values()) + [MAPPING, CHECKSUMS]:
-        print(f"  {path.relative_to(PROJECT_ROOT).as_posix()}")
-    print(f"\nVERDICT: {'PASSED' if all_ok else 'FAILED (read-back mismatch)'}")
-
     report = {
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "counts": {k: len(v) for k, v in frames.items()},
         "per_class_train": frames["train"]["class_name"]
         .value_counts()
@@ -237,9 +229,9 @@ def main():
     }
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(
-        json.dumps(report, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
+        json.dumps(report, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8",
     )
-    print(f"Report: {REPORT.relative_to(PROJECT_ROOT).as_posix()}")
     sys.exit(0 if all_ok else 1)
 
 

@@ -1,9 +1,3 @@
-"""
-src/config.py
-Single source of truth for dataset constants and path discovery.
-Other scripts import from here instead of hard-coding values.
-"""
-
 import os
 import re
 from pathlib import Path
@@ -11,10 +5,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 SPLITS_DIR = PROJECT_ROOT / "data" / "splits"
-PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"  # our outputs only
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 DOCS_DIR = PROJECT_ROOT / "docs"
-CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"  #  output (PNG)
-BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"  #  output
+CROPS_DIR = PROJECT_ROOT / "data" / "processed_crops"
+BLANK_FRAMES_CSV = PROCESSED_DIR / "blank_frames.csv"
 
 # Class set: digits first, then letters. Digit 0 is the two-handed ASL zero sign (paper, Table 1).
 CLASSES = [str(d) for d in range(10)] + [chr(c) for c in range(ord("A"), ord("Z") + 1)]
