@@ -47,13 +47,13 @@ def get_dataloaders(
     )
     pin = torch.cuda.is_available()
     persistent = num_workers > 0
-    common = dict(
-        batch_size=batch_size,
-        num_workers=num_workers,
-        pin_memory=pin,
-        persistent_workers=persistent,
-        worker_init_fn=_worker_init if num_workers > 0 else None,
-    )
+    common = {
+        "batch_size": batch_size,
+        "num_workers": num_workers,
+        "pin_memory": pin,
+        "persistent_workers": persistent,
+        "worker_init_fn": _worker_init if num_workers > 0 else None,
+    }
 
     train_loader = DataLoader(
         ASLDataset(train_df, is_train=True),
@@ -62,8 +62,16 @@ def get_dataloaders(
         generator=torch.Generator().manual_seed(seed),
         **common,
     )
-    val_loader = DataLoader(ASLDataset(val_df, is_train=False), shuffle=False, **common)
+    val_loader = DataLoader(
+        ASLDataset(val_df, is_train=False),
+        shuffle=False,
+        batch_size=batch_size,
+        num_workers=0,
+    )
     test_loader = DataLoader(
-        ASLDataset(test_df, is_train=False), shuffle=False, **common
+        ASLDataset(test_df, is_train=False),
+        shuffle=False,
+        batch_size=batch_size,
+        num_workers=0,
     )
     return train_loader, val_loader, test_loader
