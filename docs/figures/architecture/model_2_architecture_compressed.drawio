@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Model-2-Compressed">
+    <mxGraphModel dx="1200" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1640" pageHeight="320" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t1" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0f172a;&quot;&gt;Model 2: Residual Deep CNN — Compressed Pipeline Notation&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#64748b;&quot;&gt;Tensor Dimension Flow, Residual Stage Depths &amp;amp; Shortcuts &amp;bull; 2,870,084 Parameters &amp;bull; Deep Architecture&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="800" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="badge1" value="&lt;span style=&quot;font-size:10px;color:#0f172a;&quot;&gt;&lt;b&gt;Params:&lt;/b&gt; 2,870,084&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="30" width="130" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="badge2" value="&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;&lt;b&gt;Top-1 Acc:&lt;/b&gt; 82.90%&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#bbf7d0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1460" y="30" width="120" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Sequence Blocks -->
+        <!-- Block 0: Input -->
+        <mxCell id="p0" value="&lt;span style=&quot;font-size:9px;color:#64748b;text-transform:uppercase;&quot;&gt;Input&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(3 \times 224^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#94a3b8;&quot;&gt;RGB Image&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="105" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 1: Stem -->
+        <mxCell id="p1" value="&lt;span style=&quot;font-size:9px;color:#2563eb;font-weight:bold;&quot;&gt;STEM&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(32 \times 112^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;Conv 3×3 + BN + ReLU&lt;br&gt;MaxPool 2×2 (s=2)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="175" y="90" width="140" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 2: Stage 1 -->
+        <mxCell id="p2" value="&lt;span style=&quot;font-size:9px;color:#8b5cf6;font-weight:bold;&quot;&gt;STAGE 1 (×2 RES)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(32 \times 112^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× ResBlock [32 CH]&lt;br&gt;Identity Shortcuts (s=1)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="90" width="145" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 3: Stage 2 -->
+        <mxCell id="p3" value="&lt;span style=&quot;font-size:9px;color:#8b5cf6;font-weight:bold;&quot;&gt;STAGE 2 (×2 RES)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(64 \times 56^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× ResBlock [64 CH]&lt;br&gt;Proj (s=2) + Ident (s=1)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="90" width="145" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 4: Stage 3 -->
+        <mxCell id="p4" value="&lt;span style=&quot;font-size:9px;color:#8b5cf6;font-weight:bold;&quot;&gt;STAGE 3 (×2 RES)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(128 \times 28^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× ResBlock [128 CH]&lt;br&gt;Proj (s=2) + Ident (s=1)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="695" y="90" width="145" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 5: Stage 4 -->
+        <mxCell id="p5" value="&lt;span style=&quot;font-size:9px;color:#8b5cf6;font-weight:bold;&quot;&gt;STAGE 4 (×2 RES)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(256 \times 14^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× ResBlock [256 CH]&lt;br&gt;Proj (s=2) + Ident (s=1)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="90" width="145" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 6: Global Pooling -->
+        <mxCell id="p6" value="&lt;span style=&quot;font-size:9px;color:#0284c7;font-weight:bold;&quot;&gt;POOLING&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;256-D&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;AdaptiveAvgPool2d&lt;br&gt;\((1 \times 1)\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#bae6fd;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1045" y="90" width="125" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 7: Head MLP -->
+        <mxCell id="p7" value="&lt;span style=&quot;font-size:9px;color:#6366f1;font-weight:bold;&quot;&gt;HEAD MLP&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(256 \to 36\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;Drop(0.3) → FC(256)&lt;br&gt;Drop(0.3) → FC(36)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#bfdbfe;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="90" width="145" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 8: Output -->
+        <mxCell id="p8" value="&lt;span style=&quot;font-size:9px;color:#16a34a;font-weight:bold;&quot;&gt;OUTPUT&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;36 Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;Digits 0–9&lt;br&gt;Letters A–Z&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1375" y="90" width="105" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="a0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p0" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p2" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p3" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p4" target="p5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p5" target="p6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p6" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p7" target="p8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Summary Strip at Bottom -->
+        <mxCell id="summary" value="&lt;span style=&quot;font-size:10px;color:#475569;&quot;&gt;&lt;b&gt;Pipeline Summary:&lt;/b&gt; Stem + 4 Stages (Depths: [2, 2, 2, 2] = 8 Residual Blocks, 17 Conv Layers) &amp;bull; Channels: [32, 64, 128, 256] &amp;bull; Shortcuts: Conv 1×1 (s=2) + Identity &amp;bull; Parameters: 2,870,084&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#e2e8f0;strokeWidth=1;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="215" width="1540" height="32" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

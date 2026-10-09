@@ -227,9 +227,5 @@
     "recall": 0.9186111111111112,
     "f1-score": 0.910977572318923,
     "support": 7200.0
-  },
-  "top1_accuracy": 0.9186111111111112,
-  "checkpoint": "best_model_3_transfer_cnn.pt",
-  "backbone": "resnet18",
-  "num_classes": 36
+  }
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Model-3-Compressed">
+    <mxGraphModel dx="1200" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1680" pageHeight="320" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t1" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:18px;color:#0f172a;&quot;&gt;Model 3: Transfer Learning ResNet-18 — Compressed Pipeline Notation&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#64748b;&quot;&gt;Pretrained Vision Backbone &amp;amp; Fine-Tuned Seam Flow &amp;bull; 11,317,604 Parameters &amp;bull; ImageNet-1k Prior&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="800" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="badge1" value="&lt;span style=&quot;font-size:10px;color:#0f172a;&quot;&gt;&lt;b&gt;Backbone:&lt;/b&gt; ResNet-18&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="30" width="125" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="badge2" value="&lt;span style=&quot;font-size:10px;color:#2563eb;&quot;&gt;&lt;b&gt;Params:&lt;/b&gt; 11,317,604&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#bfdbfe;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1405" y="30" width="115" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="badge3" value="&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;&lt;b&gt;Top-1:&lt;/b&gt; 91.86%&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#bbf7d0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1530" y="30" width="105" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Pipeline Sequence Blocks -->
+        <!-- Block 0: Input -->
+        <mxCell id="p0" value="&lt;span style=&quot;font-size:9px;color:#64748b;text-transform:uppercase;&quot;&gt;Input&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(3 \times 224^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#94a3b8;&quot;&gt;ImageNet Norm&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="105" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 1: Stem -->
+        <mxCell id="p1" value="&lt;span style=&quot;font-size:9px;color:#334155;font-weight:bold;&quot;&gt;BB STEM&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(64 \times 56^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;Conv 7×7 (s=2) + BN&lt;br&gt;MaxPool 3×3 (s=2)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="175" y="90" width="135" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 2: Layer 1 -->
+        <mxCell id="p2" value="&lt;span style=&quot;font-size:9px;color:#334155;font-weight:bold;&quot;&gt;LAYER 1 (×2)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(64 \times 56^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× BasicBlock [64]&lt;br&gt;Identity Shortcuts&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="135" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 3: Layer 2 -->
+        <mxCell id="p3" value="&lt;span style=&quot;font-size:9px;color:#334155;font-weight:bold;&quot;&gt;LAYER 2 (×2)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(128 \times 28^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× BasicBlock [128]&lt;br&gt;Stride 2 Downsample&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="90" width="135" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 4: Layer 3 -->
+        <mxCell id="p4" value="&lt;span style=&quot;font-size:9px;color:#334155;font-weight:bold;&quot;&gt;LAYER 3 (×2)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(256 \times 14^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× BasicBlock [256]&lt;br&gt;Stride 2 Downsample&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="670" y="90" width="135" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 5: Layer 4 -->
+        <mxCell id="p5" value="&lt;span style=&quot;font-size:9px;color:#334155;font-weight:bold;&quot;&gt;LAYER 4 (×2)&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(512 \times 7^2\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;2× BasicBlock [512]&lt;br&gt;Stride 2 Downsample&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="90" width="135" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 6: AvgPool -->
+        <mxCell id="p6" value="&lt;span style=&quot;font-size:9px;color:#0284c7;font-weight:bold;&quot;&gt;AVG POOL&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;512-D&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;AdaptiveAvgPool2d&lt;br&gt;\((1 \times 1)\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#bae6fd;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="90" width="125" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 7: Custom Head -->
+        <mxCell id="p7" value="&lt;span style=&quot;font-size:9px;color:#1e3a8a;font-weight:bold;&quot;&gt;CUSTOM HEAD&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;\(512 \to 256 \to 36\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;FC(256) + BN1d + ReLU&lt;br&gt;FC(36) | Drop(0.3)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#2563eb;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1165" y="90" width="155" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Block 8: Output -->
+        <mxCell id="p8" value="&lt;span style=&quot;font-size:9px;color:#16a34a;font-weight:bold;&quot;&gt;OUTPUT&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;36 Classes&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#16a34a;font-weight:bold;&quot;&gt;Top-1: 91.86%&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:8px;color:#64748b;&quot;&gt;24 Perfect (100%)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="90" width="115" height="92" as="geometry" />
+        </mxCell>
+
+        <!-- Arrows -->
+        <mxCell id="a0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p0" target="p1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#64748b;" edge="1" parent="1" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#64748b;" edge="1" parent="1" source="p2" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#64748b;" edge="1" parent="1" source="p3" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#64748b;" edge="1" parent="1" source="p4" target="p5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#64748b;" edge="1" parent="1" source="p5" target="p6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;strokeColor=#2563eb;" edge="1" parent="1" source="p6" target="p7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="p7" target="p8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Summary Strip at Bottom -->
+        <mxCell id="summary" value="&lt;span style=&quot;font-size:10px;color:#475569;&quot;&gt;&lt;b&gt;Pipeline Summary:&lt;/b&gt; Pretrained ResNet-18 Backbone (\(11.18\text{M params}, \eta_{\text{bb}} = 5 \times 10^{-5}\)) + Custom Head (\(141.1\text{k params}, \eta_{\text{head}} = 10^{-3}\)) &amp;bull; Total Trainable: 11,317,604 &amp;bull; Top-1 Accuracy: 91.86%&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#e2e8f0;strokeWidth=1;align=left;spacingLeft=15;" vertex="1" parent="1">
+          <mxGeometry x="40" y="215" width="1575" height="32" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -26,7 +26,7 @@ from src.training.engine import get_default_device
 
 
 def plot_training_curves(log_file: Path, output_file: Path) -> None:
-    """Plot training and validation loss, accuracy, and macro F1 curves."""
+    """Plot training and validation loss, accuracy, and macro F1 curves with academic styling."""
     with open(log_file, "r", encoding="utf-8") as f:
         records = [json.loads(line) for line in f if "epoch" in json.loads(line)]
 
@@ -44,34 +44,51 @@ def plot_training_curves(log_file: Path, output_file: Path) -> None:
     val_loss = [r["val"]["loss"] for r in records]
     train_acc = [r["train"]["accuracy"] for r in records]
     val_acc = [r["val"]["accuracy"] for r in records]
-    train_f1 = [r["train"]["f1_macro"] for r in records]
     val_f1 = [r["val"]["f1_macro"] for r in records]
 
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    # Academic palette
+    c_train = "#2563eb"    # Blue
+    c_val = "#dc2626"      # Crimson
+    c_acc_tr = "#059669"   # Emerald
+    c_acc_val = "#2563eb"  # Blue
+    c_f1_val = "#7c3aed"   # Purple
 
-    # Loss plot
-    axes[0].plot(epochs, train_loss, label="Train Loss", color="#1f77b4", lw=2)
-    axes[0].plot(epochs, val_loss, label="Val Loss", color="#d62728", lw=2, linestyle="--")
-    axes[0].set_title("Cross-Entropy Loss (Label Smoothing = 0.1)", fontsize=12, fontweight="bold")
-    axes[0].set_xlabel("Epoch", fontsize=11)
-    axes[0].set_ylabel("Loss", fontsize=11)
-    axes[0].grid(True, linestyle=":", alpha=0.6)
-    axes[0].legend(fontsize=10)
+    plt.rcParams["font.family"] = "sans-serif"
+    plt.rcParams["font.sans-serif"] = ["Segoe UI", "DejaVu Sans", "Helvetica", "Arial"]
 
-    # Accuracy & Macro-F1 plot
-    axes[1].plot(epochs, train_acc, label="Train Accuracy", color="#2ca02c", lw=2)
-    axes[1].plot(epochs, val_acc, label="Val Accuracy", color="#ff7f0e", lw=2, linestyle="--")
-    axes[1].plot(epochs, val_f1, label="Val Macro-F1", color="#9467bd", lw=2, linestyle="-.")
-    axes[1].set_title("Accuracy & Macro-F1", fontsize=12, fontweight="bold")
-    axes[1].set_xlabel("Epoch", fontsize=11)
-    axes[1].set_ylabel("Score", fontsize=11)
-    axes[1].set_ylim(0.0, 1.05)
-    axes[1].grid(True, linestyle=":", alpha=0.6)
-    axes[1].legend(fontsize=10)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.2), dpi=300)
+
+    # Left: Cross-Entropy Loss
+    axes[0].plot(epochs, train_loss, label="Train Loss", color=c_train, lw=2.2)
+    axes[0].plot(epochs, val_loss, label="Val Loss", color=c_val, lw=2.0, linestyle="--")
+    axes[0].set_title("Cross-Entropy Loss (Label Smoothing = 0.1)", fontsize=12, fontweight="600", pad=12)
+    axes[0].set_xlabel("Epoch", fontsize=11, labelpad=8)
+    axes[0].set_ylabel("Loss", fontsize=11, labelpad=8)
+    axes[0].grid(True, linestyle="--", linewidth=0.6, alpha=0.4, color="#94a3b8")
+    axes[0].spines["top"].set_visible(False)
+    axes[0].spines["right"].set_visible(False)
+    axes[0].spines["left"].set_color("#64748b")
+    axes[0].spines["bottom"].set_color("#64748b")
+    axes[0].legend(frameon=True, framealpha=0.9, facecolor="#ffffff", edgecolor="#e2e8f0", fontsize=10)
+
+    # Right: Accuracy & Macro-F1
+    axes[1].plot(epochs, train_acc, label="Train Accuracy", color=c_acc_tr, lw=2.2)
+    axes[1].plot(epochs, val_acc, label="Val Accuracy", color=c_acc_val, lw=2.0, linestyle="--")
+    axes[1].plot(epochs, val_f1, label="Val Macro-F1", color=c_f1_val, lw=2.0, linestyle=":")
+    axes[1].set_title("Validation Accuracy & Macro-F1", fontsize=12, fontweight="600", pad=12)
+    axes[1].set_xlabel("Epoch", fontsize=11, labelpad=8)
+    axes[1].set_ylabel("Score", fontsize=11, labelpad=8)
+    axes[1].set_ylim(0.0, 1.02)
+    axes[1].grid(True, linestyle="--", linewidth=0.6, alpha=0.4, color="#94a3b8")
+    axes[1].spines["top"].set_visible(False)
+    axes[1].spines["right"].set_visible(False)
+    axes[1].spines["left"].set_color("#64748b")
+    axes[1].spines["bottom"].set_color("#64748b")
+    axes[1].legend(frameon=True, framealpha=0.9, facecolor="#ffffff", edgecolor="#e2e8f0", fontsize=10)
 
     plt.tight_layout()
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_file, dpi=300)
+    plt.savefig(output_file, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Training curves saved to: {output_file}")
 
@@ -93,6 +110,8 @@ def evaluate_test_set(
     fc_dim = 256
     if "classifier.2.weight" in ckpt["model_state_dict"]:
         fc_dim = ckpt["model_state_dict"]["classifier.2.weight"].shape[0]
+    elif "model.fc.1.weight" in ckpt["model_state_dict"] and ckpt["model_state_dict"]["model.fc.1.weight"].shape[0] == NUM_CLASSES:
+        fc_dim = 0
     model = build_model(model_name, num_classes=NUM_CLASSES, fc_dim=fc_dim)
     model.load_state_dict(ckpt["model_state_dict"])
     model.to(device)
@@ -137,7 +156,7 @@ def evaluate_test_set(
     # Confusion matrix
     cm = confusion_matrix(y_true, y_pred, labels=list(range(NUM_CLASSES)))
 
-    fig, ax = plt.subplots(figsize=(16, 14))
+    fig, ax = plt.subplots(figsize=(15, 13), dpi=300)
     sns.heatmap(
         cm,
         annot=True,
@@ -147,18 +166,29 @@ def evaluate_test_set(
         yticklabels=CLASSES,
         ax=ax,
         cbar=True,
+        linewidths=0.5,
+        linecolor="#f1f5f9",
+        annot_kws={"size": 8.5},
     )
+    model_display_names = {
+        "simple_cnn": "Model 1 (Simple CNN)",
+        "complex_cnn": "Model 2 (Complex Residual CNN)",
+        "transfer_cnn": "Model 3 (Transfer Learning ResNet-18)",
+    }
+    disp_title = model_display_names.get(model_name, model_name)
     ax.set_title(
-        f"Test Confusion Matrix: {model_name} (Unseen Signers P9 & P10)",
-        fontsize=14,
-        fontweight="bold",
+        f"Test Set Confusion Matrix: {disp_title}\nEvaluation on Unseen Signers P9 & P10",
+        fontsize=13,
+        fontweight="600",
+        pad=15,
     )
-    ax.set_xlabel("Predicted Sign", fontsize=12)
-    ax.set_ylabel("Ground Truth Sign", fontsize=12)
+    ax.set_xlabel("Predicted Class", fontsize=11, labelpad=10)
+    ax.set_ylabel("Ground Truth Class", fontsize=11, labelpad=10)
+    ax.tick_params(labelsize=9)
     plt.tight_layout()
 
     output_matrix_file.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_matrix_file, dpi=300)
+    plt.savefig(output_matrix_file, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Confusion matrix saved to: {output_matrix_file}")
 

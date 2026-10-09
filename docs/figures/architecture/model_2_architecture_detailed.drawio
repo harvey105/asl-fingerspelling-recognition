@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Model-2-Detailed">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1760" pageHeight="720" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="t1" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;letter-spacing:-0.5px;&quot;&gt;&lt;b style=&quot;font-size:22px;color:#0f172a;&quot;&gt;Model 2: Residual Deep CNN Architecture&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:12px;color:#64748b;font-weight:400;&quot;&gt;Modular Residual Stages with Projection Shortcuts &amp;bull; 2,907,588 Trainable Parameters &amp;bull; Signer-Independent Split&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="25" width="850" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Metric Badges Top Right -->
+        <mxCell id="badge1" value="&lt;span style=&quot;font-size:11px;color:#0f172a;&quot;&gt;&lt;b&gt;Input:&lt;/b&gt; \(3 \times 224 \times 224\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="35" width="145" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="badge2" value="&lt;span style=&quot;font-size:11px;color:#2563eb;&quot;&gt;&lt;b&gt;Params:&lt;/b&gt; 2,907,588&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#bfdbfe;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1345" y="35" width="135" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="badge4" value="&lt;span style=&quot;font-size:11px;color:#16a34a;&quot;&gt;&lt;b&gt;Top-1 Acc:&lt;/b&gt; 82.90%&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#bbf7d0;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="35" width="130" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Main Pipeline Row -->
+        <!-- 00: Input Block -->
+        <mxCell id="in_block" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;RGB Hand Crop&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#475569;&quot;&gt;\(3 \times 224 \times 224\)&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#94a3b8;text-transform:uppercase;&quot;&gt;Letterboxed ROI&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Normalized \([0, 1]\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor:#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="115" width="115" height="235" as="geometry" />
+        </mxCell>
+
+        <!-- 01: Stem Block -->
+        <mxCell id="stem_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="115" width="150" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="stem_hdr" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;STEM&lt;/b&gt; &lt;span style=&quot;color:#64748b;font-size:10px;&quot;&gt;(32 CH)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="195" y="120" width="150" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="stem_c" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;Conv 3×3, s=1, p=1&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;\(3 \to 32\) | 864 params&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="205" y="145" width="130" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="stem_bn" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;span style=&quot;font-size:10px;color:#334155;&quot;&gt;BatchNorm + ReLU&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#94a3b8;&quot;&gt;64 parameters&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="205" y="190" width="130" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="stem_p" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;MaxPool 2×2, s=2&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;\(32 \times 112 \times 112\)&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="205" y="233" width="130" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="stem_ft" value="Stem Receptive Field: 4×4" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#94a3b8;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="195" y="322" width="150" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 02: Stage 1 (2 Blocks) -->
+        <mxCell id="s1_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="375" y="115" width="180" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_hdr" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;STAGE 1&lt;/b&gt; &lt;span style=&quot;color:#64748b;font-size:10px;&quot;&gt;(2 Blocks &amp;bull; 32 CH)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="375" y="120" width="180" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_b1" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 1.1 (s=1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Identity: \(\mathcal{F}(x) + x\)&lt;br&gt;2× [Conv 3×3(32), BN]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="385" y="145" width="160" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_b2" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 1.2 (s=1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Identity: \(\mathcal{F}(x) + x\)&lt;br&gt;2× [Conv 3×3(32), BN]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="385" y="200" width="160" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_out" value="&lt;b style=&quot;font-size:10px;color:#2563eb;&quot;&gt;\(32 \times 112 \times 112\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;37,120 parameters&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="385" y="255" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_ft" value="Receptive Field: 20×20" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#94a3b8;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="375" y="322" width="180" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 03: Stage 2 (2 Blocks, Downsample) -->
+        <mxCell id="s2_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="585" y="115" width="185" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_hdr" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;STAGE 2&lt;/b&gt; &lt;span style=&quot;color:#64748b;font-size:10px;&quot;&gt;(2 Blocks &amp;bull; 64 CH)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="585" y="120" width="185" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_b1" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 2.1 (s=2 ↓)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;Conv 1×1 Shortcut&lt;br&gt;&lt;span style=&quot;color:#64748b;&quot;&gt;2× [Conv 3×3(64), BN]&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="595" y="145" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_b2" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 2.2 (s=1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Identity: \(\mathcal{F}(x) + x\)&lt;br&gt;2× [Conv 3×3(64), BN]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="595" y="200" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_out" value="&lt;b style=&quot;font-size:10px;color:#2563eb;&quot;&gt;\(64 \times 56 \times 56\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;131,712 parameters&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="595" y="255" width="165" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_ft" value="Receptive Field: 48×48" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#94a3b8;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="585" y="322" width="185" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 04: Stage 3 (2 Blocks, Downsample) -->
+        <mxCell id="s3_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="115" width="185" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_hdr" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;STAGE 3&lt;/b&gt; &lt;span style=&quot;color:#64748b;font-size:10px;&quot;&gt;(2 Blocks &amp;bull; 128 CH)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="800" y="120" width="185" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_b1" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 3.1 (s=2 ↓)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;Conv 1×1 Shortcut&lt;br&gt;&lt;span style=&quot;color:#64748b;&quot;&gt;2× [Conv 3×3(128), BN]&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="145" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_b2" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 3.2 (s=1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Identity: \(\mathcal{F}(x) + x\)&lt;br&gt;2× [Conv 3×3(128), BN]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="200" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_out" value="&lt;b style=&quot;font-size:10px;color:#2563eb;&quot;&gt;\(128 \times 28 \times 28\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;525,568 parameters&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="255" width="165" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_ft" value="Receptive Field: 104×104" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#94a3b8;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="800" y="322" width="185" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 05: Stage 4 (2 Blocks, Downsample) -->
+        <mxCell id="s4_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1015" y="115" width="185" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_hdr" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;STAGE 4&lt;/b&gt; &lt;span style=&quot;color:#64748b;font-size:10px;&quot;&gt;(2 Blocks &amp;bull; 256 CH)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1015" y="120" width="185" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_b1" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 4.1 (s=2 ↓)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;Conv 1×1 Shortcut&lt;br&gt;&lt;span style=&quot;color:#64748b;&quot;&gt;2× [Conv 3×3(256), BN]&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1025" y="145" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_b2" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ResBlock 4.2 (s=1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Identity: \(\mathcal{F}(x) + x\)&lt;br&gt;2× [Conv 3×3(256), BN]&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1025" y="200" width="165" height="48" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_out" value="&lt;b style=&quot;font-size:10px;color:#2563eb;&quot;&gt;\(256 \times 14 \times 14\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;2,099,712 parameters&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1025" y="255" width="165" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_ft" value="Receptive Field: 216×216" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#94a3b8;whiteSpace=nowrap;" vertex="1" parent="1">
+          <mxGeometry x="1015" y="322" width="185" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 06: Classifier Head -->
+        <mxCell id="clf_card" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#bfdbfe;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="115" width="200" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="clf_hdr" value="&lt;b style=&quot;font-size:11px;color:#1e3a8a;&quot;&gt;CLASSIFIER HEAD&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="120" width="200" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="clf_pool" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;AdaptiveAvgPool2d(1, 1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;256-D Global Embedding&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#93c5fd;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1242" y="145" width="176" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="clf_fc1" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;Linear 256 → 384 + ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Dropout(0.3) | 98,688 p&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#93c5fd;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1242" y="195" width="176" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clf_fc2" value="&lt;div style=&quot;text-align:left;padding-left:6px;&quot;&gt;&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;Linear 384 → 36 Logits&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Dropout(0.3) | 13,860 p&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#93c5fd;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1242" y="247" width="176" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="clf_ft" value="Receptive Field: Global" style="text;html=1;align=center;verticalAlign=middle;fontSize=9;color:#3b82f6;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="322" width="200" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- 07: Output Prediction -->
+        <mxCell id="out_block" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;36 Predictions&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#475569;&quot;&gt;Digits 0–9&lt;br&gt;Letters A–Z&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#16a34a;font-weight:bold;&quot;&gt;Top-1: 82.90%&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Macro-F1: 81.78%&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor:#0f172a;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1460" y="115" width="125" height="235" as="geometry" />
+        </mxCell>
+
+        <!-- Main Connectors -->
+        <mxCell id="e0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="in_block" target="stem_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="stem_card" target="s1_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="s1_card" target="s2_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="s2_card" target="s3_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="s3_card" target="s4_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="s4_card" target="clf_card">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0f172a;" edge="1" parent="1" source="clf_card" target="out_block">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ZOOM CALLOUT PANEL: RESIDUAL BLOCK ANATOMY -->
+        <mxCell id="zoom_panel" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#faf5ff;strokeColor=#e9d5ff;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="50" y="380" width="1535" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="zoom_title" value="&lt;b style=&quot;font-size:12px;color:#6b21a8;&quot;&gt;RESIDUAL MECHANISM: RESIDUAL BLOCK INTERNAL ANATOMY &amp;amp; SHORTCUT TOPOLOGY&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="70" y="390" width="800" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Residual Zoom Diagram -->
+        <!-- In: x -->
+        <mxCell id="rx_in" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;\(x\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;\(C_{\text{in}} \times H \times W\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="450" width="105" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Main residual path: Conv1 -> BN -> ReLU -> Conv2 -> BN -->
+        <mxCell id="r_c1" value="&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;Conv2d 3×3&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;stride=\(s\), pad=1&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="450" width="115" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r_bn1" value="&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;BatchNorm2d&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;+ ReLU&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="450" width="115" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r_c2" value="&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;Conv2d 3×3&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;stride=1, pad=1&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="450" width="115" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r_bn2" value="&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;BatchNorm2d&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Affine Normalize&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="450" width="115" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Addition node: (+) -->
+        <mxCell id="r_add" value="&lt;b style=&quot;font-size:16px;color:#7c3aed;&quot;&gt;+&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#a855f7;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="840" y="455" width="40" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Final Activation -> Out -->
+        <mxCell id="r_act" value="&lt;b style=&quot;font-size:10px;color:#0f172a;&quot;&gt;ReLU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Output Gate&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="920" y="450" width="85" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="rx_out" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;\(y = \mathcal{F}(x) + x\)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#2563eb;&quot;&gt;\(C_{\text{out}} \times H&#39; \times W&#39;\)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0f172a;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1045" y="450" width="125" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Main residual connectors -->
+        <mxCell id="re1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="rx_in" target="r_c1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_c1" target="r_bn1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_bn1" target="r_c2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_c2" target="r_bn2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_bn2" target="r_add">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_add" target="r_act">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="re7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.2;strokeColor=#0f172a;" edge="1" parent="1" source="r_act" target="rx_out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Shortcut Connection (Overhead Arc) -->
+        <mxCell id="r_sc_box" value="&lt;b style=&quot;font-size:9px;color:#7c3aed;&quot;&gt;Shortcut Path&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:9px;color:#475569;&quot;&gt;Identity \(x\) if \(s=1\) and \(C_{\text{in}} = C_{\text{out}}\)&lt;br&gt;Conv 1×1 (\(s=2\)) + BN if downsampling&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a855f7;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="525" width="280" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="re_sc_in" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#a855f7;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="rx_in" target="r_sc_box">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="132" y="546" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="re_sc_out" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#a855f7;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="r_sc_box" target="r_add">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="546" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Right Side Mathematical & Explanatory Box -->
+        <mxCell id="r_notes" value="&lt;div style=&quot;text-align:left;line-height:1.4;&quot;&gt;&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;Residual Formulation &amp;amp; Optimization Properties:&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#334155;&quot;&gt;&amp;bull; &lt;b&gt;Mapping Function:&lt;/b&gt; \(y = \text{ReLU}(\mathcal{F}(x, \{W_i\}) + W_s x)\)&lt;br&gt;&amp;bull; &lt;b&gt;Gradient Propagation:&lt;/b&gt; \(\frac{\partial \mathcal{L}}{\partial x} = \frac{\partial \mathcal{L}}{\partial y} \cdot \left(\frac{\partial \mathcal{F}}{\partial x} + W_s\right)\), guaranteeing direct gradient flow back through deep stages.&lt;br&gt;&amp;bull; &lt;b&gt;Projection Parameterization:&lt;/b&gt; \(W_s\) operates as a linear projection (Conv \(1 \times 1\) with stride 2) when matching altered spatial resolution and channel dimensionality.&lt;br&gt;&amp;bull; &lt;b&gt;Regularization:&lt;/b&gt; Dual dropout (\(p=0.3\)) integrated across classifier projection layers.&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1;align=left;spacingLeft=12;spacingRight=12;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="420" width="375" height="155" as="geometry" />
+        </mxCell>
+
+        <!-- Bottom Caption -->
+        <mxCell id="caption" value="Figure 2. Architectural blueprint of Model 2 (Residual Deep CNN). The stem performs initial 3×3 spatial convolution and downsampling to 32 channels. Four modular residual stages (depth=2 each) progressively scale capacity to 256 channels via projection shortcuts (stride=2) and identity skip connections. The lower panel illustrates the internal residual anatomy mitigating gradient decay." style="text;html=1;align=left;verticalAlign=top;fontSize=10;fontColor:#64748b;fontStyle=2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="50" y="630" width="1535" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
