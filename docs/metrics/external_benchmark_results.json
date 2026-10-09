@@ -1,0 +1,237 @@
+{
+  "simple_cnn": {
+    "display_name": "Model 1: Baseline Simple CNN",
+    "overall_180": {
+      "accuracy": 0.2833333333333333,
+      "precision_macro": 0.2974809368191721,
+      "recall_macro": 0.28333333333333327,
+      "f1_macro": 0.2510763261519463,
+      "total_samples": 180,
+      "correct_samples": 51
+    },
+    "headline_144_originals": {
+      "accuracy": 0.2986111111111111,
+      "precision_macro": 0.3119675078008411,
+      "recall_macro": 0.2986111111111111,
+      "f1_macro": 0.268331713674851,
+      "total_samples": 144,
+      "correct_samples": 43
+    },
+    "volunteer_breakdown": {
+      "cbp": {
+        "accuracy": 0.2777777777777778,
+        "precision_macro": 0.171506734006734,
+        "recall_macro": 0.2777777777777778,
+        "f1_macro": 0.1962962962962963,
+        "total_samples": 36,
+        "correct_samples": 10
+      },
+      "hck": {
+        "accuracy": 0.2222222222222222,
+        "precision_macro": 0.1278818890660996,
+        "recall_macro": 0.2222222222222222,
+        "f1_macro": 0.14637769637769638,
+        "total_samples": 72,
+        "correct_samples": 16
+      },
+      "ntt": {
+        "accuracy": 0.3611111111111111,
+        "precision_macro": 0.2523148148148148,
+        "recall_macro": 0.3611111111111111,
+        "f1_macro": 0.2842592592592592,
+        "total_samples": 36,
+        "correct_samples": 13
+      },
+      "phm": {
+        "accuracy": 0.3333333333333333,
+        "precision_macro": 0.25787037037037036,
+        "recall_macro": 0.3333333333333333,
+        "f1_macro": 0.275,
+        "total_samples": 36,
+        "correct_samples": 12
+      }
+    },
+    "handedness_parity": {
+      "right_hand_accuracy": 0.2222222222222222,
+      "left_hand_accuracy": 0.2222222222222222,
+      "parity_delta": 0.0,
+      "right_correct": 8,
+      "left_correct": 8,
+      "paired_sample_count": 36
+    }
+  },
+  "complex_cnn": {
+    "display_name": "Model 2: Deep Residual CNN",
+    "overall_180": {
+      "accuracy": 0.6111111111111112,
+      "precision_macro": 0.6833824354657689,
+      "recall_macro": 0.6111111111111112,
+      "f1_macro": 0.6070555216388549,
+      "total_samples": 180,
+      "correct_samples": 110
+    },
+    "headline_144_originals": {
+      "accuracy": 0.5902777777777778,
+      "precision_macro": 0.6714234839234839,
+      "recall_macro": 0.5902777777777778,
+      "f1_macro": 0.5846073588720648,
+      "total_samples": 144,
+      "correct_samples": 85
+    },
+    "volunteer_breakdown": {
+      "cbp": {
+        "accuracy": 0.4722222222222222,
+        "precision_macro": 0.31481481481481477,
+        "recall_macro": 0.4722222222222222,
+        "f1_macro": 0.36111111111111105,
+        "total_samples": 36,
+        "correct_samples": 17
+      },
+      "hck": {
+        "accuracy": 0.6805555555555556,
+        "precision_macro": 0.6152777777777777,
+        "recall_macro": 0.6805555555555556,
+        "f1_macro": 0.6260582010582011,
+        "total_samples": 72,
+        "correct_samples": 49
+      },
+      "ntt": {
+        "accuracy": 0.6388888888888888,
+        "precision_macro": 0.5254629629629629,
+        "recall_macro": 0.6388888888888888,
+        "f1_macro": 0.5574074074074074,
+        "total_samples": 36,
+        "correct_samples": 23
+      },
+      "phm": {
+        "accuracy": 0.5833333333333334,
+        "precision_macro": 0.487037037037037,
+        "recall_macro": 0.5833333333333334,
+        "f1_macro": 0.5138888888888888,
+        "total_samples": 36,
+        "correct_samples": 21
+      }
+    },
+    "handedness_parity": {
+      "right_hand_accuracy": 0.6666666666666666,
+      "left_hand_accuracy": 0.6944444444444444,
+      "parity_delta": 0.02777777777777779,
+      "right_correct": 24,
+      "left_correct": 25,
+      "paired_sample_count": 36
+    }
+  },
+  "transfer_cnn": {
+    "display_name": "Model 3: Fine-Tuned ResNet-18",
+    "overall_180": {
+      "accuracy": 0.8,
+      "precision_macro": 0.8359347442680777,
+      "recall_macro": 0.8000000000000002,
+      "f1_macro": 0.7993165784832451,
+      "total_samples": 180,
+      "correct_samples": 144
+    },
+    "headline_144_originals": {
+      "accuracy": 0.7708333333333334,
+      "precision_macro": 0.8200617283950619,
+      "recall_macro": 0.7708333333333334,
+      "f1_macro": 0.7678503595170263,
+      "total_samples": 144,
+      "correct_samples": 111
+    },
+    "volunteer_breakdown": {
+      "cbp": {
+        "accuracy": 0.8055555555555556,
+        "precision_macro": 0.7175925925925926,
+        "recall_macro": 0.8055555555555556,
+        "f1_macro": 0.7453703703703703,
+        "total_samples": 36,
+        "correct_samples": 29
+      },
+      "hck": {
+        "accuracy": 0.875,
+        "precision_macro": 0.8796296296296295,
+        "recall_macro": 0.875,
+        "f1_macro": 0.8648148148148148,
+        "total_samples": 72,
+        "correct_samples": 63
+      },
+      "ntt": {
+        "accuracy": 0.7222222222222222,
+        "precision_macro": 0.6064814814814814,
+        "recall_macro": 0.7222222222222222,
+        "f1_macro": 0.6435185185185185,
+        "total_samples": 36,
+        "correct_samples": 26
+      },
+      "phm": {
+        "accuracy": 0.7222222222222222,
+        "precision_macro": 0.6388888888888888,
+        "recall_macro": 0.7222222222222222,
+        "f1_macro": 0.6666666666666666,
+        "total_samples": 36,
+        "correct_samples": 26
+      }
+    },
+    "handedness_parity": {
+      "right_hand_accuracy": 0.8333333333333334,
+      "left_hand_accuracy": 0.9166666666666666,
+      "parity_delta": 0.08333333333333326,
+      "right_correct": 30,
+      "left_correct": 33,
+      "paired_sample_count": 36
+    }
+  },
+  "random_split_comparisons": {
+    "model_1_random_split": {
+      "display_name": "Model 1: Baseline Simple CNN (Trained on Random Split)",
+      "overall_180": {
+        "accuracy": 0.3055555555555556,
+        "precision_macro": 0.340237694404361,
+        "recall_macro": 0.3055555555555556,
+        "f1_macro": 0.2884814259814259,
+        "total_samples": 180,
+        "correct_samples": 55
+      },
+      "headline_144_originals": {
+        "accuracy": 0.3125,
+        "f1_macro": 0.3013047138047138,
+        "total_samples": 144,
+        "correct_samples": 45
+      },
+      "handedness_parity": {
+        "right_hand_accuracy": 0.2777777777777778,
+        "left_hand_accuracy": 0.2777777777777778,
+        "parity_delta": 0.0,
+        "paired_sample_count": 36
+      },
+      "in_domain_random_test_accuracy": 0.9072050379699944,
+      "ood_generalization_drop": 0.6016494824144388
+    },
+    "model_3_random_split": {
+      "display_name": "Model 3: Fine-Tuned ResNet-18 (Trained on Random Split)",
+      "overall_180": {
+        "accuracy": 0.8,
+        "precision_macro": 0.8251432980599647,
+        "recall_macro": 0.8,
+        "f1_macro": 0.7983155733155735,
+        "total_samples": 180,
+        "correct_samples": 144
+      },
+      "headline_144_originals": {
+        "accuracy": 0.7847222222222222,
+        "f1_macro": 0.7810105018438352,
+        "total_samples": 144,
+        "correct_samples": 113
+      },
+      "handedness_parity": {
+        "right_hand_accuracy": 0.8888888888888888,
+        "left_hand_accuracy": 0.8611111111111112,
+        "parity_delta": 0.02777777777777768,
+        "paired_sample_count": 36
+      },
+      "in_domain_random_test_accuracy": 1.0,
+      "ood_generalization_drop": 0.2
+    }
+  }
+}

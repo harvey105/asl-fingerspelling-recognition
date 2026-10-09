@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-10-09T12:24:45.706867+00:00",
+  "device": "privateuseone:0",
+  "ablation_2_aspect_ratio": {
+    "model_3": {
+      "letterbox_padding": {
+        "accuracy": 0.9186111111111112,
+        "precision_macro": 0.9311938565402649,
+        "recall_macro": 0.9186111111111112,
+        "f1_macro": 0.9109775723189232,
+        "mean_confidence": 0.9634,
+        "total_samples": 7200,
+        "correct_samples": 6614
+      },
+      "naive_squashing": {
+        "accuracy": 0.8584722222222222,
+        "precision_macro": 0.8712398402194812,
+        "recall_macro": 0.8584722222222222,
+        "f1_macro": 0.8413982049129483,
+        "mean_confidence": 0.9127,
+        "total_samples": 7200,
+        "correct_samples": 6181
+      },
+      "accuracy_degradation": 0.06013888888888898,
+      "f1_degradation": 0.069579367405975
+    },
+    "model_1": {
+      "letterbox_padding": {
+        "accuracy": 0.5270833333333333,
+        "precision_macro": 0.5447380625533139,
+        "recall_macro": 0.5270833333333332,
+        "f1_macro": 0.49199316739654875,
+        "mean_confidence": 0.6482,
+        "total_samples": 7200,
+        "correct_samples": 3795
+      },
+      "naive_squashing": {
+        "accuracy": 0.23041666666666666,
+        "precision_macro": 0.2458190348120349,
+        "recall_macro": 0.23041666666666666,
+        "f1_macro": 0.2084192039120491,
+        "mean_confidence": 0.4129,
+        "total_samples": 7200,
+        "correct_samples": 1659
+      },
+      "accuracy_degradation": 0.29666666666666663,
+      "f1_degradation": 0.28357396348449965
+    }
+  },
+  "ablation_1_split_leakage": {
+    "model_1": {
+      "subject_split": {
+        "accuracy": 0.5270833333333333,
+        "f1_macro": 0.49199316739654875
+      },
+      "random_split": {
+        "accuracy": 0.9072050379699944,
+        "f1_macro": 0.9020691126466167,
+        "precision_macro": 0.9156187310028859,
+        "recall_macro": 0.9072209793686304,
+        "loss": 1.1513956000924574
+      },
+      "leakage_inflation": 0.3801217046366611
+    },
+    "model_3": {
+      "subject_split": {
+        "accuracy": 0.9186111111111112,
+        "f1_macro": 0.9109775723189232
+      },
+      "random_split": {
+        "accuracy": 1.0,
+        "f1_macro": 1.0,
+        "precision_macro": 1.0,
+        "recall_macro": 1.0,
+        "loss": 0.6833754777466727
+      },
+      "leakage_inflation": 0.08138888888888882
+    }
+  },
+  "ablation_3_label_smoothing": {
+    "label_smoothing_alpha_0_10": {
+      "accuracy": 0.9186111111111112,
+      "precision_macro": 0.9311938565402649,
+      "recall_macro": 0.9186111111111112,
+      "f1_macro": 0.9109775723189232,
+      "mean_confidence": 0.7054297101456258,
+      "total_samples": 7200,
+      "correct_samples": 6614
+    },
+    "standard_cross_entropy_alpha_0_0": {
+      "accuracy": 0.9118055555555555,
+      "precision_macro": 0.9262693955763789,
+      "recall_macro": 0.9118055555555556,
+      "f1_macro": 0.9076564639153418,
+      "mean_confidence": 0.9369668657291267,
+      "total_samples": 7200,
+      "correct_samples": 6565
+    },
+    "accuracy_gain_from_smoothing": 0.00680555555555562,
+    "confidence_calibration_delta": 0.23153715558350085
+  }
+}
