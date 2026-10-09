@@ -36,7 +36,7 @@ The baseline model provides a clean reference benchmark built without residual h
 
 #### Mathematical Formulation
 Given an input hand crop $X \in \mathbb{R}^{3 \times 224 \times 224}$, each sequential stage $l \in \{1, 2, 3, 4\}$ computes:
-$$Z_l = \text{ReLU}\left(\text{BN}\left(W_l * X_{l-1} + b_l\right)\right)$$
+$$Z_l = \text{ReLU}\left(\text{BN}\left(W_l * X_{l-1}\right)\right)$$
 $$X_l = \text{MaxPool}_{2\times 2, s=2}(Z_l)$$
 
 Channel dimensions expand as $3 \to 32 \to 64 \to 128 \to 256$, with spatial grids halving at each step from $224 \to 112 \to 56 \to 28 \to 14$. Global average pooling compresses the feature map to $h \in \mathbb{R}^{256}$:
