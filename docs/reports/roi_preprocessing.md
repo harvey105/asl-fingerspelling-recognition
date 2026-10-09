@@ -241,9 +241,9 @@ The output is structurally and geometrically correct. The visual review confirms
 | `docs/task2_2_partB1_blank_scan.json` | Part B-1 report |
 | `docs/task2_2_partB_crop.json` | Part B-2 report |
 | `docs/task2_2_partC_verify.json` | Part C report |
-| `docs/figures/blank_scan_*.png` | Blank scan figures |
-| `docs/figures/roi_crop_inspection.png` | Crop overview |
-| `docs/figures/crop_review_*.png` | Part C review figures |
+| `docs/figures/diagnostics/blank_scan_*.png` | Blank scan figures |
+| `docs/figures/dataset/roi_crop_inspection.png` | Crop overview |
+| `docs/figures/diagnostics/crop_review_*.png` | Part C review figures |
 
 Reproduction, from the repository root, in this order:
 ```

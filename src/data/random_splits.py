@@ -12,10 +12,10 @@ from the remainder), so the  leakage numbers remain comparable.
 Writes (write-once; refuses to overwrite):
   data/splits/random_train.csv, random_val.csv, random_test.csv
   data/splits/SHA256SUMS_random.txt
-  docs/task2_4_partB_random_csv.json
+  docs/metrics/split_random.json
 
 Columns match the subject CSVs: filepath, class_name, class_id, volunteer_id, crop_path, md5.
-Run (from repository root): uv run python src/freeze_random_splits.py
+Run (from repository root): uv run python -m src.data.random_splits
 """
 
 import json
@@ -45,7 +45,7 @@ TARGETS = {
     "test": SPLITS_DIR / "random_test.csv",
 }
 CHECKSUMS = SPLITS_DIR / "SHA256SUMS_random.txt"
-REPORT = DOCS_DIR / "task2_4_partB_random_csv.json"
+REPORT = DOCS_DIR / "metrics" / "split_random.json"
 
 
 def random_split(df):

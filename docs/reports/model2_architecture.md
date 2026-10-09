@@ -186,9 +186,9 @@ Without temporal motion sequences or 3D depth, single static frames of `1` vs. `
 ### Loss and Accuracy Curves
 Convergence occurred rapidly by Epoch 8, with validation accuracy achieving 81.57% on isolated signer P8 before stabilizing.
 
-![Complex CNN Training Curves](../figures/complex_cnn_training_curves.png)
+![Complex CNN Training Curves](../figures/evaluations/complex_cnn_training_curves.png)
 
 ### Test Confusion Matrix
 The 36-class confusion matrix on unseen signers P9 and P10 shows sharp diagonal concentration across the entire alphabet and digit set, with off-diagonal errors cleanly clustered into known homograph pairs `(W, 6)` and `(V, 2)`.
 
-![Complex CNN Confusion Matrix](../figures/complex_cnn_confusion_matrix.png)
+![Complex CNN Confusion Matrix](../figures/evaluations/complex_cnn_confusion_matrix.png)

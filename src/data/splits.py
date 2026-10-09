@@ -19,8 +19,8 @@ Gates (any failure exits with code 1 and writes nothing):
   train, every crop file exists, class_name agrees with class_id, excluded rows all point
   to a kept train file, and the CSVs read back identically.
 
-Writes docs/task2_4_partA_subject_csv.json.
-Run (from repository root): uv run python src/freeze_splits.py
+Writes docs/metrics/split_subject.json.
+Run (from repository root): uv run python -m src.data.splits
 """
 
 import hashlib
@@ -37,7 +37,7 @@ from .manifests import build_manifests
 
 EXPECTED = {"train": 24777, "val": 3588, "test": 7200, "excluded": 423}  # measured in
 COLUMNS = ["filepath", "class_name", "class_id", "volunteer_id", "crop_path", "md5"]
-REPORT = DOCS_DIR / "task2_4_partA_subject_csv.json"
+REPORT = DOCS_DIR / "metrics" / "split_subject.json"
 
 TARGETS = {
     "train": SPLITS_DIR / "subject_train.csv",

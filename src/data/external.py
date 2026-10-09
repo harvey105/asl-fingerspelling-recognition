@@ -33,24 +33,25 @@ Gates (All must pass for manifest creation):
 Writes:
   data/external_test/manifest.csv            (tracked by git; raw photos untracked)
   data/processed/external_crop_log.csv       (per-crop operational metrics)
-  docs/task2_4_partC_external.json           (audit report)
+  docs/metrics/external_test.json            (audit report)
 
-Run (from repository root): uv run python src/prepare_external.py
+Run (from repository root): uv run python -m src.data.external
 """
 
 import hashlib
 import json
+from pathlib import Path
 import sys
 from datetime import datetime
 
 import cv2
 import numpy as np
 import pandas as pd
-import preprocess_roi as pr
-from blank_scan import edge_features
-from freeze_splits import gate, write_and_verify
 
-from config import CLASS_TO_ID, DOCS_DIR, PROCESSED_DIR, PROJECT_ROOT
+from src.config import CLASS_TO_ID, DOCS_DIR, PROCESSED_DIR, PROJECT_ROOT
+from . import preprocess_roi as pr
+from .roi_detector import IMG_SIZE
+from .splits import gate, write_and_verify
 
 # Core paths
 EXT_DIR = PROJECT_ROOT / "data" / "external_test"
@@ -59,7 +60,19 @@ CROP_DIR = PROJECT_ROOT / "data" / "external_crops"
 MANIFEST = EXT_DIR / "manifest.csv"
 INDEX_CSV = PROCESSED_DIR / "asl_hg_image_index.csv"
 LOG_OUT = PROCESSED_DIR / "external_crop_log.csv"
-REPORT = DOCS_DIR / "task2_4_partC_external.json"
+REPORT = DOCS_DIR / "metrics" / "external_test.json"
+
+
+def edge_features(path: Path) -> dict[str, float]:
+    """Calculate Sobel gradient edge fraction matching blank frame detector."""
+    gray = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+    if gray is None:
+        raise FileNotFoundError(f"cv2 could not read {path}")
+    g = cv2.GaussianBlur(gray, (5, 5), 0)
+    gx = cv2.Sobel(g, cv2.CV_32F, 1, 0, ksize=3)
+    gy = cv2.Sobel(g, cv2.CV_32F, 0, 1, ksize=3)
+    mag = cv2.magnitude(gx, gy)
+    return {"edge_frac_40": float((mag > 40).mean())}
 
 # Constants & Decision Thresholds
 FRAME = pr.IMG_SIZE  # 300 px Mendeley capture frame

@@ -344,11 +344,11 @@ Per-class unique counts (distinct MD5) replace the "1,000 unique per class" clai
 | `docs/task2_1_partB_signers.json` | Part B-1 report |
 | `docs/task2_1_partB2_cross_split.json` | Part B-2 report |
 | `docs/task2_1_partB3_random_split.json` | Part B-3 report |
-| `docs/figures/eda_class_balance.png` | Class balance |
-| `docs/figures/eda_36_class_grid.png` | 36-class grid (regeneration pending) |
-| `docs/figures/eda_volunteer_mosaic.png` | Signer and lighting mosaic |
-| `docs/figures/eda_signer_luminance.png` | Per-image luminance by signer |
-| `docs/figures/eda_signer_hamming.png` | Hamming distance distributions |
+| `docs/figures/dataset/eda_class_balance.png` | Class balance |
+| `docs/figures/dataset/eda_36_class_grid.png` | 36-class grid (regeneration pending) |
+| `docs/figures/dataset/eda_volunteer_mosaic.png` | Signer and lighting mosaic |
+| `docs/figures/dataset/eda_signer_luminance.png` | Per-image luminance by signer |
+| `docs/figures/dataset/eda_signer_hamming.png` | Hamming distance distributions |
 
 Reproduction, from the repository root, in this order: `verify_dataset.py`, `audit_signers.py`, `audit_cross_split.py`, `audit_random_split.py`, `eda_figures.py`.
 

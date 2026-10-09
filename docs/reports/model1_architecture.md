@@ -191,9 +191,9 @@ Errors occurring between phonologically distinct static hand configurations repr
 ### Loss and Accuracy Curves
 Convergence curves illustrate steady learning across 25 epochs. While training accuracy surpassed 89%, validation accuracy plateaued near 49.40%, showing the typical generalization gap of shallow sequential architectures under cross-signer domain shift.
 
-![Simple CNN Training Curves](../figures/simple_cnn_training_curves.png)
+![Simple CNN Training Curves](../figures/evaluations/simple_cnn_training_curves.png)
 
 ### Test Confusion Matrix
 The 36-class confusion matrix on unseen signers P9 and P10 displays strong diagonal dominance across open and distinct signs (`0`, `5`, `C`, `O`), alongside dense off-diagonal clusters corresponding to Category A homographs and Category C finger-tuck ambiguities.
 
-![Simple CNN Confusion Matrix](../figures/simple_cnn_confusion_matrix.png)
+![Simple CNN Confusion Matrix](../figures/evaluations/simple_cnn_confusion_matrix.png)

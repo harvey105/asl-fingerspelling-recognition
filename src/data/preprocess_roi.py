@@ -20,8 +20,8 @@ which the raw pixels are resampled.  uses scale to measure the class-0 size conf
 Read-only on data/raw/. Writes:
   data/processed_crops/<class folders>/*.png
   data/processed/roi_crop_log.csv
-  docs/task2_2_partB_crop.json
-  docs/figures/roi_crop_inspection.png
+  docs/metrics/crop_log.json
+  docs/figures/dataset/roi_crop_inspection.png
 
 Run (from repository root): uv run python src/preprocess_roi.py
 """
@@ -71,8 +71,8 @@ WRITTEN_METHODS = ["mediapipe", "skin", "class_rule_full", "undetected_full"]
 
 INDEX_CSV = PROCESSED_DIR / "asl_hg_image_index.csv"
 LOG_CSV = PROCESSED_DIR / "roi_crop_log.csv"
-REPORT = DOCS_DIR / "task2_2_partB_crop.json"
-INSPECT_FIG = DOCS_DIR / "figures" / "roi_crop_inspection.png"
+REPORT = DOCS_DIR / "metrics" / "crop_log.json"
+INSPECT_FIG = DOCS_DIR / "figures" / "dataset" / "roi_crop_inspection.png"
 INSPECT_CLASSES = ["0", "5", "W", "B", "C", "H", "Y", "K", "U", "3"]
 
 

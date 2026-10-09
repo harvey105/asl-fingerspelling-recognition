@@ -293,7 +293,7 @@ The restore of padding is tested. The number of natural pixels that are exactly 
 | `docs/task2_3_partA_dataset.json` | Part A report | Verification | |
 | `docs/task2_3_partB_loader.json` | Latest benchmark report | Verification | Overwritten each run. |
 | `docs/task2_3_partB_sessions.jsonl` | Per-session throughput log with power plan | Report evidence | Append-only. Do not delete. |
-| `docs/figures/aug_check_part_a.png` | Augmentation check figure | Visual review | Visual check open. |
+| `docs/figures/dataset/aug_check_part_a.png` | Augmentation check figure | Visual review | Visual check open. |
 
 **Delete:** `src/finish_part_b_report.py`.
 

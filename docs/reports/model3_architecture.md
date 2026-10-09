@@ -176,9 +176,9 @@ Genuine structural morphological confusion is restricted to just **148 images ac
 ### Loss and Accuracy Curves
 Differential fine-tuning stabilized rapidly, achieving peak validation accuracy of 88.32% on Signer P8 by Epoch 10 before early stopping at Epoch 18.
 
-![Transfer ResNet-18 Training Curves](../figures/transfer_cnn_training_curves.png)
+![Transfer ResNet-18 Training Curves](../figures/evaluations/transfer_cnn_training_curves.png)
 
 ### Test Confusion Matrix
 The 36-class confusion matrix demonstrates overwhelming diagonal concentration, with off-diagonal artifacts restricted almost entirely to known phonological homograph pairs (`6 -> W`, `1 -> Z`, `I -> J`, `N -> M`, `R -> U`).
 
-![Transfer ResNet-18 Confusion Matrix](../figures/transfer_cnn_confusion_matrix.png)
+![Transfer ResNet-18 Confusion Matrix](../figures/evaluations/transfer_cnn_confusion_matrix.png)

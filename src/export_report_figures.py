@@ -203,8 +203,8 @@ def main() -> None:
     parser.add_argument("--test-manifest", type=str, default="data/splits/subject_test.csv")
     args = parser.parse_args()
 
-    curves_out = DOCS_DIR / "figures" / f"{args.model}_training_curves.png"
-    cm_out = DOCS_DIR / "figures" / f"{args.model}_confusion_matrix.png"
+    curves_out = DOCS_DIR / "figures" / "evaluations" / f"{args.model}_training_curves.png"
+    cm_out = DOCS_DIR / "figures" / "evaluations" / f"{args.model}_confusion_matrix.png"
     metrics_out = DOCS_DIR / "metrics" / f"{args.model}_test_evaluation.json"
 
     plot_training_curves(Path(args.log_file), curves_out)
