@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Receptive-Field-Coverage">
+    <mxGraphModel dx="1000" dy="400" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="310" math="1" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Block -->
+        <mxCell id="title" value="&lt;div style=&quot;font-family:Arial,Helvetica,sans-serif;&quot;&gt;&lt;b style=&quot;font-size:15px;color:#0f172a;&quot;&gt;Effective Receptive Field Coverage Across Architectures&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#64748b;&quot;&gt;Spatial Receptive Field Span Prior to Global Average Pooling Relative to 224×224 Input Window (1 px = 1.25 pt scale)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="16" width="650" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- Legend / Reference Label -->
+        <mxCell id="ref" value="&lt;span style=&quot;font-size:10px;color:#475569;&quot;&gt;&lt;b&gt;Scale:&lt;/b&gt; 1 px RF = 1.25 canvas units&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="20" width="200" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- Background Container / Grid Axis Base (width: 450 px * 1.25 = 562.5 -> 562 width) -->
+        <mxCell id="axis_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#f1f5f9;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="65" width="562" height="175" as="geometry" />
+        </mxCell>
+
+        <!-- Vertical dashed line for 224 px input frame boundary (X = 190 + 224 * 1.25 = 190 + 280 = 470) -->
+        <mxCell id="line_bound" value="" style="endArrow=none;dashed=1;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="245" as="sourcePoint" />
+            <mxPoint x="470" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tag_bound" value="&lt;span style=&quot;font-size:10px;font-weight:bold;color:#334155;background:#ffffff;padding:2px 4px;&quot;&gt;224 px Input Boundary (100%)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="385" y="44" width="170" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- Row 1: Model 1 (46 px * 1.25 = 57.5 -> 58 width) -->
+        <mxCell id="lbl1" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;Model 1 (Simple CNN)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;features[12] (Conv4)&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="75" width="150" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="bar1" value="&lt;span style=&quot;font-size:10px;font-weight:bold;color:#991b1b;&quot;&gt;46 px (20.5%)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#f87171;strokeWidth=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="190" y="78" width="58" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="note1" value="&lt;span style=&quot;font-size:10px;color:#b91c1c;&quot;&gt;Severe under-coverage; resolves only local skin patches&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="256" y="78" width="280" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Row 2: Model 2 (216 px * 1.25 = 270 width) -->
+        <mxCell id="lbl2" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;Model 2 (Complex CNN)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;stages[7].conv2&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="125" width="150" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="bar2" value="&lt;span style=&quot;font-size:10px;font-weight:bold;color:#0369a1;&quot;&gt;216 px (96.4%)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#38bdf8;strokeWidth=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="190" y="128" width="270" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="&lt;span style=&quot;font-size:10px;color:#0284c7;&quot;&gt;Covers entire active hand bounding envelope&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="480" y="128" width="260" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Row 3: Model 3 (435 px * 1.25 = 543.75 -> 544 width) -->
+        <mxCell id="lbl3" value="&lt;b style=&quot;font-size:11px;color:#0f172a;&quot;&gt;Model 3 (Transfer CNN)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;layer4[1].conv2&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="175" width="150" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="bar3" value="&lt;span style=&quot;font-size:10px;font-weight:bold;color:#15803d;&quot;&gt;435 px (194.2% Contextual Envelope)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#4ade80;strokeWidth=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="190" y="178" width="544" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="note3" value="&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;Global receptive span; pinpoints fine joints &amp;amp; fingertips&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="740" y="178" width="210" height="28" as="geometry" />
+        </mxCell>
+
+        <!-- Benchmark Scale Marks & Axis Ticks -->
+        <!-- 0 px -->
+        <mxCell id="tick0_line" value="" style="endArrow=none;html=1;strokeColor=#94a3b8;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="244" as="sourcePoint" />
+            <mxPoint x="190" y="238" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tick0" value="&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;0 px&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="175" y="246" width="30" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- 100 px = 190 + 125 = 315 -->
+        <mxCell id="tick100_line" value="" style="endArrow=none;html=1;strokeColor=#cbd5e1;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="315" y="243" as="sourcePoint" />
+            <mxPoint x="315" y="239" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tick100" value="&lt;span style=&quot;font-size:9px;color:#94a3b8;&quot;&gt;100 px&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="295" y="246" width="40" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- 224 px = 190 + 280 = 470 -->
+        <mxCell id="tick224_line" value="" style="endArrow=none;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="246" as="sourcePoint" />
+            <mxPoint x="470" y="238" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tick224" value="&lt;span style=&quot;font-size:9px;font-weight:bold;color:#334155;&quot;&gt;224 px (Frame)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="430" y="246" width="80" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- 300 px = 190 + 375 = 565 -->
+        <mxCell id="tick300_line" value="" style="endArrow=none;html=1;strokeColor=#cbd5e1;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="565" y="243" as="sourcePoint" />
+            <mxPoint x="565" y="239" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tick300" value="&lt;span style=&quot;font-size:9px;color:#94a3b8;&quot;&gt;300 px&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="545" y="246" width="40" height="15" as="geometry" />
+        </mxCell>
+
+        <!-- 435 px = 190 + 544 = 734 -->
+        <mxCell id="tick435_line" value="" style="endArrow=none;html=1;strokeColor=#15803d;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="734" y="246" as="sourcePoint" />
+            <mxPoint x="734" y="238" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tick435" value="&lt;span style=&quot;font-size:9px;font-weight:bold;color:#15803d;&quot;&gt;435 px (ResNet-18)&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="685" y="246" width="100" height="15" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
