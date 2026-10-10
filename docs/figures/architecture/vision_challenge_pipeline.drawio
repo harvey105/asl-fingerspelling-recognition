@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Vision-Challenge-Pipeline">
+    <mxGraphModel dx="1000" dy="250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="140" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Box 1 -->
+        <mxCell id="b1" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Raw Video Frame&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;Webcam / Mobile capture&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="35" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Box 2 -->
+        <mxCell id="b2" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Hand Localization&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;ROI isolation &amp; letterbox&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="35" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Box 3 -->
+        <mxCell id="b3" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Handshape Disambiguation&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;Resolve subtle finger cues&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="35" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Box 4 -->
+        <mxCell id="b4" value="&lt;b style=&quot;font-size:12px;color:#0369a1;&quot;&gt;Cross-Signer Transfer&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#0284c7;&quot;&gt;Invariance to anatomy &amp; lighting&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#38bdf8;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="610" y="35" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Box 5 -->
+        <mxCell id="b5" value="&lt;b style=&quot;font-size:12px;color:#15803d;&quot;&gt;Real-Time Prediction&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;&amp;lt;15 ms consumer inference&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#4ade80;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="820" y="35" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="b1" target="b2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="b2" target="b3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="b3" target="b4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="b4" target="b5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -44,7 +44,7 @@ WRITTEN_METHODS: list[str] = [
 INDEX_CSV: Path = PROCESSED_DIR / "asl_hg_image_index.csv"
 LOG_CSV: Path = PROCESSED_DIR / "roi_crop_log.csv"
 REPORT: Path = DOCS_DIR / "metrics" / "crop_log.json"
-INSPECT_FIG: Path = DOCS_DIR / "figures" / "dataset" / "roi_crop_inspection.png"
+INSPECT_FIG: Path = DOCS_DIR / "figures" / "eda" / "roi_crop_inspection.png"
 
 
 def add_margin(box: BoxCoords, frac: float, frame_size: int) -> BoxCoords:
@@ -69,9 +69,7 @@ def letterbox(
     h, w = crop_bgr.shape[:2]
     scale = out_size / max(h, w)
     new_w, new_h = max(1, round(w * scale)), max(1, round(h * scale))
-    resized = cv2.resize(
-        crop_bgr, (new_w, new_h), interpolation=cv2.INTER_LINEAR
-    )
+    resized = cv2.resize(crop_bgr, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
     canvas = np.full((out_size, out_size, 3), pad_value, dtype=np.uint8)
     top = (out_size - new_h) // 2
     left = (out_size - new_w) // 2
@@ -152,19 +150,11 @@ def summarise(res: pd.DataFrame) -> dict[str, Any]:
 
     det = written[written["method"].isin(["mediapipe", "skin"])]
     touch_by_method = {
-        m: round(float(g["box_touches_border"].astype(float).mean()), 4)
-        for m, g in det.groupby("method")
+        m: round(float(g["box_touches_border"].astype(float).mean()), 4) for m, g in det.groupby("method")
     }
-    scale_by_method = {
-        m: round(float(g["scale"].median()), 4)
-        for m, g in written.groupby("method")
-    }
+    scale_by_method = {m: round(float(g["scale"].median()), 4) for m, g in written.groupby("method")}
     errors = (
-        res.loc[res["method"] == "error", ["filepath", "error"]].to_dict(
-            "records"
-        )
-        if "error" in res.columns
-        else []
+        res.loc[res["method"] == "error", ["filepath", "error"]].to_dict("records") if "error" in res.columns else []
     )
     return {
         "n": n,
@@ -182,11 +172,7 @@ def main() -> None:
 
     if not BLANK_FRAMES_CSV.exists():
         raise FileNotFoundError(f"{BLANK_FRAMES_CSV} not found.")
-    stale = (
-        [p for p in CROPS_DIR.rglob("*") if p.is_file()]
-        if CROPS_DIR.exists()
-        else []
-    )
+    stale = [p for p in CROPS_DIR.rglob("*") if p.is_file()] if CROPS_DIR.exists() else []
     if stale:
         raise SystemExit(
             f"{CROPS_DIR} already contains {len(stale)} existing files. "
@@ -194,9 +180,7 @@ def main() -> None:
         )
 
     df = pd.read_csv(INDEX_CSV, dtype={"filepath": str, "label": str})
-    blank_set = set(
-        pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"]
-    )
+    blank_set = set(pd.read_csv(BLANK_FRAMES_CSV, dtype={"filepath": str})["filepath"])
     print(f"Images: {len(df):,} | Blank excluded: {len(blank_set):,}")
 
     CROPS_DIR.mkdir(parents=True, exist_ok=True)
@@ -212,9 +196,7 @@ def main() -> None:
     ]
 
     results = []
-    with ProcessPoolExecutor(
-        max_workers=NUM_WORKERS, initializer=_init_worker
-    ) as pool:
+    with ProcessPoolExecutor(max_workers=NUM_WORKERS, initializer=_init_worker) as pool:
         for res in tqdm(
             pool.map(process_one, tasks, chunksize=50),
             total=len(tasks),

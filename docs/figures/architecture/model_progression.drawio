@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Model-Progression">
+    <mxGraphModel dx="1000" dy="250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="140" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Model 1 -->
+        <mxCell id="m1" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Model 1: Simple CNN&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;4 Conv stages · 464K params&lt;br&gt;&lt;b style=&quot;color:#991b1b;&quot;&gt;52.71% Unseen Acc&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="30" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Model 2 -->
+        <mxCell id="m2" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Model 2: Complex Residual CNN&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;8 Residual blocks · 2.91M params&lt;br&gt;&lt;b style=&quot;color:#0284c7;&quot;&gt;82.90% Unseen Acc (+30.19%)&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f9ff;strokeColor=#38bdf8;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="360" y="30" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Model 3 -->
+        <mxCell id="m3" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Model 3: Transfer ResNet-18&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;Pretrained backbone · 11.19M params&lt;br&gt;&lt;b style=&quot;color:#16a34a;&quot;&gt;91.86% Unseen Acc (+39.15%)&lt;/b&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#4ade80;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="690" y="30" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" value="&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Residual highways&lt;/span&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="m1" target="m2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="&lt;span style=&quot;font-size:9px;color:#64748b;&quot;&gt;Transfer learning&lt;/span&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="m2" target="m3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="ROI-Letterbox-Workflow">
+    <mxGraphModel dx="1000" dy="250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="140" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Step 1 -->
+        <mxCell id="s1" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Raw Capture&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;300×300 RGB Frame&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="35" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Step 2 -->
+        <mxCell id="s2" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;MediaPipe Hands&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;21 3D Landmarks&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="35" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Step 3 -->
+        <mxCell id="s3" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Adaptive Bounding Box&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;+20% margin expansion&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="35" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Step 4 -->
+        <mxCell id="s4" value="&lt;b style=&quot;font-size:12px;color:#0369a1;&quot;&gt;Aspect Scale&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#0284c7;&quot;&gt;Longest side to 224 px&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#38bdf8;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="570" y="35" width="150" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Step 5 -->
+        <mxCell id="s5" value="&lt;b style=&quot;font-size:12px;color:#15803d;&quot;&gt;Neutral Letterbox&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;224×224 Pad (128, 128, 128)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#4ade80;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="760" y="35" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="s4" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

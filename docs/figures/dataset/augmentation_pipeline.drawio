@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Augmentation-Pipeline">
+    <mxGraphModel dx="1000" dy="250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="140" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Node 1: Input -->
+        <mxCell id="n1" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Input Crop&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;224×224 RGB&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="35" width="120" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Node 2: Color Jitter -->
+        <mxCell id="n2" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Color Jitter&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;KeepPadJitter (0.25)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="35" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Node 3: Affine -->
+        <mxCell id="n3" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Random Affine&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;±12°, tr=6%, sc=0.75-1.35&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="35" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Node 4: Flip -->
+        <mxCell id="n4" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Horizontal Flip&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#0369a1;&quot;&gt;p=0.5 (Ambidexterity)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e0f2fe;strokeColor=#38bdf8;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="560" y="35" width="150" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Node 5: Output -->
+        <mxCell id="n5" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Mini-Batch&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#15803d;&quot;&gt;Tensor + ImageNet Norm&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#4ade80;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="750" y="35" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="n1" target="n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="n2" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="n3" target="n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Dataset-Splits-Structure">
+    <mxGraphModel dx="1000" dy="450" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="260" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Source Dataset Box -->
+        <mxCell id="src" value="&lt;b style=&quot;font-size:13px;color:#0f172a;&quot;&gt;ASL-HG Dataset (36,000 Captures)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#64748b;&quot;&gt;10 Signers (P1–P10) · 36 Classes · 100 Captures per Signer per Class&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="20" width="520" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- Train Branch -->
+        <mxCell id="p_train" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Train Split (70%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#475569;&quot;&gt;Signers P1–P7 (25,200 nominal)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="105" width="260" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="out_train" value="&lt;b style=&quot;font-size:12px;color:#1e3a8a;&quot;&gt;24,777 Cleaned Crops&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#3b82f6;&quot;&gt;423 burst duplicates removed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#60a5fa;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="185" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Val Branch -->
+        <mxCell id="p_val" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Validation Split (10%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#475569;&quot;&gt;Signer P8 (3,600 nominal)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="105" width="260" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="out_val" value="&lt;b style=&quot;font-size:12px;color:#854d0e;&quot;&gt;3,588 Cleaned Crops&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#eab308;&quot;&gt;12 blank camera frames removed&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fefce8;strokeColor=#facc15;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="350" y="185" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Test Branch -->
+        <mxCell id="p_test" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Test Split (20%)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:11px;color:#475569;&quot;&gt;Signers P9, P10 (7,200 nominal)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="105" width="260" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="out_test" value="&lt;b style=&quot;font-size:12px;color:#14532d;&quot;&gt;7,200 Cleaned Crops&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#22c55e;&quot;&gt;Untouched unseen test set&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#4ade80;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="660" y="185" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="src" target="p_train">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="src" target="p_val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="src" target="p_test">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="p_train" target="out_train">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="p_val" target="out_val">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#64748b;strokeWidth=1.5;" edge="1" parent="1" source="p_test" target="out_test">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="30.2.6">
+  <diagram name="Letterbox-vs-Squash">
+    <mxGraphModel dx="1000" dy="300" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="960" pageHeight="180" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Source Crop -->
+        <mxCell id="src" value="&lt;b style=&quot;font-size:12px;color:#0f172a;&quot;&gt;Hand Crop&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#64748b;&quot;&gt;Arbitrary aspect ratio&lt;br&gt;(e.g. 110×200 px)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8fafc;strokeColor=#cbd5e1;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="55" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Branch 1: Naive Squash -->
+        <mxCell id="b1" value="&lt;b style=&quot;font-size:12px;color:#991b1b;&quot;&gt;Naive Squashing&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#b91c1c;&quot;&gt;Direct resize to 224×224&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#f87171;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="20" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="&lt;b style=&quot;font-size:11px;color:#991b1b;&quot;&gt;Severe Distortion (-29.7% on Model 1)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#b91c1c;&quot;&gt;Thickens fingers, warps natural joint angles&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="550" y="20" width="370" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Branch 2: Letterboxing -->
+        <mxCell id="b2" value="&lt;b style=&quot;font-size:12px;color:#15803d;&quot;&gt;Aspect Letterboxing&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;Longest side 224 px + gray pad&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#4ade80;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="100" width="220" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="&lt;b style=&quot;font-size:11px;color:#15803d;&quot;&gt;Geometry Preserved (Our Standard)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:10px;color:#16a34a;&quot;&gt;Retains anatomical finger widths and knuckle ratios&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dcfce7;strokeColor=#22c55e;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="550" y="100" width="370" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#f87171;strokeWidth=1.5;" edge="1" parent="1" source="src" target="b1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#f87171;strokeWidth=1.5;" edge="1" parent="1" source="b1" target="r1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4ade80;strokeWidth=1.5;" edge="1" parent="1" source="src" target="b2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#4ade80;strokeWidth=1.5;" edge="1" parent="1" source="b2" target="r2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
