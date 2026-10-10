@@ -55,14 +55,14 @@ This formulation guarantees that $\alpha_k^c$ reflects the exact first-order sen
 ### 2.3 Rectified Linear Combination and Heatmap Blending
 The coarse 2D localization map $L_{\text{Grad-CAM}}^c \in \mathbb{R}^{H \times W}$ is formed by a linear combination of activation maps weighted by their importance coefficients:
 
-$$L_{\text{Grad-CAM}}^c = \operatorname{ReLU}\left( \sum_{k=1}^C \alpha_k^c A^k \right)$$
+$$L_{\text{Grad-CAM}}^c = \mathrm{ReLU}\left( \sum_{k=1}^C \alpha_k^c A^k \right)$$
 
 #### The Role of the Rectified Linear Operator
-The $\operatorname{ReLU}$ operator removes negative values ($\max(0, x)$). In visual fingerspelling, features that suppress a class score (such as an extended thumb during an `S` fist pose) should not contribute positive intensity to the spatial attribution map. ReLU guarantees that only positive evidence for class $c$ is retained.
+The $\mathrm{ReLU}$ operator removes negative values ($\max(0, x)$). In visual fingerspelling, features that suppress a class score (such as an extended thumb during an `S` fist pose) should not contribute positive intensity to the spatial attribution map. ReLU guarantees that only positive evidence for class $c$ is retained.
 
 #### Spatial Upsampling and Normalization Pipeline
 1. **Bilinear Upsampling**: The low-resolution map $L^c \in \mathbb{R}^{H \times W}$ ($14 \times 14$ for Models 1 and 2; $7 \times 7$ for Model 3) is bilinearly interpolated to the original input resolution:
-   $$\tilde{L}^c = \operatorname{Interpolate}_{224 \times 224}(L_{\text{Grad-CAM}}^c)$$
+   $$\tilde{L}^c = \mathrm{Interpolate}_{224 \times 224}(L_{\text{Grad-CAM}}^c)$$
 2. **Min-Max Dynamic Scaling**: To prevent scale distortion across varying gradient magnitudes, the interpolated map is normalized per-sample with numerical stabilization $\epsilon = 10^{-8}$:
    $$\hat{L}^c(u, v) = \frac{\tilde{L}^c(u, v) - \min_{(u, v)} \tilde{L}^c(u, v)}{\max_{(u, v)} \tilde{L}^c(u, v) - \min_{(u, v)} \tilde{L}^c(u, v) + \epsilon}$$
 3. **Jet Colormap and Alpha Blending**: The normalized intensity $\hat{L}^c \in [0, 1]$ is mapped to pseudocolor RGB values ($H_{\text{Jet}} = \mathcal{C}_{\text{Jet}}(\hat{L}^c)$) and overlaid on the letterboxed RGB image ($I_{\text{RGB}}$):

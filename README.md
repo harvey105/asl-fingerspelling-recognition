@@ -79,7 +79,7 @@ Raw Image (300×300) ──> MediaPipe Hand ROI (+20% Margin) ──> Aspect-Rat
 
 1. **Aspect-Ratio Letterboxing (Zero-Squash Standard)**: Hand bounding boxes are scaled along their longest axis to 224 px and padded symmetrically with neutral gray RGB `(128, 128, 128)`. Direct squashing distorts anatomical aspect ratios, collapsing finger thickness and dropping accuracy by **29.67%** on Model 1.
 2. **Runtime Stochastic Ambidexterity**: The ASL-HG dataset captured all 10 participants signing exclusively with their left hand. Single-handed ASL signs are linguistically and phonologically ambidextrous. By injecting runtime stochastic horizontal flipping (`RandomHorizontalFlip(p=0.5)`) into the PyTorch DataLoader, the network acquires right-hand invariance dynamically without duplicating 36,000 files on disk. Verified on external tests: handedness parity delta is under 0.00%–8.33%.
-3. **Subject-Independent Partitioning**: Partitioned by human volunteer (Train: P1–P7, Val: P8, Test: P9–P10). Consecutive video frames within a signer's burst share a perceptual Hamming distance $< 1$, whereas cross-signer distance is $23$–$34$. Random splitting leaks near-duplicate frames, creating an artificial ~99% performance illusion.
+3. **Subject-Independent Partitioning**: Partitioned by human volunteer (Train: P1–P7, Val: P8, Test: P9–P10). Consecutive video frames within a signer's burst share a perceptual Hamming distance < 1, whereas cross-signer distance is 23–34. Random splitting leaks near-duplicate frames, creating an artificial ~99% performance illusion.
 
 ---
 
@@ -91,7 +91,7 @@ Raw Image (300×300) ──> MediaPipe Hand ROI (+20% Margin) ──> Aspect-Rat
 
 To verify that predictions are driven by anatomical hand features rather than background shortcuts or skin-tone artifacts, we implemented native PyTorch Grad-CAM with backward hooks on the terminal convolutional layers:
 
-$$\alpha_k^c = \frac{1}{Z} \sum_{i=1}^H \sum_{j=1}^W \frac{\partial y^c}{\partial A_{i, j}^k}, \quad L_{\text{Grad-CAM}}^c = \operatorname{ReLU}\left( \sum_{k=1}^C \alpha_k^c A^k \right)$$
+$$\alpha_k^c = \frac{1}{Z} \sum_{i=1}^H \sum_{j=1}^W \frac{\partial y^c}{\partial A_{i, j}^k}, \quad L_{\text{Grad-CAM}}^c = \mathrm{ReLU}\left( \sum_{k=1}^C \alpha_k^c A^k \right)$$
 
 ![Grad-CAM Attribution Evolution](docs/figures/interpretability/architectural_attribution_evolution.png)
 
