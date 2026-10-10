@@ -92,12 +92,12 @@ def generate_progression_montage(
             ha="left",
             color="#1e293b",
             linespacing=1.35,
-            bbox=dict(
-                boxstyle="square,pad=0.55",
-                facecolor="#f8fafc",
-                edgecolor="#cbd5e1",
-                lw=1.0,
-            ),
+            bbox={
+                "boxstyle": "square,pad=0.55",
+                "facecolor": "#f8fafc",
+                "edgecolor": "#cbd5e1",
+                "lw": 1.0,
+            },
         )
 
         ax_ref = fig.add_subplot(gs[i, 1])
@@ -153,12 +153,12 @@ def generate_progression_montage(
                 ha="left",
                 color=col_tone,
                 linespacing=1.35,
-                bbox=dict(
-                    boxstyle="round,pad=0.5",
-                    facecolor="#f0fdf4" if correct else "#fef2f2",
-                    edgecolor=col_tone,
-                    lw=1.1,
-                ),
+                bbox={
+                    "boxstyle": "round,pad=0.5",
+                    "facecolor": "#f0fdf4" if correct else "#fef2f2",
+                    "edgecolor": col_tone,
+                    "lw": 1.1,
+                },
             )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -293,12 +293,12 @@ def generate_bayes_residuals_figure(
             ha="left",
             color="#1e293b",
             linespacing=1.35,
-            bbox=dict(
-                boxstyle="square,pad=0.55",
-                facecolor="#f8fafc",
-                edgecolor="#cbd5e1",
-                lw=1.0,
-            ),
+            bbox={
+                "boxstyle": "square,pad=0.55",
+                "facecolor": "#f8fafc",
+                "edgecolor": "#cbd5e1",
+                "lw": 1.0,
+            },
         )
 
         ax_test = fig.add_subplot(gs[i, 1])
@@ -342,12 +342,12 @@ def generate_bayes_residuals_figure(
             ha="left",
             color="#b91c1c",
             linespacing=1.35,
-            bbox=dict(
-                boxstyle="round,pad=0.5",
-                facecolor="#fef2f2",
-                edgecolor="#fca5a5",
-                lw=1.1,
-            ),
+            bbox={
+                "boxstyle": "round,pad=0.5",
+                "facecolor": "#fef2f2",
+                "edgecolor": "#fca5a5",
+                "lw": 1.1,
+            },
         )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

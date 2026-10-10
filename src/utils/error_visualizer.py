@@ -147,12 +147,12 @@ def generate_tri_panel_figure(
             ha="left",
             color="#1e293b",
             linespacing=1.35,
-            bbox=dict(
-                boxstyle="square,pad=0.55",
-                facecolor="#f8fafc",
-                edgecolor="#cbd5e1",
-                lw=1.0,
-            ),
+            bbox={
+                "boxstyle": "square,pad=0.55",
+                "facecolor": "#f8fafc",
+                "edgecolor": "#cbd5e1",
+                "lw": 1.0,
+            },
         )
 
         ax_gt = fig.add_subplot(gs[i, 1])

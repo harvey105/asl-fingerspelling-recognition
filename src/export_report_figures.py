@@ -51,7 +51,7 @@ def plot_training_curves(log_file: Path, output_file: Path) -> None:
     plt.rcParams["font.family"] = "sans-serif"
     plt.rcParams["font.sans-serif"] = ["Segoe UI", "DejaVu Sans", "Helvetica", "Arial"]
 
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5.2), dpi=300)
+    _fig, axes = plt.subplots(1, 2, figsize=(14, 5.2), dpi=300)
 
     # Left: Cross-Entropy Loss
     axes[0].plot(epochs, train_loss, label="Train Loss", color=c_train, lw=2.2)
@@ -94,7 +94,7 @@ def evaluate_test_set(
     test_manifest: Path,
     output_matrix_file: Path,
     output_metrics_file: Path,
-    device_name: str = None,
+    device_name: str | None = None,
 ) -> dict:
     """Evaluate checkpoint on unseen test set and save confusion matrix and per-class stats."""
     device = get_default_device(device_name)
@@ -151,7 +151,7 @@ def evaluate_test_set(
     # Confusion matrix
     cm = confusion_matrix(y_true, y_pred, labels=list(range(NUM_CLASSES)))
 
-    fig, ax = plt.subplots(figsize=(15, 13), dpi=300)
+    _fig, ax = plt.subplots(figsize=(15, 13), dpi=300)
     sns.heatmap(
         cm,
         annot=True,

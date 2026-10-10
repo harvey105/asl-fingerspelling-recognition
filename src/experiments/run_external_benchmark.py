@@ -123,7 +123,7 @@ def load_model_from_checkpoint(
         raise FileNotFoundError(f"Missing checkpoint: {ckpt_path}")
 
     ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False)
-    state_dict = ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt
+    state_dict = ckpt.get("model_state_dict", ckpt)
 
     if model_name == "simple_cnn":
         model = build_model("simple_cnn", num_classes=NUM_CLASSES)
