@@ -47,8 +47,8 @@ if __name__ == "__main__":
         "--predictions-csv",
         type=Path,
         default=PROJECT_ROOT
-        / "temp"
-        / "diagnostics"
+        / "docs"
+        / "metrics"
         / "test_predictions_summary.csv",
     )
     parser.add_argument(

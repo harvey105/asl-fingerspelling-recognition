@@ -26,11 +26,11 @@ def train_manifest(project_root: Path) -> pd.DataFrame:
 @pytest.fixture(scope="module")
 def predictions_df(project_root: Path) -> pd.DataFrame:
     preds_path = (
-        project_root / "temp" / "diagnostics" / "test_predictions_summary.csv"
+        project_root / "docs" / "metrics" / "test_predictions_summary.csv"
     )
     if not preds_path.exists():
         pytest.skip(
-            "Predictions summary temp/diagnostics/test_predictions_summary.csv not found"
+            "Predictions summary docs/metrics/test_predictions_summary.csv not found"
         )
     return pd.read_csv(preds_path)
 
