@@ -23,6 +23,8 @@ env/
 archive/
 GLOSSARY.md
 docs/adr/
+*.zip
+*.7z
 
 # --- Raw & Processed Datasets (DO NOT COMMIT IMAGES) ---
 # Raw datasets
@@ -76,3 +78,4 @@ temp/
 logs/
 dev_docs/
 src/tune.py
+predict_results.txt

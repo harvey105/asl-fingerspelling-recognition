@@ -156,29 +156,75 @@ The training engine auto-detects hardware in order of availability:
 - **CUDA (NVIDIA GPUs)**: Native acceleration with automatic mixed precision.
 - **CPU Fallback**: Full compatibility on standard multi-core processors.
 
-### 3. Pipeline Execution
+### 3. Dataset Acquisition & Layout
+1. Download the raw ASL-HG dataset from Mendeley Data: [ASL-HG Benchmark Dataset](https://data.mendeley.com/datasets/j4y5w2c8w9/1) (Al-Hammadi et al., 2020).
+2. Extract the archive into `data/raw/` so that each class directory contains the signer frames:
 
-<details>
-<summary><b>Click to expand CLI commands</b></summary>
+```text
+data/raw/
+├── 0/
+│   ├── P1_0_1.jpg ... P10_0_100.jpg
+├── 1/
+...
+└── Z/
+    └── P1_Z_1.jpg ... P10_Z_100.jpg
+```
 
+### 4. End-to-End Pipeline Execution
+
+<details open>
+<summary><b>Click to expand full execution workflow</b></summary>
+
+#### Step 1: Preprocessing & Split Generation
 ```bash
-# 1. Train Model 1 (Simple CNN Baseline)
+# Detect hand ROIs with MediaPipe, apply 20% margin and aspect-ratio letterboxing
+uv run python -m src.data.preprocess_roi
+
+# Audit exact duplicates and compile subject-independent split manifests
+uv run python -m src.data.splits
+```
+
+#### Step 2: Model Training
+```bash
+# Model 1: Simple CNN Baseline (4 stages, 464k params)
 uv run python src/train.py --model simple_cnn --epochs 25 --lr 5e-4 --batch-size 64
 
-# 2. Train Model 2 (Deep Residual CNN Scratch)
+# Model 2: Deep Residual CNN (8 residual blocks, 2.91M params)
 uv run python src/train.py --model complex_cnn --epochs 20 --lr 4.5e-4 --batch-size 64
 
-# 3. Train Model 3 (Fine-Tuned ResNet-18)
-uv run python src/train.py --model transfer_cnn --epochs 20 --lr 5e-4 --batch-size 64
+# Model 3: Transfer ResNet-18 (differential LR + label smoothing, 11.19M params)
+uv run python src/train.py --model transfer_cnn --epochs 20 --lr 5e-4 --lr-backbone 1e-4 --batch-size 64
+```
 
-# 4. Generate Grad-CAM Spatial Attribution Panels
+#### Step 3: Rapid Prediction & Model Verification (`predict.py`)
+```bash
+# Default: evaluate all 3 models on a random 250-image test sample with summary comparison
+uv run python predict.py
+
+# Evaluate all 3 models across the entire unseen test set (7,200 images)
+uv run python predict.py --full
+
+# Evaluate a specific model architecture (e.g. Model 3 only)
+uv run python predict.py --model model_3
+uv run python predict.py --full --model model_3
+
+# Single image ad-hoc inference
+uv run python predict.py --image data/external_crops/B/cbp_B_01.png --model model_3
+```
+
+#### Step 4: Interpretability, Diagnostics & Ablations
+```bash
+# Generate Grad-CAM attribution heatmaps
 uv run python src/experiments/generate_gradcam_panels.py
 
-# 5. Extract Qualitative Error Cases and Montages
+# Extract qualitative failure cases and progression montages
 uv run python src/experiments/extract_error_cases.py
 
-# 6. Run Controlled Scientific Ablation Suite
+# Run controlled scientific ablation experiments
 uv run python src/experiments/run_ablations.py --experiment all
+
+# Run phone capture domain generalization benchmark
+uv run python src/experiments/run_external_benchmark.py
 ```
 
 </details>
