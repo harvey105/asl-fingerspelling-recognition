@@ -196,20 +196,20 @@ uv run python src/train.py --model complex_cnn --epochs 20 --lr 4.5e-4 --batch-s
 uv run python src/train.py --model transfer_cnn --epochs 20 --lr 5e-4 --lr-backbone 1e-4 --batch-size 64
 ```
 
-#### Step 3: Rapid Prediction & Model Verification (`predict.py`)
+#### Step 3: Rapid Prediction & Model Verification (`src/predict.py`)
 ```bash
 # Default: evaluate all 3 models on a random 250-image test sample with summary comparison
-uv run python predict.py
+uv run python src/predict.py
 
 # Evaluate all 3 models across the entire unseen test set (7,200 images)
-uv run python predict.py --full
+uv run python src/predict.py --full
 
 # Evaluate a specific model architecture (e.g. Model 3 only)
-uv run python predict.py --model model_3
-uv run python predict.py --full --model model_3
+uv run python src/predict.py --model model_3
+uv run python src/predict.py --full --model model_3
 
 # Single image ad-hoc inference
-uv run python predict.py --image data/external_crops/B/cbp_B_01.png --model model_3
+uv run python src/predict.py --image data/external_crops/B/cbp_B_01.png --model model_3
 ```
 
 #### Step 4: Interpretability, Diagnostics & Ablations
